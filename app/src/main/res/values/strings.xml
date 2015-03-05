@@ -1,6 +1,22 @@
 <resources>
-    <string name="app_name">Business Card</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Business Card</string>
     <string name="action_settings">Settings</string>
+    <string name="create_new_account">Create a new account</string>
+    <string name="log_with_account">Log in using and existing account</string>
+    <string name="login">Log in with your account</string>
+    <string name="or">or</string>
+    <string name="username">Username</string>
+    <string name="username_hint">Username (used for log in)</string>
+    <string name="password">Password</string>
+    <string name="password_hint">Password (used for log in)</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="login_button">Log in</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email_hint">Email (optional)</string>
+    <string name="phone_hint">Phone (optional)</string>
+    <string name="title">Title</string>
+    <string name="create_account">Create Account</string>
+
 </resources>
