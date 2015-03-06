@@ -7,11 +7,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.business.card.BusinessCardApplication;
 import com.business.card.R;
+
+import java.util.Random;
 
 public class LoginActivity extends ActionBarActivity {
 
+    private ImageView logo;
     private EditText username;
     private EditText password;
     private Button loginButton;
@@ -37,6 +42,8 @@ public class LoginActivity extends ActionBarActivity {
 
             }
         });
+
+        setUpAutoAccountFiller();
     }
 
     @Override
@@ -56,5 +63,22 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         return true;
+    }
+
+    /**
+     * Set up the auto account filler, based on previously generated username and password
+     */
+    private void setUpAutoAccountFiller() {
+        logo = (ImageView) findViewById(R.id.logo);
+        logo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // fill in the previously generated username and password
+                username.setText(BusinessCardApplication.getInstance().generatedUsername);
+                password.setText(BusinessCardApplication.getInstance().generatedPassword);
+
+                return true;
+            }
+        });
     }
 }

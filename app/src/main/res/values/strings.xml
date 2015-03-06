@@ -18,5 +18,12 @@
     <string name="phone_hint">Phone (optional)</string>
     <string name="title">Title</string>
     <string name="create_account">Create Account</string>
+    <string name="please_wait">Please wait&#8230;</string>
+    <string name="sign_up_success">You have successfully signed up.\nPlease login.</string>
+    <string name="username_taken">This username has already been used</string>
+    <string name="please_fill_required_fields">Please fill in the required fields</string>
+    <string name="login_invalid">Email is invalid.</string>
+    <string name="password_not_confirmed">The password was not correctly confirmed</string>
+    <string name="username_contains_spaces">Your username must not contain any spaces</string>
 
 </resources>
