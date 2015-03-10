@@ -9,9 +9,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.business.card.R;
+import com.business.card.util.PreferenceHelper;
 
 
-public class StartActivity extends ActionBarActivity {
+public class NotLoggedActivity extends ActionBarActivity {
 
     private Button createAccountButton;
     private Button loginButton;
@@ -27,7 +28,7 @@ public class StartActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 // start the activity to create a new account
-                Intent intent = new Intent(StartActivity.this, CreateAccountActivity.class);
+                Intent intent = new Intent(NotLoggedActivity.this, CreateAccountActivity.class);
                 startActivity(intent);
             }
         });
@@ -38,7 +39,7 @@ public class StartActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 // start the activity to log in with an existing account
-                Intent intent = new Intent(StartActivity.this, LoginActivity.class);
+                Intent intent = new Intent(NotLoggedActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

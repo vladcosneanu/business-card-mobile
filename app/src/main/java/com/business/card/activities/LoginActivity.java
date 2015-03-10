@@ -1,6 +1,7 @@
 package com.business.card.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -112,6 +113,11 @@ public class LoginActivity extends ActionBarActivity {
                 PreferenceHelper.saveUser(user, this);
 
                 Toast.makeText(this, R.string.login_successful, Toast.LENGTH_SHORT).show();
+
+                // start the main activity, clearing any other activities previously opened
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             } else {
                 Toast.makeText(this, R.string.login_incorrect, Toast.LENGTH_SHORT).show();
             }

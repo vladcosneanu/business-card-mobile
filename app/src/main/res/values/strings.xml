@@ -29,5 +29,6 @@
     <string name="logout_successful">You have successfully logged out.</string>
     <string name="login_empty">Email and Password fields must not be empty.</string>
     <string name="email_invalid">Email is invalid.</string>
+    <string name="action_logout">Logout</string>
 
 </resources>

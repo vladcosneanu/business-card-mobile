@@ -3,6 +3,7 @@ package com.business.card;
 import android.app.Application;
 
 import com.business.card.objects.User;
+import com.business.card.util.PreferenceHelper;
 
 public class BusinessCardApplication extends Application {
 
@@ -20,8 +21,8 @@ public class BusinessCardApplication extends Application {
         super.onCreate();
 
         singleton = this;
-//        if (PreferenceHelper.isUserLoggedIn(this)) {
-//            loggedUser = PreferenceHelper.loadUser(this);
-//        }
+        if (PreferenceHelper.isUserLoggedIn(this)) {
+            loggedUser = PreferenceHelper.loadUser(this);
+        }
     }
 }
