@@ -82,7 +82,7 @@ public class CreateAccountActivity extends ActionBarActivity {
                 Toast.makeText(CreateAccountActivity.this, getString(R.string.please_fill_required_fields), Toast.LENGTH_SHORT).show();
             } else if (!Util.isEmailValid(emailValue)) {
                 // email address is invalid
-                Toast.makeText(CreateAccountActivity.this, getString(R.string.login_invalid), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccountActivity.this, getString(R.string.email_invalid), Toast.LENGTH_SHORT).show();
             } else if (!passwordValue.equals(confirmValue)) {
                 // password not confirmed
                 Toast.makeText(CreateAccountActivity.this, getString(R.string.password_not_confirmed), Toast.LENGTH_SHORT).show();

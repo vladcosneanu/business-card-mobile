@@ -22,8 +22,12 @@
     <string name="sign_up_success">You have successfully signed up.\nPlease login.</string>
     <string name="username_taken">This username has already been used</string>
     <string name="please_fill_required_fields">Please fill in the required fields</string>
-    <string name="login_invalid">Email is invalid.</string>
     <string name="password_not_confirmed">The password was not correctly confirmed</string>
     <string name="username_contains_spaces">Your username must not contain any spaces</string>
+    <string name="login_incorrect">Incorrect login, please try again.</string>
+    <string name="login_successful">You have successfully logged in.</string>
+    <string name="logout_successful">You have successfully logged out.</string>
+    <string name="login_empty">Email and Password fields must not be empty.</string>
+    <string name="email_invalid">Email is invalid.</string>
 
 </resources>
