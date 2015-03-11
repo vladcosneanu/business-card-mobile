@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
+import com.business.card.objects.BusinessCard;
 import com.business.card.objects.User;
 import com.business.card.requests.RequestSignUp;
 import com.business.card.util.Util;
@@ -100,7 +101,11 @@ public class CreateAccountActivity extends ActionBarActivity {
                 user.setUsername(usernameValue);
                 user.setPassword(passwordValue);
 
-                RequestSignUp requestSignUp = new RequestSignUp(CreateAccountActivity.this, user);
+                BusinessCard businessCard = new BusinessCard();
+                businessCard.setPhone(phoneValue);
+                businessCard.setEmail(emailValue);
+
+                RequestSignUp requestSignUp = new RequestSignUp(CreateAccountActivity.this, user, businessCard);
                 requestSignUp.execute(new String[] {});
             }
             }

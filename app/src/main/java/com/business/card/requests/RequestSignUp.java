@@ -15,7 +15,9 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.business.card.BusinessCardApplication;
 import com.business.card.activities.CreateAccountActivity;
+import com.business.card.objects.BusinessCard;
 import com.business.card.objects.User;
 
 public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
@@ -23,10 +25,12 @@ public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
     private boolean done = false;
     private CreateAccountActivity activity;
     private User user;
+    private BusinessCard businessCard;
 
-    public RequestSignUp(CreateAccountActivity activity, User user) {
+    public RequestSignUp(CreateAccountActivity activity, User user, BusinessCard businessCard) {
         this.activity = activity;
         this.user = user;
+        this.businessCard = businessCard;
     }
 
     @Override
@@ -39,8 +43,8 @@ public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
             url += "?title=" + URLEncoder.encode(user.getTitle(), "UTF-8");
             url += "&first_name=" + URLEncoder.encode(user.getFirstName(), "UTF-8");
             url += "&last_name=" + URLEncoder.encode(user.getLastName(), "UTF-8");
-            url += "&email=" + URLEncoder.encode("test@test.com", "UTF-8");
-            url += "&phone=" + URLEncoder.encode("1234567890", "UTF-8");
+            url += "&email=" + URLEncoder.encode(businessCard.getEmail(), "UTF-8");
+            url += "&phone=" + URLEncoder.encode(businessCard.getPhone(), "UTF-8");
             url += "&username=" + URLEncoder.encode(user.getUsername(), "UTF-8");
             url += "&password=" + URLEncoder.encode(user.getPassword(), "UTF-8");
 
