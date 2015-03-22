@@ -7,22 +7,24 @@ public class BusinessCard {
 
     private String id;
     private String userId;
+    private String title;
     private String email;
     private String phone;
     private String address;
 
     public static BusinessCard parseBusinessCardFromJson(JSONObject json) {
-        BusinessCard user = new BusinessCard();
+        BusinessCard businessCard = new BusinessCard();
         try {
-            user.setId(json.getString("id"));
-            user.setUserId(json.getString("user_id"));
-            user.setEmail(json.getString("email"));
-            user.setPhone(json.getString("phone"));
-            user.setAddress(json.getString("address"));
+            businessCard.setId(json.getString("id"));
+            businessCard.setUserId(json.getString("userId"));
+            businessCard.setTitle(json.getString("title"));
+            businessCard.setEmail(json.getString("email"));
+            businessCard.setPhone(json.getString("phone"));
+            businessCard.setAddress(json.getString("address"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return user;
+        return businessCard;
     }
 
     public String getId() {
@@ -39,6 +41,14 @@ public class BusinessCard {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getEmail() {

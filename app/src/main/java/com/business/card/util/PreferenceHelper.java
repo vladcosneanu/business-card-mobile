@@ -34,7 +34,6 @@ public class PreferenceHelper {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USER_ID, user.getId());
-        editor.putString(USER_TITLE, user.getTitle());
         editor.putString(USER_FIRST_NAME, user.getFirstName());
         editor.putString(USER_LAST_NAME, user.getLastName());
         editor.putString(USER_USERNAME, user.getUsername());
@@ -47,7 +46,6 @@ public class PreferenceHelper {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARE, Context.MODE_PRIVATE);
         user.setId(sharedPreferences.getString(USER_ID, ""));
-        user.setTitle(sharedPreferences.getString(USER_TITLE, ""));
         user.setFirstName(sharedPreferences.getString(USER_FIRST_NAME, ""));
         user.setLastName(sharedPreferences.getString(USER_LAST_NAME, ""));
         user.setUsername(sharedPreferences.getString(USER_USERNAME, ""));

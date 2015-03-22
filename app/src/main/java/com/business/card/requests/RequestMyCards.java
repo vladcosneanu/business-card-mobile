@@ -1,8 +1,11 @@
 package com.business.card.requests;
 
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URLEncoder;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.business.card.activities.MainActivity;
+import com.business.card.objects.BusinessCard;
+import com.business.card.objects.User;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -10,43 +13,31 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import org.json.JSONArray;
 
-import android.os.AsyncTask;
-import android.util.Log;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 
-import com.business.card.BusinessCardApplication;
-import com.business.card.activities.CreateAccountActivity;
-import com.business.card.objects.BusinessCard;
-import com.business.card.objects.User;
-
-public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
+public class RequestMyCards extends AsyncTask<String, Integer, JSONArray> {
 
     private boolean done = false;
-    private CreateAccountActivity activity;
+    private MainActivity activity;
     private User user;
     private BusinessCard businessCard;
 
-    public RequestSignUp(CreateAccountActivity activity, User user, BusinessCard businessCard) {
+    public RequestMyCards(MainActivity activity, User user) {
         this.activity = activity;
         this.user = user;
-        this.businessCard = businessCard;
     }
 
     @Override
-    protected JSONObject doInBackground(String... params) {
+    protected JSONArray doInBackground(String... params) {
         byte[] result = null;
-        JSONObject json = null;
+        JSONArray json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/sign_up.php";
-            url += "?title=" + URLEncoder.encode(businessCard.getTitle(), "UTF-8");
-            url += "&first_name=" + URLEncoder.encode(user.getFirstName(), "UTF-8");
-            url += "&last_name=" + URLEncoder.encode(user.getLastName(), "UTF-8");
-            url += "&email=" + URLEncoder.encode(businessCard.getEmail(), "UTF-8");
-            url += "&phone=" + URLEncoder.encode(businessCard.getPhone(), "UTF-8");
-            url += "&username=" + URLEncoder.encode(user.getUsername(), "UTF-8");
-            url += "&password=" + URLEncoder.encode(user.getPassword(), "UTF-8");
+            String url = "http://businesscard.netne.net/api/get/my_cards.php";
+            url += "?user_id=" + user.getId();
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -58,7 +49,7 @@ public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
                 result = EntityUtils.toByteArray(response.getEntity());
                 publishProgress(result.length);
                 String str = new String(result, "UTF-8");
-                json = new JSONObject(str);
+                json = new JSONArray(str);
             }
 
             if (json != null) {
@@ -79,11 +70,11 @@ public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
     }
 
     @Override
-    protected void onPostExecute(JSONObject json) {
+    protected void onPostExecute(JSONArray json) {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onSignUpRequestFinished(json);
+            activity.onMyCardsRequestFinished(json);
         }
     }
 }

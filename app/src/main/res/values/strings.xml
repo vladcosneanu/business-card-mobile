@@ -30,5 +30,8 @@
     <string name="login_empty">Email and Password fields must not be empty.</string>
     <string name="email_invalid">Email is invalid.</string>
     <string name="action_logout">Logout</string>
+    <string name="saved_cards">Saved Cards</string>
+    <string name="my_cards">My Cards</string>
+    <string name="conferences">Conferences</string>
 
 </resources>

@@ -95,13 +95,13 @@ public class CreateAccountActivity extends ActionBarActivity {
                 progressDialog.show();
 
                 User user = new User();
-                user.setTitle(titleValue);
                 user.setFirstName(firstNameValue);
                 user.setLastName(lastNameValue);
                 user.setUsername(usernameValue);
                 user.setPassword(passwordValue);
 
                 BusinessCard businessCard = new BusinessCard();
+                businessCard.setTitle(titleValue);
                 businessCard.setPhone(phoneValue);
                 businessCard.setEmail(emailValue);
 

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public class User {
 
     private String id;
-    private String title;
+
     private String firstName;
     private String lastName;
     private String username;
@@ -16,7 +16,6 @@ public class User {
         User user = new User();
         try {
             user.setId(json.getString("id"));
-            user.setTitle(json.getString("title"));
             user.setFirstName(json.getString("first_name"));
             user.setLastName(json.getString("last_name"));
             user.setUsername(json.getString("username"));
@@ -34,14 +33,6 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getFirstName() {
