@@ -19,6 +19,7 @@ import com.business.card.fragments.MyCardsFragment;
 import com.business.card.fragments.SavedCardsFragment;
 import com.business.card.objects.BusinessCard;
 import com.business.card.requests.RequestMyCards;
+import com.business.card.requests.RequestSavedCards;
 import com.business.card.util.PreferenceHelper;
 
 import org.json.JSONArray;
@@ -32,6 +33,9 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager pager;
     private MyPagerAdapter pagerAdapter;
 
+    private List<BusinessCard> savedCards;
+    private List<BusinessCard> myCards;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,9 @@ public class MainActivity extends ActionBarActivity {
         pager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
+
+        RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
+        requestSavedCards.execute(new String[]{});
 
         RequestMyCards requestMyCards = new RequestMyCards(this, BusinessCardApplication.loggedUser);
         requestMyCards.execute(new String[]{});
@@ -72,10 +79,19 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public List<BusinessCard> getSavedCards() {
+        return savedCards;
+    }
+
+    public List<BusinessCard> getMyCards() {
+        return myCards;
+    }
+
     /**
-     * Finished request for My Cards
+     * Finished request for Saved Cards
      */
-    public void onMyCardsRequestFinished(JSONArray j) {
+    public void onSavedCardsRequestFinished(JSONArray j) {
+        savedCards = new ArrayList<BusinessCard>();
         List<BusinessCard> businessCards = new ArrayList<BusinessCard>();
         for (int i = 0; i < j.length(); i++) {
             try {
@@ -86,6 +102,26 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+        savedCards = businessCards;
+        ((SavedCardsFragment) pagerAdapter.getItem(0)).setSavedCards(businessCards);
+    }
+
+    /**
+     * Finished request for My Cards
+     */
+    public void onMyCardsRequestFinished(JSONArray j) {
+        myCards = new ArrayList<BusinessCard>();
+        List<BusinessCard> businessCards = new ArrayList<BusinessCard>();
+        for (int i = 0; i < j.length(); i++) {
+            try {
+                BusinessCard businessCard = BusinessCard.parseBusinessCardFromJson(j.getJSONObject(i));
+                businessCards.add(businessCard);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        myCards = businessCards;
         ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(businessCards);
     }
 

@@ -2,10 +2,24 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
+    <ListView
+        android:id="@+id/saved_cards_listview"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"></ListView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content" />
+
     <TextView
+        android:id="@+id/no_cards_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Saved Cards"/>
+        android:visibility="gone"
+        android:text="@string/no_cards"/>
 
 </RelativeLayout>

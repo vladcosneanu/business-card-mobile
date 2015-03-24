@@ -33,5 +33,6 @@
     <string name="saved_cards">Saved Cards</string>
     <string name="my_cards">My Cards</string>
     <string name="conferences">Conferences</string>
+    <string name="no_cards">No Cards available</string>
 
 </resources>

@@ -11,11 +11,20 @@ public class BusinessCard {
     private String email;
     private String phone;
     private String address;
+    private String firstName;
+    private String lastName;
 
     public static BusinessCard parseBusinessCardFromJson(JSONObject json) {
         BusinessCard businessCard = new BusinessCard();
         try {
-            businessCard.setId(json.getString("id"));
+            if (json.has("firstName")) {
+                businessCard.setFirstName(json.getString("firstName"));
+            }
+
+            if (json.has("lastname")) {
+                businessCard.setLastName(json.getString("lastname"));
+            }
+
             businessCard.setUserId(json.getString("userId"));
             businessCard.setTitle(json.getString("title"));
             businessCard.setEmail(json.getString("email"));
@@ -73,5 +82,21 @@ public class BusinessCard {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
