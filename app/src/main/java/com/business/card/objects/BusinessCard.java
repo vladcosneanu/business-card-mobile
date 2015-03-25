@@ -17,6 +17,10 @@ public class BusinessCard {
     public static BusinessCard parseBusinessCardFromJson(JSONObject json) {
         BusinessCard businessCard = new BusinessCard();
         try {
+            if (json.has("id")) {
+                businessCard.setId(json.getString("id"));
+            }
+
             if (json.has("firstName")) {
                 businessCard.setFirstName(json.getString("firstName"));
             }

@@ -8,6 +8,7 @@
     <string name="or">or</string>
     <string name="username">Username</string>
     <string name="username_hint">Username (used for log in)</string>
+    <string name="address_hint">Address (optional)</string>
     <string name="password">Password</string>
     <string name="password_hint">Password (used for log in)</string>
     <string name="confirm_password">Confirm Password</string>
@@ -16,6 +17,8 @@
     <string name="last_name">Last Name</string>
     <string name="email_hint">Email (optional)</string>
     <string name="phone_hint">Phone (optional)</string>
+    <string name="email_hint2">Email</string>
+    <string name="phone_hint2">Phone</string>
     <string name="title">Title</string>
     <string name="create_account">Create Account</string>
     <string name="please_wait">Please wait&#8230;</string>
@@ -34,5 +37,8 @@
     <string name="my_cards">My Cards</string>
     <string name="conferences">Conferences</string>
     <string name="no_cards">No Cards available</string>
+    <string name="edit_business_card">Edit Business Card</string>
+    <string name="card_edit_success">You have successfully updated your business card.</string>
+    <string name="unknown_error">An unknown error has occurred. Please try again.</string>
 
 </resources>

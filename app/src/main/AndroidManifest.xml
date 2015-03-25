@@ -41,6 +41,11 @@
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"></activity>
 
+        <activity
+            android:name=".activities.EditCardActivity"
+            android:label="@string/edit_business_card"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"></activity>
     </application>
 
 </manifest>

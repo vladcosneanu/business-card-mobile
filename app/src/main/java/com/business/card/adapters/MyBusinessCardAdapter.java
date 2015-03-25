@@ -1,13 +1,17 @@
 package com.business.card.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.business.card.BusinessCardApplication;
 import com.business.card.R;
+import com.business.card.activities.EditCardActivity;
+import com.business.card.activities.MainActivity;
 import com.business.card.objects.BusinessCard;
 
 import java.util.List;
@@ -72,6 +76,16 @@ public class MyBusinessCardAdapter extends BaseAdapter {
             viewHolder.address.setVisibility(View.VISIBLE);
             viewHolder.address.setText(businessCard.getAddress());
         }
+
+        rowView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BusinessCardApplication.selectedBusinessCard = businessCard;
+                // start the edit card activity
+                Intent intent = new Intent(context, EditCardActivity.class);
+                context.startActivity(intent);
+            }
+        });
 
         return rowView;
     }

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -44,6 +45,11 @@ public class MainActivity extends ActionBarActivity {
         pager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
         requestSavedCards.execute(new String[]{});
