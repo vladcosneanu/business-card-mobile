@@ -2,6 +2,7 @@
 
     <string name="app_name">Business Card</string>
     <string name="action_settings">Settings</string>
+    <string name="action_add">Add</string>
     <string name="create_new_account">Create a new account</string>
     <string name="log_with_account">Log in using and existing account</string>
     <string name="login">Log in with your account</string>
@@ -37,8 +38,19 @@
     <string name="my_cards">My Cards</string>
     <string name="conferences">Conferences</string>
     <string name="no_cards">No Cards available</string>
+    <string name="add_business_card">Add Business Card</string>
     <string name="edit_business_card">Edit Business Card</string>
     <string name="card_edit_success">You have successfully updated your business card.</string>
     <string name="unknown_error">An unknown error has occurred. Please try again.</string>
+    <string name="card_add_success">You have successfully added your business card.</string>
+    <string name="card_delete_success">You have successfully deleted your business card.</string>
+    <string name="delete">Delete</string>
+    <string name="delete_card">Delete Card</string>
+    <string name="share">Share</string>
+    <string name="edit">Edit</string>
+    <string name="delete_card_message">Are you sure you wish to delete this business card?\n\nTitle: %1$s\nEmail: %2$s\nPhone: %3$s\nAddress: %4$s</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="choose_action_for_card">Choose an Action for this Card</string>
 
 </resources>

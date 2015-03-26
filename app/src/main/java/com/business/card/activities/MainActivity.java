@@ -1,17 +1,17 @@
 package com.business.card.activities;
 
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
@@ -25,6 +25,7 @@ import com.business.card.util.PreferenceHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +35,59 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager pager;
     private MyPagerAdapter pagerAdapter;
 
+    private MenuItem addMenuItem;
+    private boolean displayAddMenuItem = false;
+
     private List<BusinessCard> savedCards;
     private List<BusinessCard> myCards;
+
+    private int currentPage;
+    private ProgressDialog progressDialog;
+
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+        @Override
+        public void onPageSelected(int position) {
+            currentPage = position;
+            if (position == 0) {
+                if (addMenuItem != null) {
+                    addMenuItem.setVisible(false);
+                } else {
+                    displayAddMenuItem = false;
+                }
+            } else if (position == 1) {
+                if (addMenuItem != null) {
+                    addMenuItem.setVisible(true);
+                } else {
+                    displayAddMenuItem = true;
+                }
+            } else if (position == 2) {
+                if (addMenuItem != null) {
+                    addMenuItem.setVisible(true);
+                } else {
+                    displayAddMenuItem = true;
+                }
+            }
+        }
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.please_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(true);
+
         pager = (ViewPager) findViewById(R.id.viewPager);
+        pager.setOnPageChangeListener(pageChangeListener);
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
     }
@@ -58,10 +103,22 @@ public class MainActivity extends ActionBarActivity {
         requestMyCards.execute(new String[]{});
     }
 
+    public void displayProgressDialog() {
+        progressDialog.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        addMenuItem = menu.getItem(0);
+        if (displayAddMenuItem) {
+            addMenuItem.setVisible(true);
+        } else {
+            addMenuItem.setVisible(false);
+        }
+
         return true;
     }
 
@@ -69,6 +126,15 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.action_add:
+                if (currentPage == 1) {
+                    // Clear any Business Card selected
+                    BusinessCardApplication.selectedBusinessCard = null;
+                    // start the edit card activity
+                    Intent intent = new Intent(this, AddEditCardActivity.class);
+                    this.startActivity(intent);
+                }
+                break;
             case R.id.action_logout:
                 // remove the previously saved user
                 PreferenceHelper.deletSavedUser(this);
@@ -129,6 +195,28 @@ public class MainActivity extends ActionBarActivity {
 
         myCards = businessCards;
         ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(businessCards);
+    }
+
+    /**
+     * Finished request for My Card Delete
+     */
+    public void onMyCardDeleteRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            String success = json.getString("success");
+            if (success.equals("true")) {
+                // card deleted
+                Toast.makeText(this, getString(R.string.card_delete_success), Toast.LENGTH_SHORT).show();
+
+                ((MyCardsFragment) pagerAdapter.getItem(1)).removeSelectedBusinessCard();
+            } else {
+                // card not deleted
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {

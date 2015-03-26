@@ -18,13 +18,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
-public class RequestEditCard extends AsyncTask<String, Integer, JSONObject> {
+public class RequestAddCard extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
     private AddEditCardActivity activity;
     private BusinessCard businessCard;
 
-    public RequestEditCard(AddEditCardActivity activity, BusinessCard businessCard) {
+    public RequestAddCard(AddEditCardActivity activity, BusinessCard businessCard) {
         this.activity = activity;
         this.businessCard = businessCard;
     }
@@ -35,9 +35,8 @@ public class RequestEditCard extends AsyncTask<String, Integer, JSONObject> {
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/update/card.php";
-            url += "?id=" + businessCard.getId();
-            url += "&user_id=" + businessCard.getUserId();
+            String url = "http://businesscard.netne.net/api/add/card.php";
+            url += "?user_id=" + businessCard.getUserId();
             url += "&title=" + URLEncoder.encode(businessCard.getTitle(), "UTF-8");
             url += "&email=" + URLEncoder.encode(businessCard.getEmail(), "UTF-8");
             url += "&phone=" + URLEncoder.encode(businessCard.getPhone(), "UTF-8");
@@ -78,7 +77,7 @@ public class RequestEditCard extends AsyncTask<String, Integer, JSONObject> {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onEditCardRequestFinished(json);
+            activity.onAddCardRequestFinished(json);
         }
     }
 }
