@@ -1,10 +1,12 @@
 package com.business.card;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.business.card.objects.BusinessCard;
 import com.business.card.objects.User;
 import com.business.card.util.PreferenceHelper;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 
 public class BusinessCardApplication extends Application {
 
@@ -25,6 +27,14 @@ public class BusinessCardApplication extends Application {
         singleton = this;
         if (PreferenceHelper.isUserLoggedIn(this)) {
             loggedUser = PreferenceHelper.loadUser(this);
+        }
+
+        try {
+            LocationLibrary.initialiseLibrary(getBaseContext(), "com.business.card");
+            LocationLibrary.useFineAccuracyForRequests(true);
+        } catch (Exception e) {
+            Log.e("BusinessCardApplication", "Could not setup the location library: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

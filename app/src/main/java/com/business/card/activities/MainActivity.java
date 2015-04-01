@@ -2,6 +2,7 @@ package com.business.card.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +22,10 @@ import com.business.card.fragments.SavedCardsFragment;
 import com.business.card.objects.BusinessCard;
 import com.business.card.requests.RequestMyCards;
 import com.business.card.requests.RequestSavedCards;
+import com.business.card.util.LocationBroadcastReceiver;
 import com.business.card.util.PreferenceHelper;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +47,8 @@ public class MainActivity extends ActionBarActivity {
 
     private int currentPage;
     private ProgressDialog progressDialog;
+
+    private LocationBroadcastReceiver lftBroadcastReceiver;
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -101,6 +107,13 @@ public class MainActivity extends ActionBarActivity {
 
         RequestMyCards requestMyCards = new RequestMyCards(this, BusinessCardApplication.loggedUser);
         requestMyCards.execute(new String[]{});
+
+        final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
+        lftBroadcastReceiver = new LocationBroadcastReceiver();
+        registerReceiver(lftBroadcastReceiver, lftIntentFilter);
+
+        // force a location update
+        LocationLibrary.forceLocationUpdate(this);
     }
 
     public void displayProgressDialog() {
