@@ -1,8 +1,13 @@
 package com.business.card.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,10 +25,15 @@ import com.business.card.fragments.ConferencesFragment;
 import com.business.card.fragments.MyCardsFragment;
 import com.business.card.fragments.SavedCardsFragment;
 import com.business.card.objects.BusinessCard;
+import com.business.card.requests.RequestGCMRegistration;
 import com.business.card.requests.RequestMyCards;
 import com.business.card.requests.RequestSavedCards;
 import com.business.card.util.LocationBroadcastReceiver;
 import com.business.card.util.PreferenceHelper;
+import com.business.card.util.Util;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
 
@@ -31,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +60,14 @@ public class MainActivity extends ActionBarActivity {
     private ProgressDialog progressDialog;
 
     private LocationBroadcastReceiver lftBroadcastReceiver;
+    private GoogleCloudMessaging gcm;
+    private String regid;
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
+
         @Override
         public void onPageSelected(int position) {
             currentPage = position;
@@ -77,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
+
         @Override
         public void onPageScrollStateChanged(int state) {
         }
@@ -96,6 +111,21 @@ public class MainActivity extends ActionBarActivity {
         pager.setOnPageChangeListener(pageChangeListener);
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
+
+        // Check device for Play Services APK. If check succeeds, proceed with
+        //  GCM registration.
+        if (Util.checkPlayServices(this)) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = PreferenceHelper.getRegistrationId(this);
+
+            if (regid.isEmpty()) {
+                RequestGCMRegistration requestGCMRegistration = new RequestGCMRegistration(this, gcm);
+                requestGCMRegistration.execute();
+            }
+        } else {
+            Log.i("MainActivity", "No valid Google Play Services APK found.");
+        }
+
     }
 
     @Override
@@ -164,6 +194,25 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (lftBroadcastReceiver != null) {
+            unregisterReceiver(lftBroadcastReceiver);
+        }
+    }
+
+    /**
+     * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
+     * or CCS to send messages to your app. Not needed for this demo since the
+     * device sends upstream messages to a server that echoes back the message
+     * using the 'from' address in the message.
+     */
+    private void sendRegistrationIdToBackend() {
+        // Your implementation here.
+    }
+
     public List<BusinessCard> getSavedCards() {
         return savedCards;
     }
@@ -208,6 +257,10 @@ public class MainActivity extends ActionBarActivity {
 
         myCards = businessCards;
         ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(businessCards);
+    }
+
+    public void onGCMRegistrationComplete(String msg) {
+        Log.d("MainActivity", "msg: " + msg);
     }
 
     /**
