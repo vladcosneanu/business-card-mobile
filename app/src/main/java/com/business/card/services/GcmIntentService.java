@@ -76,7 +76,7 @@ public class GcmIntentService extends IntentService {
                                 .bigText(msg))
                         .setContentText(msg)
                         .setAutoCancel(true)
-                        .setSound(uri);
+                        .setDefaults(NotificationCompat.DEFAULT_ALL);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
