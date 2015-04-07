@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.business.card.objects.Coordinate;
@@ -53,7 +55,14 @@ public class Util {
         coordinate.setLatitude(locationInfo.lastLat);
         coordinate.setLongitude(locationInfo.lastLong);
         coordinate.setValid(true);
+        coordinate.setLocationUpdateTimestamp(locationInfo.lastLocationUpdateTimestamp);
         coordinate.setAccuracy(locationInfo.lastAccuracy);
+    }
+    
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     /**

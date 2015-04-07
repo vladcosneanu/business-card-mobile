@@ -147,7 +147,6 @@ public class AddEditCardActivity extends ActionBarActivity {
                 Toast.makeText(AddEditCardActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -166,7 +165,6 @@ public class AddEditCardActivity extends ActionBarActivity {
                 Toast.makeText(AddEditCardActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
