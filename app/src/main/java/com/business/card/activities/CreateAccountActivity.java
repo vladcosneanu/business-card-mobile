@@ -104,6 +104,7 @@ public class CreateAccountActivity extends ActionBarActivity {
                 businessCard.setTitle(titleValue);
                 businessCard.setPhone(phoneValue);
                 businessCard.setEmail(emailValue);
+                businessCard.setIsPublic("1");
 
                 RequestSignUp requestSignUp = new RequestSignUp(CreateAccountActivity.this, user, businessCard);
                 requestSignUp.execute(new String[] {});

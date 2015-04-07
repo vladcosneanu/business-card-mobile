@@ -3,8 +3,11 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.business.card.activities.AddEditCardActivity;
-import com.business.card.objects.BusinessCard;
+import com.business.card.activities.MainActivity;
+import com.business.card.objects.Coordinate;
+import com.business.card.objects.User;
+import com.business.card.services.ScheduledGPSService;
+import com.business.card.util.PreferenceHelper;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -16,17 +19,16 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 
-public class RequestAddCard extends AsyncTask<String, Integer, JSONObject> {
+public class RequestUpdateGCMId extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
-    private AddEditCardActivity activity;
-    private BusinessCard businessCard;
+    private MainActivity activity;
+    private User user;
 
-    public RequestAddCard(AddEditCardActivity activity, BusinessCard businessCard) {
+    public RequestUpdateGCMId(MainActivity activity, User user) {
         this.activity = activity;
-        this.businessCard = businessCard;
+        this.user = user;
     }
 
     @Override
@@ -35,13 +37,9 @@ public class RequestAddCard extends AsyncTask<String, Integer, JSONObject> {
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/card.php";
-            url += "?user_id=" + businessCard.getUserId();
-            url += "&title=" + URLEncoder.encode(businessCard.getTitle(), "UTF-8");
-            url += "&email=" + URLEncoder.encode(businessCard.getEmail(), "UTF-8");
-            url += "&phone=" + URLEncoder.encode(businessCard.getPhone(), "UTF-8");
-            url += "&address=" + URLEncoder.encode(businessCard.getAddress(), "UTF-8");
-            url += "&public=" + URLEncoder.encode(businessCard.getIsPublic(), "UTF-8");
+            String url = "http://businesscard.netne.net/api/update/user_gcm_reg_id.php";
+            url += "?id=" + user.getId();
+            url += "&gcm_reg_id=" + PreferenceHelper.getRegistrationId(activity);
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -78,7 +76,7 @@ public class RequestAddCard extends AsyncTask<String, Integer, JSONObject> {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onAddCardRequestFinished(json);
+            activity.onGCMRegistrationIdSent(json);
         }
     }
 }

@@ -13,6 +13,7 @@ public class BusinessCard {
     private String address;
     private String firstName;
     private String lastName;
+    private String isPublic;
 
     public static BusinessCard parseBusinessCardFromJson(JSONObject json) {
         BusinessCard businessCard = new BusinessCard();
@@ -34,6 +35,7 @@ public class BusinessCard {
             businessCard.setEmail(json.getString("email"));
             businessCard.setPhone(json.getString("phone"));
             businessCard.setAddress(json.getString("address"));
+            businessCard.setIsPublic(json.getString("public"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -102,5 +104,13 @@ public class BusinessCard {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(String isPublic) {
+        this.isPublic = isPublic;
     }
 }

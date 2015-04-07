@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,13 +29,15 @@ public class AddEditCardActivity extends ActionBarActivity {
     private EditText email;
     private EditText phone;
     private EditText address;
+    private CheckBox isPublicCheckbox;
+    private View isPublicContainer;
     private Button addEditCardButton;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_card);
+        setContentView(R.layout.add_edit_card);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
@@ -49,6 +52,16 @@ public class AddEditCardActivity extends ActionBarActivity {
         email = (EditText) findViewById(R.id.email);
         phone = (EditText) findViewById(R.id.phone);
         address = (EditText) findViewById(R.id.address);
+        isPublicCheckbox = (CheckBox) findViewById(R.id.is_public_checkbox);
+        isPublicCheckbox.setChecked(true);
+
+        isPublicContainer = findViewById(R.id.is_public_container);
+        isPublicContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPublicCheckbox.toggle();
+            }
+        });
 
         if (BusinessCardApplication.selectedBusinessCard != null) {
             businessCard = BusinessCardApplication.selectedBusinessCard;
@@ -58,6 +71,12 @@ public class AddEditCardActivity extends ActionBarActivity {
             email.setText(businessCard.getEmail());
             phone.setText(businessCard.getPhone());
             address.setText(businessCard.getAddress());
+
+            if (businessCard.getIsPublic().equals("1")) {
+                isPublicCheckbox.setChecked(true);
+            } else if (businessCard.getIsPublic().equals("0")) {
+                isPublicCheckbox.setChecked(false);
+            }
         }
 
         // get a reference to the "Edit Business Card" button and assign a click listener
@@ -79,6 +98,13 @@ public class AddEditCardActivity extends ActionBarActivity {
                 String emailValue = email.getText().toString().trim();
                 String phoneValue = phone.getText().toString().trim();
                 String addressValue = address.getText().toString().trim();
+                String publicValue;
+
+                if (isPublicCheckbox.isChecked()) {
+                    publicValue = "1";
+                } else {
+                    publicValue = "0";
+                }
 
                 if (titleValue.equals("") || emailValue.equals("") || phoneValue.equals("")) {
                     // fields not completed
@@ -101,6 +127,7 @@ public class AddEditCardActivity extends ActionBarActivity {
                     newBusinessCard.setEmail(emailValue);
                     newBusinessCard.setPhone(phoneValue);
                     newBusinessCard.setAddress(addressValue);
+                    newBusinessCard.setIsPublic(publicValue);
 
                     if (BusinessCardApplication.selectedBusinessCard != null) {
                         RequestEditCard requestEditCard = new RequestEditCard(AddEditCardActivity.this, newBusinessCard);

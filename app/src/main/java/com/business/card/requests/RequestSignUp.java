@@ -47,6 +47,7 @@ public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
             url += "&phone=" + URLEncoder.encode(businessCard.getPhone(), "UTF-8");
             url += "&username=" + URLEncoder.encode(user.getUsername(), "UTF-8");
             url += "&password=" + URLEncoder.encode(user.getPassword(), "UTF-8");
+            url += "&public=" + URLEncoder.encode(businessCard.getIsPublic(), "UTF-8");
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();

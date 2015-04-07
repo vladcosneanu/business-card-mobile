@@ -69,20 +69,6 @@ public class PreferenceHelper {
         return true;
     }
 
-    public static void deletSavedUser(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARD, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(USER_ID);
-        editor.remove(USER_TITLE);
-        editor.remove(USER_FIRST_NAME);
-        editor.remove(USER_LAST_NAME);
-        editor.remove(USER_USERNAME);
-        editor.remove(USER_PASSWORD);
-        editor.commit();
-
-        Toast.makeText(context, context.getString(R.string.logout_successful), Toast.LENGTH_SHORT).show();
-    }
-
     /**
      * Gets the current registration ID for application on GCM service.
      * <p/>
@@ -124,6 +110,13 @@ public class PreferenceHelper {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
+        editor.commit();
+    }
+
+    public static void clearPreferences(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARD, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
         editor.commit();
     }
 }

@@ -31,6 +31,7 @@ import com.business.card.receivers.BootCompletedReceiver;
 import com.business.card.requests.RequestMyCards;
 import com.business.card.requests.RequestSavedCards;
 import com.business.card.receivers.LocationBroadcastReceiver;
+import com.business.card.requests.RequestUpdateGCMId;
 import com.business.card.util.PreferenceHelper;
 import com.business.card.util.Util;
 import com.google.android.gms.common.ConnectionResult;
@@ -54,6 +55,8 @@ public class MainActivity extends ActionBarActivity {
 
     private MenuItem addMenuItem;
     private boolean displayAddMenuItem = false;
+    private MenuItem searchMenuItem;
+    private boolean displaySearchMenuItem = true;
 
     private List<BusinessCard> savedCards;
     private List<BusinessCard> myCards;
@@ -74,18 +77,36 @@ public class MainActivity extends ActionBarActivity {
         public void onPageSelected(int position) {
             currentPage = position;
             if (position == 0) {
+                if (searchMenuItem != null) {
+                    searchMenuItem.setVisible(true);
+                } else {
+                    displaySearchMenuItem = true;
+                }
+
                 if (addMenuItem != null) {
                     addMenuItem.setVisible(false);
                 } else {
                     displayAddMenuItem = false;
                 }
             } else if (position == 1) {
+                if (searchMenuItem != null) {
+                    searchMenuItem.setVisible(false);
+                } else {
+                    displaySearchMenuItem = false;
+                }
+
                 if (addMenuItem != null) {
                     addMenuItem.setVisible(true);
                 } else {
                     displayAddMenuItem = true;
                 }
             } else if (position == 2) {
+                if (searchMenuItem != null) {
+                    searchMenuItem.setVisible(false);
+                } else {
+                    displaySearchMenuItem = false;
+                }
+
                 if (addMenuItem != null) {
                     addMenuItem.setVisible(true);
                 } else {
@@ -123,6 +144,9 @@ public class MainActivity extends ActionBarActivity {
             if (regid.isEmpty()) {
                 RequestGCMRegistration requestGCMRegistration = new RequestGCMRegistration(this, gcm);
                 requestGCMRegistration.execute();
+            } else {
+                RequestUpdateGCMId requestUpdateGCMId = new RequestUpdateGCMId(this, BusinessCardApplication.loggedUser);
+                requestUpdateGCMId.execute(new String[]{});
             }
         } else {
             Log.i("MainActivity", "No valid Google Play Services APK found.");
@@ -161,7 +185,14 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        addMenuItem = menu.getItem(0);
+        searchMenuItem = menu.getItem(0);
+        if (displaySearchMenuItem) {
+            searchMenuItem.setVisible(true);
+        } else {
+            searchMenuItem.setVisible(false);
+        }
+
+        addMenuItem = menu.getItem(1);
         if (displayAddMenuItem) {
             addMenuItem.setVisible(true);
         } else {
@@ -175,6 +206,9 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.action_search:
+
+                break;
             case R.id.action_add:
                 if (currentPage == 1) {
                     // Clear any Business Card selected
@@ -186,7 +220,9 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case R.id.action_logout:
                 // remove the previously saved user
-                PreferenceHelper.deletSavedUser(this);
+                PreferenceHelper.clearPreferences(this);
+
+                Toast.makeText(this, R.string.logout_successful, Toast.LENGTH_SHORT).show();
 
                 // start the initial activity, clearing any other activities previously opened
                 Intent intent = new Intent(this, NotLoggedActivity.class);
@@ -267,6 +303,23 @@ public class MainActivity extends ActionBarActivity {
 
     public void onGCMRegistrationComplete(String msg) {
         Log.d("MainActivity", "msg: " + msg);
+        RequestUpdateGCMId requestUpdateGCMId = new RequestUpdateGCMId(this, BusinessCardApplication.loggedUser);
+        requestUpdateGCMId.execute(new String[]{});
+    }
+
+    /**
+     * The GCM device registration server update request finished
+     */
+    public void onGCMRegistrationIdSent(JSONObject json) {
+        try {
+            String success = json.getString("success");
+            if (success.equals("true")) {
+                // location updated
+                Log.d(getClass().getSimpleName(), "Device GCM registration id sent to server");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
