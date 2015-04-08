@@ -26,8 +26,8 @@ public class BusinessCard {
                 businessCard.setFirstName(json.getString("firstName"));
             }
 
-            if (json.has("lastname")) {
-                businessCard.setLastName(json.getString("lastname"));
+            if (json.has("lastName")) {
+                businessCard.setLastName(json.getString("lastName"));
             }
 
             businessCard.setUserId(json.getString("userId"));
