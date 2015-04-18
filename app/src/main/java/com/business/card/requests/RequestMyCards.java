@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.business.card.activities.MainActivity;
-import com.business.card.objects.BusinessCard;
 import com.business.card.objects.User;
 
 import org.apache.http.HttpResponse;
@@ -23,7 +22,6 @@ public class RequestMyCards extends AsyncTask<String, Integer, JSONArray> {
     private boolean done = false;
     private MainActivity activity;
     private User user;
-    private BusinessCard businessCard;
 
     public RequestMyCards(MainActivity activity, User user) {
         this.activity = activity;

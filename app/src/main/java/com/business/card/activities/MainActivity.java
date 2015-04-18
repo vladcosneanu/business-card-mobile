@@ -1,14 +1,8 @@
 package com.business.card.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.location.LocationProvider;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,16 +20,14 @@ import com.business.card.fragments.ConferencesFragment;
 import com.business.card.fragments.MyCardsFragment;
 import com.business.card.fragments.SavedCardsFragment;
 import com.business.card.objects.BusinessCard;
-import com.business.card.requests.RequestGCMRegistration;
 import com.business.card.receivers.BootCompletedReceiver;
+import com.business.card.receivers.LocationBroadcastReceiver;
+import com.business.card.requests.RequestGCMRegistration;
 import com.business.card.requests.RequestMyCards;
 import com.business.card.requests.RequestSavedCards;
-import com.business.card.receivers.LocationBroadcastReceiver;
 import com.business.card.requests.RequestUpdateGCMId;
 import com.business.card.util.PreferenceHelper;
 import com.business.card.util.Util;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
@@ -44,7 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -207,15 +198,19 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_search:
-
+                // start searching for nearby public cards
+                Intent nearbyIntent = new Intent(this, NearbyCardsActivity.class);
+                startActivity(nearbyIntent);
                 break;
             case R.id.action_add:
                 if (currentPage == 1) {
                     // Clear any Business Card selected
                     BusinessCardApplication.selectedBusinessCard = null;
                     // start the edit card activity
-                    Intent intent = new Intent(this, AddEditCardActivity.class);
-                    this.startActivity(intent);
+                    Intent addEditCardIntent = new Intent(this, AddEditCardActivity.class);
+                    startActivity(addEditCardIntent);
+                } else if (currentPage == 2) {
+                    // adda a Conference
                 }
                 break;
             case R.id.action_logout:

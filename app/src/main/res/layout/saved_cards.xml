@@ -6,6 +6,10 @@
         android:id="@+id/saved_cards_listview"
         android:layout_width="match_parent"
         android:visibility="gone"
+        android:divider="@null"
+        android:dividerHeight="0px"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_height="match_parent"></ListView>
 
     <ProgressBar
@@ -20,6 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        android:text="@string/no_cards"/>
+        android:text="@string/no_cards" />
 
 </RelativeLayout>

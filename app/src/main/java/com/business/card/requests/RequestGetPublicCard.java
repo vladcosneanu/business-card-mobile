@@ -3,8 +3,10 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.business.card.activities.MainActivity;
-import com.business.card.objects.User;
+import com.business.card.BusinessCardApplication;
+import com.business.card.activities.AddEditCardActivity;
+import com.business.card.activities.NearbyCardsActivity;
+import com.business.card.objects.BusinessCard;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -12,30 +14,32 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 
-public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
+public class RequestGetPublicCard extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
-    private MainActivity activity;
-    private User user;
+    private NearbyCardsActivity activity;
+    private BusinessCard businessCard;
 
-    public RequestSavedCards(MainActivity activity, User user) {
+    public RequestGetPublicCard(NearbyCardsActivity activity, BusinessCard businessCard) {
         this.activity = activity;
-        this.user = user;
+        this.businessCard = businessCard;
     }
 
     @Override
-    protected JSONArray doInBackground(String... params) {
+    protected JSONObject doInBackground(String... params) {
         byte[] result = null;
-        JSONArray json = null;
+        JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/get/saved_cards.php";
-            url += "?user_id=" + user.getId();
+            String url = "http://businesscard.netne.net/api/add/public_card.php";
+            url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
+            url += "&card_id=" + businessCard.getId();
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -47,7 +51,7 @@ public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
                 result = EntityUtils.toByteArray(response.getEntity());
                 publishProgress(result.length);
                 String str = new String(result, "UTF-8");
-                json = new JSONArray(str);
+                json = new JSONObject(str);
             }
 
             if (json != null) {
@@ -68,11 +72,11 @@ public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
     }
 
     @Override
-    protected void onPostExecute(JSONArray json) {
+    protected void onPostExecute(JSONObject json) {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onSavedCardsRequestFinished(json);
+            activity.onGetPublicCardRequestFinished(json);
         }
     }
 }

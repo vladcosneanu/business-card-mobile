@@ -167,11 +167,11 @@ public class AddEditCardActivity extends ActionBarActivity {
             String success = json.getString("success");
             if (success.equals("true")) {
                 // card edited
-                Toast.makeText(AddEditCardActivity.this, getString(R.string.card_edit_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.card_edit_success), Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 // card not edited
-                Toast.makeText(AddEditCardActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -185,11 +185,11 @@ public class AddEditCardActivity extends ActionBarActivity {
             String success = json.getString("success");
             if (success.equals("true")) {
                 // card edited
-                Toast.makeText(AddEditCardActivity.this, getString(R.string.card_add_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.card_add_success), Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 // card not edited
-                Toast.makeText(AddEditCardActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();

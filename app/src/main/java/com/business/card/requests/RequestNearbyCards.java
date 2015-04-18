@@ -3,7 +3,8 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.business.card.activities.MainActivity;
+import com.business.card.activities.NearbyCardsActivity;
+import com.business.card.objects.Coordinate;
 import com.business.card.objects.User;
 
 import org.apache.http.HttpResponse;
@@ -17,15 +18,19 @@ import org.json.JSONArray;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
+public class RequestNearbyCards extends AsyncTask<String, Integer, JSONArray> {
 
     private boolean done = false;
-    private MainActivity activity;
+    private NearbyCardsActivity activity;
     private User user;
+    private Coordinate coordinate;
+    private int distance;
 
-    public RequestSavedCards(MainActivity activity, User user) {
+    public RequestNearbyCards(NearbyCardsActivity activity, User user, Coordinate coordinate, int distance) {
         this.activity = activity;
         this.user = user;
+        this.coordinate = coordinate;
+        this.distance = distance;
     }
 
     @Override
@@ -34,8 +39,11 @@ public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
         JSONArray json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/get/saved_cards.php";
+            String url = "http://businesscard.netne.net/api/get/nearby_cards.php";
             url += "?user_id=" + user.getId();
+            url += "&distance=" + distance;
+            url += "&lat=" + coordinate.getLatitude();
+            url += "&lng=" + coordinate.getLongitude();
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -72,7 +80,7 @@ public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onSavedCardsRequestFinished(json);
+            activity.onNearbyCardsRequestFinished(json);
         }
     }
 }

@@ -87,6 +87,11 @@
             android:label="@string/edit_business_card"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"></activity>
+        <activity
+            android:name=".activities.NearbyCardsActivity"
+            android:label="@string/nearby_cards"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"></activity>
 
         <receiver
             android:name=".receivers.GcmBroadcastReceiver"

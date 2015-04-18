@@ -39,6 +39,7 @@
     <string name="my_cards">My Cards</string>
     <string name="conferences">Conferences</string>
     <string name="no_cards">No Cards available</string>
+    <string name="no_nearby_cards">No nearby Cards found</string>
     <string name="add_business_card">Add Business Card</string>
     <string name="edit_business_card">Edit Business Card</string>
     <string name="card_edit_success">You have successfully updated your business card.</string>
@@ -54,5 +55,9 @@
     <string name="no">No</string>
     <string name="choose_action_for_card">Choose an Action for this Card</string>
     <string name="public_text">Public</string>
+    <string name="nearby_cards">Nearby Cards</string>
+    <string name="distance_meters">%1$sm</string>
+    <string name="get_card">Get Card</string>
+    <string name="public_card_received">%1$s %2$s\'s %3$s Card was added to your Saved Cards</string>
 
 </resources>

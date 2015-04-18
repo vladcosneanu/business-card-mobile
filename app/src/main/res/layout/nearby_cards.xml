@@ -3,7 +3,7 @@
     android:layout_height="fill_parent">
 
     <ListView
-        android:id="@+id/my_cards_listview"
+        android:id="@+id/nearby_cards_listview"
         android:layout_width="match_parent"
         android:visibility="gone"
         android:divider="@null"
@@ -24,6 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        android:text="@string/no_cards" />
+        android:text="@string/no_nearby_cards" />
 
 </RelativeLayout>
