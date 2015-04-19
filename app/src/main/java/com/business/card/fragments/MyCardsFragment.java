@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.business.card.activities.MainActivity;
 import com.business.card.adapters.MyBusinessCardAdapter;
 import com.business.card.objects.BusinessCard;
 import com.business.card.requests.RequestDeleteMyCard;
+import com.business.card.util.Util;
 
 import java.util.List;
 
@@ -82,19 +84,19 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
         menu.setHeaderTitle(getString(R.string.choose_action_for_card));
 
         // add context menu items - second parameter is the itemId
-        menu.add(0, 0, 0, getString(R.string.share));
-        menu.add(0, 1, 0, getString(R.string.edit));
-        menu.add(0, 2, 0, getString(R.string.delete));
+        menu.add(0, Util.CONTEXT_MENU_ITEM_MY_CARDS_SHARE, 0, getString(R.string.share));
+        menu.add(0, Util.CONTEXT_MENU_ITEM_MY_CARDS_EDIT, 0, getString(R.string.edit));
+        menu.add(0, Util.CONTEXT_MENU_ITEM_MY_CARDS_DELETE, 0, getString(R.string.delete));
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case 0:
+            case Util.CONTEXT_MENU_ITEM_MY_CARDS_SHARE:
                 // selected Share
 
                 break;
-            case 1:
+            case Util.CONTEXT_MENU_ITEM_MY_CARDS_EDIT:
                 // selected Edit
                 BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
 
@@ -102,7 +104,7 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
                 Intent intent = new Intent(getActivity(), AddEditCardActivity.class);
                 startActivity(intent);
                 break;
-            case 2:
+            case Util.CONTEXT_MENU_ITEM_MY_CARDS_DELETE:
                 // selected Delete
                 displayConfirmDeleteDialog(selectedBusinessCard);
                 break;
@@ -110,7 +112,7 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
                 break;
         }
 
-        return true;
+        return super.onContextItemSelected(item);
     }
 
     private void displayConfirmDeleteDialog(final BusinessCard businessCard) {

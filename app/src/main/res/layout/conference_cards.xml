@@ -3,7 +3,7 @@
     android:layout_height="fill_parent">
 
     <ListView
-        android:id="@+id/conferences_listview"
+        android:id="@+id/conference_cards_listview"
         android:layout_width="match_parent"
         android:visibility="gone"
         android:divider="@null"
@@ -19,11 +19,11 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/no_conferences_available"
+        android:id="@+id/no_cards_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        android:text="@string/no_conferences" />
+        android:text="@string/no_conference_cards" />
 
 </RelativeLayout>

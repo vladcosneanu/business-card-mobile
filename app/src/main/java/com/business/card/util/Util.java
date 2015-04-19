@@ -18,6 +18,14 @@ import java.util.regex.Pattern;
 
 public class Util {
 
+    public static final int CONTEXT_MENU_ITEM_MY_CARDS_SHARE = 0;
+    public static final int CONTEXT_MENU_ITEM_MY_CARDS_EDIT = 1;
+    public static final int CONTEXT_MENU_ITEM_MY_CARDS_DELETE = 2;
+
+    public static final int CONTEXT_MENU_ITEM_CONFERENCES_DELETE = 3;
+
+    public static final int CONTEXT_MENU_ITEM_SAVED_CARDS_DELETE = 4;
+
     public static final String SENDER_ID = "384500724074";
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;

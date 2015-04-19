@@ -46,11 +46,13 @@
     <string name="unknown_error">An unknown error has occurred. Please try again.</string>
     <string name="card_add_success">You have successfully added your business card.</string>
     <string name="card_delete_success">You have successfully deleted your business card.</string>
+    <string name="saved_card_delete_success">You have successfully deleted the business card.</string>
     <string name="delete">Delete</string>
     <string name="delete_card">Delete Card</string>
     <string name="share">Share</string>
     <string name="edit">Edit</string>
     <string name="delete_card_message">Are you sure you wish to delete this business card?\n\nTitle: %1$s\nEmail: %2$s\nPhone: %3$s\nAddress: %4$s</string>
+    <string name="delete_conference_message">Are you sure you wish to delete this conference?\n\n%1$s\n%2$s</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="choose_action_for_card">Choose an Action for this Card</string>
@@ -59,5 +61,11 @@
     <string name="distance_meters">%1$sm</string>
     <string name="get_card">Get Card</string>
     <string name="public_card_received">%1$s %2$s\'s %3$s Card was added to your Saved Cards</string>
+    <string name="no_conferences">No Conferences available</string>
+    <string name="choose_action_for_conference">Choose an Action for this Conference</string>
+    <string name="delete_conference">Delete Conference</string>
+    <string name="no_conference_cards">No Cards found for this Conference</string>
+    <string name="conference_cards">Conference Cards</string>
+    <string name="save_card">Save Card</string>
 
 </resources>

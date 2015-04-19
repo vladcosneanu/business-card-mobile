@@ -44,6 +44,7 @@ public class BusinessCard {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return businessCard;
     }
 

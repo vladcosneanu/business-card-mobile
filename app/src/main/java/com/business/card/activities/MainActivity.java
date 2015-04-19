@@ -20,10 +20,12 @@ import com.business.card.fragments.ConferencesFragment;
 import com.business.card.fragments.MyCardsFragment;
 import com.business.card.fragments.SavedCardsFragment;
 import com.business.card.objects.BusinessCard;
+import com.business.card.objects.Conference;
 import com.business.card.receivers.BootCompletedReceiver;
 import com.business.card.receivers.LocationBroadcastReceiver;
 import com.business.card.requests.RequestGCMRegistration;
 import com.business.card.requests.RequestMyCards;
+import com.business.card.requests.RequestMyConferences;
 import com.business.card.requests.RequestSavedCards;
 import com.business.card.requests.RequestUpdateGCMId;
 import com.business.card.util.PreferenceHelper;
@@ -51,6 +53,7 @@ public class MainActivity extends ActionBarActivity {
 
     private List<BusinessCard> savedCards;
     private List<BusinessCard> myCards;
+    private List<Conference> myConferences;
 
     private int currentPage;
     private ProgressDialog progressDialog;
@@ -155,6 +158,9 @@ public class MainActivity extends ActionBarActivity {
         RequestMyCards requestMyCards = new RequestMyCards(this, BusinessCardApplication.loggedUser);
         requestMyCards.execute(new String[]{});
 
+        RequestMyConferences requestMyConferences = new RequestMyConferences(this, BusinessCardApplication.loggedUser);
+        requestMyConferences.execute(new String[]{});
+
         final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
         lftBroadcastReceiver = new LocationBroadcastReceiver();
         registerReceiver(lftBroadcastReceiver, lftIntentFilter);
@@ -258,6 +264,10 @@ public class MainActivity extends ActionBarActivity {
         return myCards;
     }
 
+    public List<Conference> getConferences() {
+        return myConferences;
+    }
+
     /**
      * Finished request for Saved Cards
      */
@@ -296,6 +306,25 @@ public class MainActivity extends ActionBarActivity {
         ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(businessCards);
     }
 
+    /**
+     * Finished request for Conferences
+     */
+    public void onMyConferencesRequestFinished(JSONArray j) {
+        myConferences = new ArrayList<Conference>();
+        List<Conference> conferences = new ArrayList<Conference>();
+        for (int i = 0; i < j.length(); i++) {
+            try {
+                Conference conference = Conference.parseConferenceFromJson(j.getJSONObject(i));
+                conferences.add(conference);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        myConferences = conferences;
+        ((ConferencesFragment) pagerAdapter.getItem(2)).setMyConferences(myConferences);
+    }
+
     public void onGCMRegistrationComplete(String msg) {
         Log.d("MainActivity", "msg: " + msg);
         RequestUpdateGCMId requestUpdateGCMId = new RequestUpdateGCMId(this, BusinessCardApplication.loggedUser);
@@ -329,6 +358,28 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(this, getString(R.string.card_delete_success), Toast.LENGTH_SHORT).show();
 
                 ((MyCardsFragment) pagerAdapter.getItem(1)).removeSelectedBusinessCard();
+            } else {
+                // card not deleted
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Finished request for Saved Card Delete
+     */
+    public void onSavedCardDeleteRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            String success = json.getString("success");
+            if (success.equals("true")) {
+                // card deleted
+                Toast.makeText(this, getString(R.string.saved_card_delete_success), Toast.LENGTH_SHORT).show();
+
+                ((SavedCardsFragment) pagerAdapter.getItem(0)).removeSelectedBusinessCard();
             } else {
                 // card not deleted
                 Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
