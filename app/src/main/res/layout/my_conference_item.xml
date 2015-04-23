@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardBackgroundColor="@color/purple_card"
+        card_view:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="18sp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:text="Conference 1" />
 
                 <TextView
@@ -42,7 +43,7 @@
                     android:layout_weight="1"
                     android:textSize="16sp"
                     android:gravity="right"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/lighter_gray"
                     android:text="2015-01-11" />
             </LinearLayout>
 
@@ -51,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/lighter_gray"
                 android:text="New York" />
 
         </LinearLayout>

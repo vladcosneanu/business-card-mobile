@@ -144,7 +144,7 @@ public class AddEditCardActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
+        getMenuInflater().inflate(R.menu.menu_nearby, menu);
         return true;
     }
 
@@ -154,6 +154,12 @@ public class AddEditCardActivity extends ActionBarActivity {
             case android.R.id.home:
                 // the top left back button was clicked
                 finish();
+                break;
+            case R.id.action_logout:
+                Util.displayConfirmLogoutDialog(this);
+
+                return true;
+            default:
                 break;
         }
 

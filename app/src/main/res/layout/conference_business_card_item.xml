@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardBackgroundColor="@color/orange_card"
+        card_view:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,8 +33,9 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:textSize="18sp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/white"
                     android:text="John Doe" />
 
 
@@ -42,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/lighter_gray"
                     android:text="Carpenter" />
 
                 <TextView
@@ -50,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/lighter_gray"
                     android:text="test@email.com" />
 
                 <TextView
@@ -58,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/lighter_gray"
                     android:text="1234567890" />
 
                 <TextView
@@ -66,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/lighter_gray"
                     android:text="Address " />
             </LinearLayout>
 

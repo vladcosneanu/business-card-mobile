@@ -1,6 +1,8 @@
 package com.business.card.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -20,6 +22,7 @@ import com.business.card.objects.Conference;
 import com.business.card.requests.RequestConferenceCards;
 import com.business.card.requests.RequestSaveConferenceCard;
 import com.business.card.util.PreferenceHelper;
+import com.business.card.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,15 +91,7 @@ public class ConferenceCardsActivity extends ActionBarActivity {
                 finish();
                 break;
             case R.id.action_logout:
-                // remove the previously saved user
-                PreferenceHelper.clearPreferences(this);
-
-                Toast.makeText(this, R.string.logout_successful, Toast.LENGTH_SHORT).show();
-
-                // start the initial activity, clearing any other activities previously opened
-                Intent intent = new Intent(this, NotLoggedActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                Util.displayConfirmLogoutDialog(this);
 
                 return true;
             default:

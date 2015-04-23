@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="actionbat_background">#FF28416D</color>
+    <color name="lighter_gray">#FFDDDDDD</color>
+    <color name="yellow_card">#FFBAA345</color>
+    <color name="purple_card">#FF322D77</color>
+    <color name="red_card">#FF800000</color>
+    <color name="green_card">#FF446600</color>
+    <color name="orange_card">#FFB35F00</color>
+    
+</resources>

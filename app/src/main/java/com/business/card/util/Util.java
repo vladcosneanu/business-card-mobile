@@ -1,13 +1,19 @@
 package com.business.card.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.business.card.R;
+import com.business.card.activities.NotLoggedActivity;
 import com.business.card.objects.Coordinate;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -104,5 +110,30 @@ public class Util {
             return false;
         }
         return true;
+    }
+
+    public static void displayConfirmLogoutDialog(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.action_logout);
+        builder.setMessage(R.string.logout_message);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked "Yes" button, delete the selected business card
+                // remove the previously saved user
+                PreferenceHelper.clearPreferences(activity);
+
+                Toast.makeText(activity, R.string.logout_successful, Toast.LENGTH_SHORT).show();
+
+                // start the initial activity, clearing any other activities previously opened
+                Intent intent = new Intent(activity, NotLoggedActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                activity.startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton(R.string.no, null);
+
+        builder.show();
     }
 }

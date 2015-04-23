@@ -91,10 +91,6 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         BusinessCard businessCard = adapter.getItem(position);
         BusinessCardApplication.selectedBusinessCard = businessCard;
-
-        // start the edit card activity
-        Intent intent = new Intent(getActivity(), AddEditCardActivity.class);
-        startActivity(intent);
     }
 
     @Override

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_gravity="top"
+        android:textColor="@color/actionbat_background"
         android:paddingBottom="4dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

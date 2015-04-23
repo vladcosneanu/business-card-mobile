@@ -89,15 +89,7 @@ public class NearbyCardsActivity extends ActionBarActivity {
                 finish();
                 break;
             case R.id.action_logout:
-                // remove the previously saved user
-                PreferenceHelper.clearPreferences(this);
-
-                Toast.makeText(this, R.string.logout_successful, Toast.LENGTH_SHORT).show();
-
-                // start the initial activity, clearing any other activities previously opened
-                Intent intent = new Intent(this, NotLoggedActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                Util.displayConfirmLogoutDialog(this);
 
                 return true;
             default:
@@ -158,16 +150,10 @@ public class NearbyCardsActivity extends ActionBarActivity {
                         selectedCard.getFirstName(), selectedCard.getLastName(),
                         selectedCard.getTitle()), Toast.LENGTH_SHORT).show();
 
-                RequestNearbyCards requestNearbyCards = new RequestNearbyCards(this, BusinessCardApplication.loggedUser, Util
-                        .getLocation(), 1000);
-                requestNearbyCards.execute(new String[]{});
-
                 nearbyCards.remove(selectedCard);
                 if (nearbyCards.size() > 0) {
                     nearbyCardsListView.setVisibility(View.VISIBLE);
                     noCardsAvailable.setVisibility(View.GONE);
-                    adapter = new NearbyBusinessCardAdapter(this, nearbyCards);
-                    nearbyCardsListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 } else {
                     nearbyCardsListView.setVisibility(View.GONE);

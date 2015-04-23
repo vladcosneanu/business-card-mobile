@@ -67,5 +67,6 @@
     <string name="no_conference_cards">No Cards found for this Conference</string>
     <string name="conference_cards">Conference Cards</string>
     <string name="save_card">Save Card</string>
+    <string name="logout_message">Are you sure you wish to logout?</string>
 
 </resources>
