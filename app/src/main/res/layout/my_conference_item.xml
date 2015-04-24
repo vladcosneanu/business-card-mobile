@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        card_view:cardBackgroundColor="@color/purple_card"
+        card_view:cardBackgroundColor="@color/actionbat_background"
         card_view:cardCornerRadius="10dp">
 
         <LinearLayout

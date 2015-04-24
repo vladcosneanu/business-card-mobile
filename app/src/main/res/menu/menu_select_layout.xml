@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_accept"
+        android:title="@string/action_search"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_accept" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="200"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="300"
+        app:showAsAction="never"
+        android:title="@string/action_logout" />
+</menu>

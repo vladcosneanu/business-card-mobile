@@ -2,6 +2,7 @@ package com.business.card.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.business.card.BusinessCardApplication;
 import com.business.card.R;
 import com.business.card.activities.AddEditCardActivity;
 import com.business.card.objects.BusinessCard;
+import com.business.card.util.Util;
 
 import java.util.List;
 
@@ -49,6 +51,7 @@ public class MyBusinessCardAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.my_business_card_item, parent, false);
             ViewHolder viewHolder = new ViewHolder();
 
+            viewHolder.cardView = (CardView) rowView.findViewById(R.id.card_view);
             viewHolder.title = (TextView) rowView.findViewById(R.id.title);
             viewHolder.phone = (TextView) rowView.findViewById(R.id.phone);
             viewHolder.email = (TextView) rowView.findViewById(R.id.email);
@@ -58,6 +61,9 @@ public class MyBusinessCardAdapter extends BaseAdapter {
         }
 
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
+
+        viewHolder.cardView.setCardBackgroundColor(context.getResources()
+                .getColor(Util.getColorByCardLayoutNo(Integer.parseInt(businessCard.getLayout()))));
 
         viewHolder.title.setText(businessCard.getTitle());
         viewHolder.phone.setText(businessCard.getPhone());
@@ -84,5 +90,6 @@ public class MyBusinessCardAdapter extends BaseAdapter {
         private TextView phone;
         private TextView email;
         private TextView address;
+        private CardView cardView;
     }
 }

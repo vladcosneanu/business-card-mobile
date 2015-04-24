@@ -70,7 +70,7 @@ public class NearbyCardsActivity extends ActionBarActivity {
         Util.updateCoordinate(latestInfo);
 
         RequestNearbyCards requestNearbyCards = new RequestNearbyCards(this, BusinessCardApplication.loggedUser, Util
-                .getLocation(), 1000);
+                .getLocation(), 10000);
         requestNearbyCards.execute(new String[]{});
     }
 

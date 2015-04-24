@@ -1,6 +1,7 @@
 package com.business.card.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.business.card.R;
 import com.business.card.activities.ConferenceCardsActivity;
 import com.business.card.objects.BusinessCard;
+import com.business.card.util.Util;
 
 import java.util.List;
 
@@ -48,6 +50,7 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.conference_business_card_item, parent, false);
             ViewHolder viewHolder = new ViewHolder();
 
+            viewHolder.cardView = (CardView) rowView.findViewById(R.id.card_view);
             viewHolder.name = (TextView) rowView.findViewById(R.id.name);
             viewHolder.title = (TextView) rowView.findViewById(R.id.title);
             viewHolder.email = (TextView) rowView.findViewById(R.id.email);
@@ -59,6 +62,9 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
         }
 
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
+
+        viewHolder.cardView.setCardBackgroundColor(activity.getResources()
+                .getColor(Util.getColorByCardLayoutNo(Integer.parseInt(businessCard.getLayout()))));
 
         viewHolder.title.setText(businessCard.getTitle());
         viewHolder.name.setText(businessCard.getFirstName() + " " + businessCard.getLastName());
@@ -96,5 +102,6 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
         private TextView phone;
         private TextView address;
         private Button saveCardButton;
+        private CardView cardView;
     }
 }

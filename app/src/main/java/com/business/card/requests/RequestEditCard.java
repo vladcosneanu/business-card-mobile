@@ -43,6 +43,7 @@ public class RequestEditCard extends AsyncTask<String, Integer, JSONObject> {
             url += "&phone=" + URLEncoder.encode(businessCard.getPhone(), "UTF-8");
             url += "&address=" + URLEncoder.encode(businessCard.getAddress(), "UTF-8");
             url += "&public=" + URLEncoder.encode(businessCard.getIsPublic(), "UTF-8");
+            url += "&layout=" + URLEncoder.encode(businessCard.getLayout(), "UTF-8");
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();

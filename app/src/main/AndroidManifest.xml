@@ -97,6 +97,9 @@
             android:label="@string/conference_cards"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"></activity>
+        <activity
+            android:name=".activities.SelectLayoutActivity"
+            android:label="@string/select_card_layout"></activity>
 
         <receiver
             android:name=".receivers.GcmBroadcastReceiver"

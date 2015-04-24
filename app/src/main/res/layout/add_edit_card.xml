@@ -77,12 +77,42 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dip"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:text="@string/card_layout"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:id="@+id/layout_color"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/actionbat_background"/>
+
+            <Button
+                android:id="@+id/change_layout"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/change" />
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/add_edit_card_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:text="@string/edit_business_card" />
     </LinearLayout>
 

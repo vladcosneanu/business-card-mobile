@@ -136,4 +136,42 @@ public class Util {
 
         builder.show();
     }
+
+    public static int getColorByCardLayoutNo(int layoutNo) {
+        switch (layoutNo) {
+            case 1:
+                return R.color.actionbat_background;
+            case 2:
+                return R.color.red_card;
+            case 3:
+                return R.color.orange_card;
+            case 4:
+                return R.color.green_card;
+            case 5:
+                return R.color.purple_card;
+            case 6:
+                return R.color.yellow_card;
+            default:
+                return R.color.actionbat_background;
+        }
+    }
+
+    public static int getLayoutByCardLayoutNo(int layoutNo) {
+        switch (layoutNo) {
+            case 1:
+                return R.layout.card_layout_1;
+            case 2:
+                return R.layout.card_layout_2;
+            case 3:
+                return R.layout.card_layout_3;
+            case 4:
+                return R.layout.card_layout_4;
+            case 5:
+                return R.layout.card_layout_5;
+            case 6:
+                return R.layout.card_layout_6;
+            default:
+                return R.layout.card_layout_1;
+        }
+    }
 }

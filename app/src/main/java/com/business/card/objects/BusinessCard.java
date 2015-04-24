@@ -15,6 +15,7 @@ public class BusinessCard {
     private String lastName;
     private String isPublic;
     private int distance;
+    private String layout;
 
     public static BusinessCard parseBusinessCardFromJson(JSONObject json) {
         BusinessCard businessCard = new BusinessCard();
@@ -40,6 +41,10 @@ public class BusinessCard {
 
             if (json.has("distance") && !json.isNull("distance")) {
                 businessCard.setDistance((int) Math.round(json.getDouble("distance")));
+            }
+
+            if (json.has("layout")) {
+                businessCard.setLayout(String.valueOf(json.getInt("layout")));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -126,5 +131,13 @@ public class BusinessCard {
 
     public void setDistance(int distance) {
         this.distance = distance;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 }

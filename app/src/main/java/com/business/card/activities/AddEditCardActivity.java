@@ -1,6 +1,7 @@
 package com.business.card.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -23,6 +24,9 @@ import org.json.JSONObject;
 
 public class AddEditCardActivity extends ActionBarActivity {
 
+    static final int SELECT_LAYOUT_REQUEST = 1;
+    static final String LAYOUT_EXTRA_KEY = "layout";
+
     private BusinessCard businessCard;
 
     private EditText title;
@@ -33,6 +37,10 @@ public class AddEditCardActivity extends ActionBarActivity {
     private View isPublicContainer;
     private Button addEditCardButton;
     private ProgressDialog progressDialog;
+    private View layoutColor;
+    private Button changeLayoutButton;
+
+    private String selectedLayout = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,7 @@ public class AddEditCardActivity extends ActionBarActivity {
         email = (EditText) findViewById(R.id.email);
         phone = (EditText) findViewById(R.id.phone);
         address = (EditText) findViewById(R.id.address);
+        layoutColor = findViewById(R.id.layout_color);
         isPublicCheckbox = (CheckBox) findViewById(R.id.is_public_checkbox);
         isPublicCheckbox.setChecked(true);
 
@@ -63,6 +72,8 @@ public class AddEditCardActivity extends ActionBarActivity {
             }
         });
 
+        selectedLayout = "1";
+
         if (BusinessCardApplication.selectedBusinessCard != null) {
             businessCard = BusinessCardApplication.selectedBusinessCard;
 
@@ -71,6 +82,10 @@ public class AddEditCardActivity extends ActionBarActivity {
             email.setText(businessCard.getEmail());
             phone.setText(businessCard.getPhone());
             address.setText(businessCard.getAddress());
+
+            // set the background color for the layout preview rectangle
+            selectedLayout = businessCard.getLayout();
+            layoutColor.setBackgroundColor(getResources().getColor(Util.getColorByCardLayoutNo(Integer.parseInt(selectedLayout))));
 
             if (businessCard.getIsPublic().equals("1")) {
                 isPublicCheckbox.setChecked(true);
@@ -128,6 +143,7 @@ public class AddEditCardActivity extends ActionBarActivity {
                     newBusinessCard.setPhone(phoneValue);
                     newBusinessCard.setAddress(addressValue);
                     newBusinessCard.setIsPublic(publicValue);
+                    newBusinessCard.setLayout(selectedLayout);
 
                     if (BusinessCardApplication.selectedBusinessCard != null) {
                         RequestEditCard requestEditCard = new RequestEditCard(AddEditCardActivity.this, newBusinessCard);
@@ -137,6 +153,17 @@ public class AddEditCardActivity extends ActionBarActivity {
                         requestAddCard.execute(new String[]{});
                     }
                 }
+            }
+        });
+
+        changeLayoutButton = (Button) findViewById(R.id.change_layout);
+        changeLayoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // start the card layout selection activity
+                Intent intent = new Intent(AddEditCardActivity.this, SelectLayoutActivity.class);
+                intent.putExtra(LAYOUT_EXTRA_KEY, selectedLayout);
+                startActivityForResult(intent, SELECT_LAYOUT_REQUEST);
             }
         });
     }
@@ -199,6 +226,15 @@ public class AddEditCardActivity extends ActionBarActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_LAYOUT_REQUEST) {
+            if(resultCode == RESULT_OK){
+                selectedLayout = data.getStringExtra(LAYOUT_EXTRA_KEY);
+                layoutColor.setBackgroundColor(getResources().getColor(Util.getColorByCardLayoutNo(Integer.parseInt(selectedLayout))));
+            }
         }
     }
 }
