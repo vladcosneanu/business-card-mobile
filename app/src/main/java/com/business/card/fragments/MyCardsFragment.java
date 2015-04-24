@@ -20,6 +20,7 @@ import com.business.card.BusinessCardApplication;
 import com.business.card.R;
 import com.business.card.activities.AddEditCardActivity;
 import com.business.card.activities.MainActivity;
+import com.business.card.activities.ViewCardActivity;
 import com.business.card.adapters.MyBusinessCardAdapter;
 import com.business.card.objects.BusinessCard;
 import com.business.card.requests.RequestDeleteMyCard;
@@ -71,8 +72,9 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
         BusinessCard businessCard = adapter.getItem(position);
         BusinessCardApplication.selectedBusinessCard = businessCard;
 
-        // start the edit card activity
-        Intent intent = new Intent(getActivity(), AddEditCardActivity.class);
+        // start the view card activity
+        Intent intent = new Intent(getActivity(), ViewCardActivity.class);
+        intent.putExtra(ViewCardActivity.DISPLAY_EDIT_EXTRA_KEY, true);
         startActivity(intent);
     }
 

@@ -24,8 +24,8 @@ import org.json.JSONObject;
 
 public class AddEditCardActivity extends ActionBarActivity {
 
-    static final int SELECT_LAYOUT_REQUEST = 1;
-    static final String LAYOUT_EXTRA_KEY = "layout";
+    public static final int SELECT_LAYOUT_REQUEST = 1;
+    public static final String LAYOUT_EXTRA_KEY = "layout";
 
     private BusinessCard businessCard;
 
@@ -201,6 +201,9 @@ public class AddEditCardActivity extends ActionBarActivity {
             if (success.equals("true")) {
                 // card edited
                 Toast.makeText(this, getString(R.string.card_edit_success), Toast.LENGTH_SHORT).show();
+
+                BusinessCardApplication.selectedBusinessCard.setLayout(selectedLayout);
+
                 finish();
             } else {
                 // card not edited

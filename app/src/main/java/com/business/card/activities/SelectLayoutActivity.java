@@ -33,34 +33,8 @@ public class SelectLayoutActivity extends ActionBarActivity {
 
             getSupportActionBar().setSubtitle(getString(R.string.x_of_y, (currentPage + 1), pagerAdapter.getCount()));
 
-            switch (position) {
-                case 0:
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
-                            .getColor(R.color.actionbat_background)));
-                    break;
-                case 1:
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
-                            .getColor(R.color.red_card)));
-                    break;
-                case 2:
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
-                            .getColor(R.color.orange_card)));
-                    break;
-                case 3:
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
-                            .getColor(R.color.green_card)));
-                    break;
-                case 4:
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
-                            .getColor(R.color.purple_card)));
-                    break;
-                case 5:
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
-                            .getColor(R.color.yellow_card)));
-                    break;
-                default:
-                    break;
-            }
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
+                    .getColor(Util.getColorByCardLayoutNo(currentPage + 1))));
 
 //            getSupportActionBar().setDisplayShowTitleEnabled(false);
 //            getSupportActionBar().setDisplayShowTitleEnabled(true);

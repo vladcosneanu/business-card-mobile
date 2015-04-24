@@ -100,6 +100,9 @@
         <activity
             android:name=".activities.SelectLayoutActivity"
             android:label="@string/select_card_layout"></activity>
+        <activity
+            android:name=".activities.ViewCardActivity"
+            android:label="@string/view_card"></activity>
 
         <receiver
             android:name=".receivers.GcmBroadcastReceiver"

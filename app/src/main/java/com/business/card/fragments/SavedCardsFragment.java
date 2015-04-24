@@ -19,6 +19,7 @@ import com.business.card.BusinessCardApplication;
 import com.business.card.R;
 import com.business.card.activities.AddEditCardActivity;
 import com.business.card.activities.MainActivity;
+import com.business.card.activities.ViewCardActivity;
 import com.business.card.adapters.SavedBusinessCardAdapter;
 import com.business.card.objects.BusinessCard;
 import com.business.card.requests.RequestDeleteMyCard;
@@ -91,6 +92,11 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         BusinessCard businessCard = adapter.getItem(position);
         BusinessCardApplication.selectedBusinessCard = businessCard;
+
+        // start the view card activity
+        Intent intent = new Intent(getActivity(), ViewCardActivity.class);
+        intent.putExtra(ViewCardActivity.DISPLAY_EDIT_EXTRA_KEY, false);
+        startActivity(intent);
     }
 
     @Override
