@@ -59,10 +59,12 @@
     <string name="no">No</string>
     <string name="choose_action_for_card">Choose an Action for this Card</string>
     <string name="public_text">Public</string>
+    <string name="private_text">Private</string>
     <string name="nearby_cards">Nearby Cards</string>
     <string name="distance_meters">%1$sm</string>
     <string name="get_card">Get Card</string>
     <string name="public_card_received">%1$s %2$s\'s %3$s Card was added to your Saved Cards</string>
+    <string name="private_card_requested">%1$s %2$s\'s %3$s Card was requested.\nYou will have access to this card once the request is accepted.</string>
     <string name="no_conferences">No Conferences available</string>
     <string name="choose_action_for_conference">Choose an Action for this Conference</string>
     <string name="delete_conference">Delete Conference</string>
@@ -75,5 +77,8 @@
     <string name="card_layout">Card Layout</string>
     <string name="x_of_y">%1$d of %2$d</string>
     <string name="view_card">View Card</string>
+    <string name="request_card">Request Card</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
 
 </resources>

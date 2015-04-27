@@ -42,13 +42,13 @@ public class GcmIntentService extends IntentService {
              * recognize.
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
+                sendNotification(extras);
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString());
+                sendNotification(extras);
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                sendNotification(extras);
                 Log.i("GCM", "Received: " + extras.toString());
             }
         }
@@ -59,7 +59,7 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String msg) {
+    private void sendNotification(Bundle bundle) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -71,14 +71,16 @@ public class GcmIntentService extends IntentService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_action_new)
-                        .setContentTitle("GCM Notification")
+                        .setContentTitle(bundle.getString("title"))
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg)
+                                .bigText(bundle.getString("message")))
+                        .setContentText(bundle.getString("message"))
                         .setAutoCancel(true)
-                        .setDefaults(NotificationCompat.DEFAULT_ALL);
+                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                        .addAction(R.drawable.ic_action_accept, getString(R.string.allow), contentIntent)
+                        .addAction(R.drawable.ic_action_cancel, getString(R.string.deny), contentIntent);
 
-        mBuilder.setContentIntent(contentIntent);
+                                mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 }

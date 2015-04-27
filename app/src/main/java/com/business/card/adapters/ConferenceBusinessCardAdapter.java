@@ -56,7 +56,9 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
             viewHolder.email = (TextView) rowView.findViewById(R.id.email);
             viewHolder.phone = (TextView) rowView.findViewById(R.id.phone);
             viewHolder.address = (TextView) rowView.findViewById(R.id.address);
+            viewHolder.visibility = (TextView) rowView.findViewById(R.id.visibility);
             viewHolder.saveCardButton = (Button) rowView.findViewById(R.id.save_card_button);
+            viewHolder.requestCardButton = (Button) rowView.findViewById(R.id.request_card_button);
 
             rowView.setTag(viewHolder);
         }
@@ -69,28 +71,52 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
         viewHolder.title.setText(businessCard.getTitle());
         viewHolder.name.setText(businessCard.getFirstName() + " " + businessCard.getLastName());
 
-        if (businessCard.getEmail().equals("")) {
-            viewHolder.email.setVisibility(View.GONE);
-        } else {
-            viewHolder.email.setVisibility(View.VISIBLE);
-            viewHolder.email.setText(businessCard.getEmail());
-        }
-
-        if (businessCard.getAddress().equals("")) {
-            viewHolder.address.setVisibility(View.GONE);
-        } else {
-            viewHolder.address.setVisibility(View.VISIBLE);
-            viewHolder.address.setText(businessCard.getAddress());
-        }
-
-        viewHolder.phone.setText(businessCard.getPhone());
-        viewHolder.saveCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // "Save Card" button was pressed for this card
-                activity.requestConferenceCard(businessCard);
+        if (businessCard.getIsPublic().equals("1")) {
+            if (businessCard.getEmail().equals("")) {
+                viewHolder.email.setVisibility(View.GONE);
+            } else {
+                viewHolder.email.setVisibility(View.VISIBLE);
+                viewHolder.email.setText(businessCard.getEmail());
             }
-        });
+
+            if (businessCard.getAddress().equals("")) {
+                viewHolder.address.setVisibility(View.GONE);
+            } else {
+                viewHolder.address.setVisibility(View.VISIBLE);
+                viewHolder.address.setText(businessCard.getAddress());
+            }
+
+            viewHolder.phone.setVisibility(View.VISIBLE);
+            viewHolder.phone.setText(businessCard.getPhone());
+
+            viewHolder.visibility.setText(activity.getString(R.string.public_text));
+            viewHolder.saveCardButton.setVisibility(View.VISIBLE);
+            viewHolder.requestCardButton.setVisibility(View.GONE);
+
+            viewHolder.saveCardButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // "Save Card" button was pressed for this card
+                    activity.requestPublicConferenceCard(businessCard);
+                }
+            });
+        } else {
+            viewHolder.email.setVisibility(View.GONE);
+            viewHolder.address.setVisibility(View.GONE);
+            viewHolder.phone.setVisibility(View.GONE);
+
+            viewHolder.visibility.setText(activity.getString(R.string.private_text));
+            viewHolder.saveCardButton.setVisibility(View.GONE);
+            viewHolder.requestCardButton.setVisibility(View.VISIBLE);
+
+            viewHolder.requestCardButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                // "Request Card" button was pressed for this card
+                activity.requestPrivateConferenceCard(businessCard);
+                }
+            });
+        }
 
         return rowView;
     }
@@ -101,7 +127,9 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
         private TextView email;
         private TextView phone;
         private TextView address;
+        private TextView visibility;
         private Button saveCardButton;
+        private Button requestCardButton;
         private CardView cardView;
     }
 }

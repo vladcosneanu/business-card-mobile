@@ -1,9 +1,6 @@
 package com.business.card.activities;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -20,8 +17,8 @@ import com.business.card.adapters.ConferenceBusinessCardAdapter;
 import com.business.card.objects.BusinessCard;
 import com.business.card.objects.Conference;
 import com.business.card.requests.RequestConferenceCards;
-import com.business.card.requests.RequestSaveConferenceCard;
-import com.business.card.util.PreferenceHelper;
+import com.business.card.requests.RequestPrivateConferenceCard;
+import com.business.card.requests.RequestPublicConferenceCard;
 import com.business.card.util.Util;
 
 import org.json.JSONArray;
@@ -131,23 +128,31 @@ public class ConferenceCardsActivity extends ActionBarActivity {
         }
     }
 
-    public void requestConferenceCard(BusinessCard businessCard) {
+    public void requestPublicConferenceCard(BusinessCard businessCard) {
         progressDialog.show();
         selectedCard = businessCard;
 
-        RequestSaveConferenceCard requestSaveConferenceCard = new RequestSaveConferenceCard(this, businessCard);
-        requestSaveConferenceCard.execute(new String[]{});
+        RequestPublicConferenceCard requestPublicConferenceCard = new RequestPublicConferenceCard(this, businessCard);
+        requestPublicConferenceCard.execute(new String[]{});
+    }
+
+    public void requestPrivateConferenceCard(BusinessCard businessCard) {
+        progressDialog.show();
+        selectedCard = businessCard;
+
+        RequestPrivateConferenceCard requestPrivateConferenceCard = new RequestPrivateConferenceCard(this, businessCard);
+        requestPrivateConferenceCard.execute(new String[]{});
     }
 
     /**
-     * Finished request for getting a conference card
+     * Finished request for getting a public conference card
      */
-    public void onSaveConferenceCardRequestFinished(JSONObject json) {
+    public void onPublicConferenceCardRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             String success = json.getString("success");
             if (success.equals("true")) {
-                // card edited
+                // card saved
                 Toast.makeText(this, getString(R.string.public_card_received,
                         selectedCard.getFirstName(), selectedCard.getLastName(),
                         selectedCard.getTitle()), Toast.LENGTH_SHORT).show();
@@ -167,7 +172,28 @@ public class ConferenceCardsActivity extends ActionBarActivity {
                     noCardsAvailable.setVisibility(View.VISIBLE);
                 }
             } else {
-                // card not edited
+                // card not saved
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Finished request for requesting a private conference card
+     */
+    public void onPrivateConferenceCardRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            int success = json.getInt("success");
+            if (success == 1) {
+                // card requested
+                Toast.makeText(this, getString(R.string.private_card_requested,
+                        selectedCard.getFirstName(), selectedCard.getLastName(),
+                        selectedCard.getTitle()), Toast.LENGTH_LONG).show();
+            } else {
+                // card not requested
                 Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {

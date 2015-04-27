@@ -18,13 +18,13 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestSaveConferenceCard extends AsyncTask<String, Integer, JSONObject> {
+public class RequestPrivateConferenceCard extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
     private ConferenceCardsActivity activity;
     private BusinessCard businessCard;
 
-    public RequestSaveConferenceCard(ConferenceCardsActivity activity, BusinessCard businessCard) {
+    public RequestPrivateConferenceCard(ConferenceCardsActivity activity, BusinessCard businessCard) {
         this.activity = activity;
         this.businessCard = businessCard;
     }
@@ -35,7 +35,7 @@ public class RequestSaveConferenceCard extends AsyncTask<String, Integer, JSONOb
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/conference_card.php";
+            String url = "http://businesscard.netne.net/api/add/private_conference_card.php";
             url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
             url += "&card_id=" + businessCard.getId();
 
@@ -74,7 +74,7 @@ public class RequestSaveConferenceCard extends AsyncTask<String, Integer, JSONOb
         super.onPostExecute(json);
 
         if (done) {
-            activity.onSaveConferenceCardRequestFinished(json);
+            activity.onPrivateConferenceCardRequestFinished(json);
         }
     }
 }
