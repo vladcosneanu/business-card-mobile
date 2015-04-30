@@ -36,6 +36,16 @@ public class Util {
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
+    public static final String REQUEST_CARD_RESPONSE_EXTRA = "REQUEST_CARD_RESPONSE_EXTRA";
+    public static final String REQUEST_CARD_RESPONSE_ACCEPT = "REQUEST_CARD_RESPONSE_ACCEPT";
+    public static final String REQUEST_CARD_RESPONSE_DENY = "REQUEST_CARD_RESPONSE_DENY";
+    public static final String REQUEST_CARD_RESPONSE_CARD_ID_EXTRA = "REQUEST_CARD_RESPONSE_CARD_ID_EXTRA";
+    public static final String REQUEST_CARD_RESPONSE_USER_ID_EXTRA = "REQUEST_CARD_RESPONSE_USER_ID_EXTRA";
+
+    public static final String ACCEPT_REQUEST_CARD_ACTION = "ACCEPT_REQUEST_CARD_ACTION";
+    public static final String DENY_REQUEST_CARD_ACTION = "DENY_REQUEST_CARD_ACTION";
+    public static final String ACCEPT_REQUEST_CARD_GRANTED_ACTION = "ACCEPT_REQUEST_CARD_GRANTED_ACTION";
+
     private static Coordinate coordinate;
 
     public static boolean isEmailValid(String email) {

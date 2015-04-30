@@ -80,5 +80,7 @@
     <string name="request_card">Request Card</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
+    <string name="accepted_private_card_request">You have granted access to your business card.</string>
+    <string name="denied_private_card_request">You have denied access to your business card.</string>
 
 </resources>

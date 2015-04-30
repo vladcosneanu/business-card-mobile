@@ -181,7 +181,7 @@ public class ConferenceCardsActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished request for requesting a private conference card
+     * Finished requesting a private conference card
      */
     public void onPrivateConferenceCardRequestFinished(JSONObject json) {
         progressDialog.dismiss();

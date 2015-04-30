@@ -1,8 +1,8 @@
 package com.business.card.activities;
 
-import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -25,11 +25,14 @@ import com.business.card.objects.BusinessCard;
 import com.business.card.objects.Conference;
 import com.business.card.receivers.BootCompletedReceiver;
 import com.business.card.receivers.LocationBroadcastReceiver;
+import com.business.card.requests.RequestAcceptPrivateConferenceCard;
+import com.business.card.requests.RequestDenyPrivateConferenceCard;
 import com.business.card.requests.RequestGCMRegistration;
 import com.business.card.requests.RequestMyCards;
 import com.business.card.requests.RequestMyConferences;
 import com.business.card.requests.RequestSavedCards;
 import com.business.card.requests.RequestUpdateGCMId;
+import com.business.card.services.GcmIntentService;
 import com.business.card.util.PreferenceHelper;
 import com.business.card.util.Util;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -148,6 +151,7 @@ public class MainActivity extends ActionBarActivity {
             Log.i("MainActivity", "No valid Google Play Services APK found.");
         }
 
+        verifyReceivedIntent(getIntent());
     }
 
     @Override
@@ -173,6 +177,38 @@ public class MainActivity extends ActionBarActivity {
         // schedule alarm for updating the GPS location
         BootCompletedReceiver.scheduleAlarms(this);
         Log.d("GPS", "Scheduled GPS location update");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        verifyReceivedIntent(intent);
+
+        super.onNewIntent(intent);
+    }
+
+    private void verifyReceivedIntent(Intent intent) {
+        Bundle receivedBundle = intent.getExtras();
+        if (receivedBundle != null && getIntent().getExtras().containsKey(Util.REQUEST_CARD_RESPONSE_EXTRA)) {
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(GcmIntentService.REQUEST_CARD_NOTIFICATION_ID);
+
+            String cardId = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_CARD_ID_EXTRA);
+            String userId = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_USER_ID_EXTRA);
+            Log.d("Vlad", "cardId: " + cardId + ", userId: " + userId);
+
+            String requestCardExtra = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_EXTRA);
+            if (requestCardExtra.equals(Util.REQUEST_CARD_RESPONSE_ACCEPT)) {
+                // Accept the card sharing request
+                displayProgressDialog();
+                RequestAcceptPrivateConferenceCard requestAcceptPrivateConferenceCard = new RequestAcceptPrivateConferenceCard(this, cardId, userId);
+                requestAcceptPrivateConferenceCard.execute(new String[]{});
+            } else if (requestCardExtra.equals(Util.REQUEST_CARD_RESPONSE_DENY)) {
+                // Deny the card sharing request
+                displayProgressDialog();
+                RequestDenyPrivateConferenceCard requestDenyPrivateConferenceCard = new RequestDenyPrivateConferenceCard(this, cardId, userId);
+                requestDenyPrivateConferenceCard.execute(new String[]{});
+            }
+        }
     }
 
     public void displayProgressDialog() {
@@ -380,6 +416,44 @@ public class MainActivity extends ActionBarActivity {
             }
         } catch (JSONException e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Finished accepting the request for a private conference card
+     */
+    public void onAcceptPrivateConferenceCardRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            int success = json.getInt("success");
+            if (success == 1) {
+                // card requested
+                Toast.makeText(this, getString(R.string.accepted_private_card_request), Toast.LENGTH_LONG).show();
+            } else {
+                // card not requested
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Finished denying the request for a private conference card
+     */
+    public void onDenyPrivateConferenceCardRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            int success = json.getInt("success");
+            if (success == 1) {
+                // card requested
+                Toast.makeText(this, getString(R.string.denied_private_card_request), Toast.LENGTH_LONG).show();
+            } else {
+                // card not requested
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
