@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,11 +17,12 @@ import android.widget.TextView;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
-import com.business.card.activities.AddEditCardActivity;
 import com.business.card.activities.ConferenceCardsActivity;
 import com.business.card.activities.MainActivity;
 import com.business.card.adapters.ConferenceAdapter;
+import com.business.card.adapters.SavedBusinessCardAdapter;
 import com.business.card.objects.Conference;
+import com.business.card.requests.RequestDeleteJoinedConference;
 import com.business.card.util.Util;
 
 import java.util.List;
@@ -109,15 +109,15 @@ public class ConferencesFragment extends Fragment implements AdapterView.OnItemC
         menu.setHeaderTitle(getString(R.string.choose_action_for_conference));
 
         // add context menu items - second parameter is the itemId
-        menu.add(0, Util.CONTEXT_MENU_ITEM_CONFERENCES_DELETE, 0, getString(R.string.delete));
+        menu.add(0, Util.CONTEXT_MENU_ITEM_CONFERENCES_REMOVE, 0, getString(R.string.remove));
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case Util.CONTEXT_MENU_ITEM_CONFERENCES_DELETE:
-                // selected Delete
-                displayConfirmDeleteDialog(selectedConference);
+            case Util.CONTEXT_MENU_ITEM_CONFERENCES_REMOVE:
+                // selected Remove
+                displayConfirmRemoveDialog(selectedConference);
                 break;
             default:
                 break;
@@ -126,23 +126,32 @@ public class ConferencesFragment extends Fragment implements AdapterView.OnItemC
         return super.onContextItemSelected(item);
     }
 
-    private void displayConfirmDeleteDialog(final Conference conference) {
+    private void displayConfirmRemoveDialog(final Conference conference) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.delete_conference);
-        builder.setMessage(getString(R.string.delete_conference_message, conference.getName(),
+        builder.setTitle(R.string.remove_conference);
+        builder.setMessage(getString(R.string.remove_conference_message, conference.getName(),
                 conference.getLocation()));
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked "Yes" button, delete the selected conference
-//                ((MainActivity) getActivity()).displayProgressDialog();
-//                RequestDeleteMyCard requestDeleteMyCard = new RequestDeleteMyCard((MainActivity) getActivity(), businessCard);
-//                requestDeleteMyCard.execute(new String[]{});
+                ((MainActivity) getActivity()).displayProgressDialog();
+                RequestDeleteJoinedConference requestDeleteJoinedConference = new RequestDeleteJoinedConference((MainActivity) getActivity(), conference);
+                requestDeleteJoinedConference.execute(new String[]{});
             }
         });
 
         builder.setNegativeButton(R.string.no, null);
 
         builder.show();
+    }
+
+    public void removeSelectedConference() {
+        // remove the Conference that the user deleted
+        myConferences.remove(selectedConference);
+
+        adapter = new ConferenceAdapter(getActivity(), myConferences);
+        myConferencesListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 }

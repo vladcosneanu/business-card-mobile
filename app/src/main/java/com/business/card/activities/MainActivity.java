@@ -1,8 +1,10 @@
 package com.business.card.activities;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.business.card.BusinessCardApplication;
@@ -28,6 +32,7 @@ import com.business.card.receivers.LocationBroadcastReceiver;
 import com.business.card.requests.RequestAcceptPrivateConferenceCard;
 import com.business.card.requests.RequestDenyPrivateConferenceCard;
 import com.business.card.requests.RequestGCMRegistration;
+import com.business.card.requests.RequestJoinConference;
 import com.business.card.requests.RequestMyCards;
 import com.business.card.requests.RequestMyConferences;
 import com.business.card.requests.RequestSavedCards;
@@ -55,6 +60,8 @@ public class MainActivity extends ActionBarActivity {
     private boolean displayAddMenuItem = false;
     private MenuItem searchMenuItem;
     private boolean displaySearchMenuItem = true;
+    private MenuItem joinMenuItem;
+    private boolean displayJoinMenuItem = false;
 
     private List<BusinessCard> savedCards;
     private List<BusinessCard> myCards;
@@ -87,6 +94,12 @@ public class MainActivity extends ActionBarActivity {
                 } else {
                     displayAddMenuItem = false;
                 }
+
+                if (joinMenuItem != null) {
+                    joinMenuItem.setVisible(false);
+                } else {
+                    displayJoinMenuItem = false;
+                }
             } else if (position == 1) {
                 if (searchMenuItem != null) {
                     searchMenuItem.setVisible(false);
@@ -99,6 +112,12 @@ public class MainActivity extends ActionBarActivity {
                 } else {
                     displayAddMenuItem = true;
                 }
+
+                if (joinMenuItem != null) {
+                    joinMenuItem.setVisible(false);
+                } else {
+                    displayJoinMenuItem = false;
+                }
             } else if (position == 2) {
                 if (searchMenuItem != null) {
                     searchMenuItem.setVisible(false);
@@ -110,6 +129,12 @@ public class MainActivity extends ActionBarActivity {
                     addMenuItem.setVisible(true);
                 } else {
                     displayAddMenuItem = true;
+                }
+
+                if (joinMenuItem != null) {
+                    joinMenuItem.setVisible(true);
+                } else {
+                    displayJoinMenuItem = true;
                 }
             }
         }
@@ -152,6 +177,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         verifyReceivedIntent(getIntent());
+
+        final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
+        lftBroadcastReceiver = new LocationBroadcastReceiver();
+        registerReceiver(lftBroadcastReceiver, lftIntentFilter);
     }
 
     @Override
@@ -166,10 +195,6 @@ public class MainActivity extends ActionBarActivity {
 
         RequestMyConferences requestMyConferences = new RequestMyConferences(this, BusinessCardApplication.loggedUser);
         requestMyConferences.execute(new String[]{});
-
-        final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
-        lftBroadcastReceiver = new LocationBroadcastReceiver();
-        registerReceiver(lftBroadcastReceiver, lftIntentFilter);
 
         // force a location update
         LocationLibrary.forceLocationUpdate(this);
@@ -227,11 +252,18 @@ public class MainActivity extends ActionBarActivity {
             searchMenuItem.setVisible(false);
         }
 
-        addMenuItem = menu.getItem(1);
+        addMenuItem = menu.getItem(2);
         if (displayAddMenuItem) {
             addMenuItem.setVisible(true);
         } else {
             addMenuItem.setVisible(false);
+        }
+
+        joinMenuItem = menu.getItem(1);
+        if (displayJoinMenuItem) {
+            joinMenuItem.setVisible(true);
+        } else {
+            joinMenuItem.setVisible(false);
         }
 
         return true;
@@ -254,8 +286,12 @@ public class MainActivity extends ActionBarActivity {
                     Intent addEditCardIntent = new Intent(this, AddEditCardActivity.class);
                     startActivity(addEditCardIntent);
                 } else if (currentPage == 2) {
-                    // adda a Conference
+                    // add a Conference
                 }
+                break;
+            case R.id.action_join:
+                // Join a Conference
+                displayJoinConferenceDialog();
                 break;
             case R.id.action_logout:
                 Util.displayConfirmLogoutDialog(this);
@@ -268,8 +304,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
 
         if (lftBroadcastReceiver != null) {
             unregisterReceiver(lftBroadcastReceiver);
@@ -399,19 +435,41 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished request for Saved Card Delete
+     * Finished request for Saved Card remove
      */
     public void onSavedCardDeleteRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             String success = json.getString("success");
             if (success.equals("true")) {
-                // card deleted
-                Toast.makeText(this, getString(R.string.saved_card_delete_success), Toast.LENGTH_SHORT).show();
+                // card removed
+                Toast.makeText(this, getString(R.string.saved_card_remove_success), Toast.LENGTH_SHORT).show();
 
                 ((SavedCardsFragment) pagerAdapter.getItem(0)).removeSelectedBusinessCard();
             } else {
-                // card not deleted
+                // card not removed
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Finished request for joined Conference remove
+     */
+    public void onJoinedConferenceDeleteRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            String success = json.getString("success");
+            if (success.equals("true")) {
+                // conference removed
+                Toast.makeText(this, getString(R.string.conference_remove_success), Toast.LENGTH_SHORT).show();
+
+                ((ConferencesFragment) pagerAdapter.getItem(2)).removeSelectedConference();
+            } else {
+                // conference not deleted
                 Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
@@ -454,6 +512,68 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void displayJoinConferenceDialog() {
+        View dialoglayout = getLayoutInflater().inflate(R.layout.alert_edit, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.conference_passcode_title));
+        builder.setMessage(getString(R.string.conference_passcode_message));
+
+        final EditText textEntryView = (EditText) dialoglayout.findViewById(R.id.value);
+
+        builder.setPositiveButton(getResources().getString(R.string.submit), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String value = textEntryView.getText().toString().trim();
+                if (value.equals("")) {
+                    Toast.makeText(MainActivity.this, R.string.invalid_passcode, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (value.length() < 4) {
+                    Toast.makeText(MainActivity.this, R.string.invalid_passcode, Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    // the Conference Passcode can be submitted
+                    progressDialog.show();
+                    RequestJoinConference requestJoinConference = new RequestJoinConference(MainActivity.this, value);
+                    requestJoinConference.execute(new String[]{});
+                }
+            }
+        });
+        builder.setNeutralButton(getResources().getString(R.string.cancel), null);
+
+        builder.setView(dialoglayout);
+        builder.show();
+    }
+
+    /**
+     * Finished joining a conference
+     */
+    public void onJoinConferenceRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            String success = json.getString("success");
+            if (success.equals("true")) {
+                // Conference joined
+                String conferenceName = json.getString("conference");
+
+                Toast.makeText(this, getString(R.string.conference_joined, conferenceName), Toast.LENGTH_SHORT).show();
+
+                RequestMyConferences requestMyConferences = new RequestMyConferences(this, BusinessCardApplication.loggedUser);
+                requestMyConferences.execute(new String[]{});
+            } else if (success.equals("false")) {
+                // Conference not joined
+                String error = json.getString("error");
+                if (error.equals("Conference does not exist")) {
+                    Toast.makeText(this, getString(R.string.passcode_does_not_exist), Toast.LENGTH_SHORT).show();
+                } else if (error.equals("User already added to conference")) {
+                    Toast.makeText(this, getString(R.string.conference_already_joined), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

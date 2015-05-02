@@ -54,7 +54,7 @@ public class NearbyBusinessCardAdapter extends BaseAdapter {
             viewHolder.name = (TextView) rowView.findViewById(R.id.name);
             viewHolder.title = (TextView) rowView.findViewById(R.id.title);
             viewHolder.distance = (TextView) rowView.findViewById(R.id.distance);
-            viewHolder.getCardButton = (Button) rowView.findViewById(R.id.get_card_button);
+            viewHolder.saveCardButton = (Button) rowView.findViewById(R.id.save_card_button);
 
             rowView.setTag(viewHolder);
         }
@@ -67,10 +67,10 @@ public class NearbyBusinessCardAdapter extends BaseAdapter {
         viewHolder.title.setText(businessCard.getTitle());
         viewHolder.name.setText(businessCard.getFirstName() + " " + businessCard.getLastName());
         viewHolder.distance.setText(activity.getString(R.string.distance_meters, businessCard.getDistance()));
-        viewHolder.getCardButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.saveCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // "Get Card" button was pressed for this card
+                // "Save Card" button was pressed for this card
                 activity.requestPublicCard(businessCard);
             }
         });
@@ -82,7 +82,7 @@ public class NearbyBusinessCardAdapter extends BaseAdapter {
         private TextView name;
         private TextView title;
         private TextView distance;
-        private Button getCardButton;
+        private Button saveCardButton;
         private CardView cardView;
     }
 }

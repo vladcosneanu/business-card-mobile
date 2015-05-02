@@ -3,6 +3,7 @@
     <string name="app_name">Business Card</string>
     <string name="action_settings">Settings</string>
     <string name="action_add">Add</string>
+    <string name="action_join">Join</string>
     <string name="action_search">Search</string>
     <string name="action_accept">Accept</string>
     <string name="action_edit">Edit</string>
@@ -48,13 +49,16 @@
     <string name="unknown_error">An unknown error has occurred. Please try again.</string>
     <string name="card_add_success">You have successfully added your business card.</string>
     <string name="card_delete_success">You have successfully deleted your business card.</string>
-    <string name="saved_card_delete_success">You have successfully deleted the business card.</string>
+    <string name="saved_card_remove_success">You have successfully removed the business card.</string>
     <string name="delete">Delete</string>
+    <string name="remove">Remove</string>
+    <string name="remove_card">Remove Card</string>
     <string name="delete_card">Delete Card</string>
     <string name="share">Share</string>
     <string name="edit">Edit</string>
     <string name="delete_card_message">Are you sure you wish to delete this business card?\n\nTitle: %1$s\nEmail: %2$s\nPhone: %3$s\nAddress: %4$s</string>
-    <string name="delete_conference_message">Are you sure you wish to delete this conference?\n\n%1$s\n%2$s</string>
+    <string name="remove_card_message">Are you sure you wish to remove this business card from your Saved list?\n\nTitle: %1$s\nEmail: %2$s\nPhone: %3$s\nAddress: %4$s</string>
+    <string name="remove_conference_message">Are you sure you wish to remove this conference?\n\n%1$s\n%2$s</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="choose_action_for_card">Choose an Action for this Card</string>
@@ -62,12 +66,11 @@
     <string name="private_text">Private</string>
     <string name="nearby_cards">Nearby Cards</string>
     <string name="distance_meters">%1$sm</string>
-    <string name="get_card">Get Card</string>
     <string name="public_card_received">%1$s %2$s\'s %3$s Card was added to your Saved Cards</string>
     <string name="private_card_requested">%1$s %2$s\'s %3$s Card was requested.\nYou will have access to this card once the request is accepted.</string>
     <string name="no_conferences">No Conferences available</string>
     <string name="choose_action_for_conference">Choose an Action for this Conference</string>
-    <string name="delete_conference">Delete Conference</string>
+    <string name="remove_conference">Remove Conference</string>
     <string name="no_conference_cards">No Cards found for this Conference</string>
     <string name="conference_cards">Conference Cards</string>
     <string name="save_card">Save Card</string>
@@ -82,5 +85,15 @@
     <string name="deny">Deny</string>
     <string name="accepted_private_card_request">You have granted access to your business card.</string>
     <string name="denied_private_card_request">You have denied access to your business card.</string>
+    <string name="passcode">Passcode</string>
+    <string name="conference_passcode_title">Conference Passcode</string>
+    <string name="conference_passcode_message">Please insert a valid Conference Passcode in order to get access to the participants business cards.</string>
+    <string name="submit">Submit</string>
+    <string name="invalid_passcode">Invalid Passcode</string>
+    <string name="cancel">Cancel</string>
+    <string name="conference_joined">You have successfully joined %1$s</string>
+    <string name="passcode_does_not_exist">There is no Conference associated with this Passcode.</string>
+    <string name="conference_already_joined">You have already joined this Conference.</string>
+    <string name="conference_remove_success">You have successfully removed the conference.</string>
 
 </resources>

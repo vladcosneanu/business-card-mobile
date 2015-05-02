@@ -107,15 +107,15 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
         menu.setHeaderTitle(getString(R.string.choose_action_for_card));
 
         // add context menu items - second parameter is the itemId
-        menu.add(0, Util.CONTEXT_MENU_ITEM_SAVED_CARDS_DELETE, 0, getString(R.string.delete));
+        menu.add(0, Util.CONTEXT_MENU_ITEM_SAVED_CARDS_REMOVE, 0, getString(R.string.remove));
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case Util.CONTEXT_MENU_ITEM_SAVED_CARDS_DELETE:
-                // selected Delete
-                displayConfirmDeleteDialog(selectedBusinessCard);
+            case Util.CONTEXT_MENU_ITEM_SAVED_CARDS_REMOVE:
+                // selected Remove
+                displayConfirmRemoveDialog(selectedBusinessCard);
                 break;
             default:
                 break;
@@ -124,10 +124,10 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
         return super.onContextItemSelected(item);
     }
 
-    private void displayConfirmDeleteDialog(final BusinessCard businessCard) {
+    private void displayConfirmRemoveDialog(final BusinessCard businessCard) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.delete_card);
-        builder.setMessage(getString(R.string.delete_card_message, businessCard.getTitle(),
+        builder.setTitle(R.string.remove_card);
+        builder.setMessage(getString(R.string.remove_card_message, businessCard.getTitle(),
                 businessCard.getEmail(), businessCard.getPhone(), businessCard.getAddress()));
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

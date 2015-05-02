@@ -9,20 +9,27 @@
         android:icon="@drawable/ic_action_radar" />
 
     <item
+        android:id="@+id/action_join"
+        android:title="@string/action_join"
+        android:orderInCategory="200"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_add_group" />
+
+    <item
         android:id="@+id/action_add"
         android:title="@string/action_add"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         app:showAsAction="always"
         android:icon="@drawable/ic_action_new" />
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
-        android:orderInCategory="300"
+        android:orderInCategory="400"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_logout"
-        android:orderInCategory="400"
+        android:orderInCategory="500"
         app:showAsAction="never"
         android:title="@string/action_logout" />
 </menu>
