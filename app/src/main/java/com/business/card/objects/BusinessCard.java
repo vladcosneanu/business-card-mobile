@@ -3,7 +3,11 @@ package com.business.card.objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BusinessCard {
+import java.io.Serializable;
+
+public class BusinessCard implements Serializable {
+
+    private static final long serialVersionUID = -9114417240352034198L;
 
     private String id;
     private String userId;

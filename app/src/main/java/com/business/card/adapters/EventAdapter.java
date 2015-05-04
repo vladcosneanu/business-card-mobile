@@ -8,18 +8,18 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.business.card.R;
-import com.business.card.objects.Conference;
+import com.business.card.objects.Event;
 
 import java.util.List;
 
-public class ConferenceAdapter extends BaseAdapter {
+public class EventAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Conference> conferences;
+    private List<Event> events;
 
-    public ConferenceAdapter(Context context, List<Conference> conferences) {
+    public EventAdapter(Context context, List<Event> events) {
         this.context = context;
-        this.conferences = conferences;
+        this.events = events;
     }
 
     @Override
@@ -29,21 +29,21 @@ public class ConferenceAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return conferences.size();
+        return events.size();
     }
 
-    public Conference getItem(int position) {
-        return conferences.get(position);
+    public Event getItem(int position) {
+        return events.get(position);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Conference conference = getItem(position);
+        final Event event = getItem(position);
         View rowView = convertView;
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            rowView = inflater.inflate(R.layout.my_conference_item, parent, false);
+            rowView = inflater.inflate(R.layout.my_event_item, parent, false);
             ViewHolder viewHolder = new ViewHolder();
 
             viewHolder.name = (TextView) rowView.findViewById(R.id.name);
@@ -55,9 +55,9 @@ public class ConferenceAdapter extends BaseAdapter {
 
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
 
-        viewHolder.name.setText(conference.getName());
-        viewHolder.date.setText(conference.getDate());
-        viewHolder.location.setText(conference.getLocation());
+        viewHolder.name.setText(event.getName());
+        viewHolder.date.setText(event.getDate());
+        viewHolder.location.setText(event.getLocation());
 
         return rowView;
     }

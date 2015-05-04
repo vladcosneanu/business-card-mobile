@@ -4,7 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.business.card.objects.BusinessCard;
-import com.business.card.objects.Conference;
+import com.business.card.objects.Event;
 import com.business.card.objects.User;
 import com.business.card.util.PreferenceHelper;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
@@ -14,7 +14,7 @@ public class BusinessCardApplication extends Application {
     private static BusinessCardApplication singleton;
     public static User loggedUser;
     public static BusinessCard selectedBusinessCard;
-    public static Conference selectedConference;
+    public static Event selectedEvent;
     public String generatedUsername = "";
     public String generatedPassword = "";
 

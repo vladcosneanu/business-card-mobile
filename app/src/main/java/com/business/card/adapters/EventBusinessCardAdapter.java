@@ -10,18 +10,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.business.card.R;
-import com.business.card.activities.ConferenceCardsActivity;
+import com.business.card.activities.EventCardsActivity;
 import com.business.card.objects.BusinessCard;
 import com.business.card.util.Util;
 
 import java.util.List;
 
-public class ConferenceBusinessCardAdapter extends BaseAdapter {
+public class EventBusinessCardAdapter extends BaseAdapter {
 
-    private ConferenceCardsActivity activity;
+    private EventCardsActivity activity;
     private List<BusinessCard> businessCards;
 
-    public ConferenceBusinessCardAdapter(ConferenceCardsActivity activity, List<BusinessCard> businessCards) {
+    public EventBusinessCardAdapter(EventCardsActivity activity, List<BusinessCard> businessCards) {
         this.activity = activity;
         this.businessCards = businessCards;
     }
@@ -47,7 +47,7 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            rowView = inflater.inflate(R.layout.conference_business_card_item, parent, false);
+            rowView = inflater.inflate(R.layout.event_business_card_item, parent, false);
             ViewHolder viewHolder = new ViewHolder();
 
             viewHolder.cardView = (CardView) rowView.findViewById(R.id.card_view);
@@ -97,7 +97,7 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     // "Save Card" button was pressed for this card
-                    activity.requestPublicConferenceCard(businessCard);
+                    activity.requestPublicEventCard(businessCard);
                 }
             });
         } else {
@@ -112,8 +112,8 @@ public class ConferenceBusinessCardAdapter extends BaseAdapter {
             viewHolder.requestCardButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                // "Request Card" button was pressed for this card
-                activity.requestPrivateConferenceCard(businessCard);
+                    // "Request Card" button was pressed for this card
+                    activity.requestPrivateEventCard(businessCard);
                 }
             });
         }

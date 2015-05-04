@@ -3,10 +3,8 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.business.card.BusinessCardApplication;
-import com.business.card.activities.ConferenceCardsActivity;
 import com.business.card.activities.MainActivity;
-import com.business.card.objects.BusinessCard;
+import com.business.card.objects.User;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -14,33 +12,30 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestAcceptPrivateConferenceCard extends AsyncTask<String, Integer, JSONObject> {
+public class RequestMyEvents extends AsyncTask<String, Integer, JSONArray> {
 
     private boolean done = false;
     private MainActivity activity;
-    private String cardId;
-    private String userId;
+    private User user;
 
-    public RequestAcceptPrivateConferenceCard(MainActivity activity, String cardId, String userId) {
+    public RequestMyEvents(MainActivity activity, User user) {
         this.activity = activity;
-        this.cardId = cardId;
-        this.userId = userId;
+        this.user = user;
     }
 
     @Override
-    protected JSONObject doInBackground(String... params) {
+    protected JSONArray doInBackground(String... params) {
         byte[] result = null;
-        JSONObject json = null;
+        JSONArray json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/accept_private_conference_card.php";
-            url += "?user_id=" + userId;
-            url += "&card_id=" + cardId;
+            String url = "http://businesscard.netne.net/api/get/events.php";
+            url += "?user_id=" + user.getId();
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -52,7 +47,7 @@ public class RequestAcceptPrivateConferenceCard extends AsyncTask<String, Intege
                 result = EntityUtils.toByteArray(response.getEntity());
                 publishProgress(result.length);
                 String str = new String(result, "UTF-8");
-                json = new JSONObject(str);
+                json = new JSONArray(str);
             }
 
             if (json != null) {
@@ -73,11 +68,11 @@ public class RequestAcceptPrivateConferenceCard extends AsyncTask<String, Intege
     }
 
     @Override
-    protected void onPostExecute(JSONObject json) {
+    protected void onPostExecute(JSONArray json) {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onAcceptPrivateConferenceCardRequestFinished(json);
+            activity.onMyEventsRequestFinished(json);
         }
     }
 }

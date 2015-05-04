@@ -36,7 +36,7 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
     private MyBusinessCardAdapter adapter;
     private ProgressBar progressBar;
     private TextView noCardsAvailable;
-
+    private boolean refreshList = false;
     private BusinessCard selectedBusinessCard;
 
     @Override
@@ -56,6 +56,11 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
 
         noCardsAvailable = (TextView) mView.findViewById(R.id.no_cards_available);
         noCardsAvailable.setVisibility(View.GONE);
+
+        if (refreshList) {
+            refreshList = false;
+            setMyCards(myCards);
+        }
     }
 
     @Override
@@ -138,9 +143,13 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     public void setMyCards(List<BusinessCard> myCards) {
-        progressBar.setVisibility(View.GONE);
+        if (!isAdded()) {
+            this.myCards = myCards;
+            refreshList = true;
+            return;
+        }
 
-        this.myCards = myCards;
+        progressBar.setVisibility(View.GONE);
 
         if (myCards.size() > 0) {
             myCardsListView.setVisibility(View.VISIBLE);

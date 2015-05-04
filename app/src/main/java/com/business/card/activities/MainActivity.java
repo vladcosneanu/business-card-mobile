@@ -22,19 +22,19 @@ import android.widget.Toast;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
-import com.business.card.fragments.ConferencesFragment;
+import com.business.card.fragments.EventsFragment;
 import com.business.card.fragments.MyCardsFragment;
 import com.business.card.fragments.SavedCardsFragment;
 import com.business.card.objects.BusinessCard;
-import com.business.card.objects.Conference;
+import com.business.card.objects.Event;
 import com.business.card.receivers.BootCompletedReceiver;
 import com.business.card.receivers.LocationBroadcastReceiver;
-import com.business.card.requests.RequestAcceptPrivateConferenceCard;
-import com.business.card.requests.RequestDenyPrivateConferenceCard;
+import com.business.card.requests.RequestAcceptPrivateEventCard;
+import com.business.card.requests.RequestDenyPrivateEventCard;
 import com.business.card.requests.RequestGCMRegistration;
-import com.business.card.requests.RequestJoinConference;
+import com.business.card.requests.RequestJoinEvent;
 import com.business.card.requests.RequestMyCards;
-import com.business.card.requests.RequestMyConferences;
+import com.business.card.requests.RequestMyEvents;
 import com.business.card.requests.RequestSavedCards;
 import com.business.card.requests.RequestUpdateGCMId;
 import com.business.card.services.GcmIntentService;
@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
     private List<BusinessCard> savedCards;
     private List<BusinessCard> myCards;
-    private List<Conference> myConferences;
+    private List<Event> myEvents;
 
     private int currentPage;
     private ProgressDialog progressDialog;
@@ -177,15 +177,29 @@ public class MainActivity extends ActionBarActivity {
         }
 
         verifyReceivedIntent(getIntent());
-
-        final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
-        lftBroadcastReceiver = new LocationBroadcastReceiver();
-        registerReceiver(lftBroadcastReceiver, lftIntentFilter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        savedCards = (List<BusinessCard>) Util.loadList(Util.SAVED_CARDS_FILE);
+        if (savedCards != null && savedCards.size() > 0) {
+            // retrieved saved cards from cache file
+            ((SavedCardsFragment) pagerAdapter.getItem(0)).setSavedCards(savedCards);
+        }
+
+        myCards = (List<BusinessCard>) Util.loadList(Util.MY_CARDS_FILE);
+        if (myCards != null && myCards.size() > 0) {
+            // retrieved my cards from cache file
+            ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(myCards);
+        }
+
+        myEvents = (List<Event>) Util.loadList(Util.EVENTS_FILE);
+        if (myEvents != null && myEvents.size() > 0) {
+            // retrieved events from cache file
+            ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(myEvents);
+        }
 
         RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
         requestSavedCards.execute(new String[]{});
@@ -193,8 +207,12 @@ public class MainActivity extends ActionBarActivity {
         RequestMyCards requestMyCards = new RequestMyCards(this, BusinessCardApplication.loggedUser);
         requestMyCards.execute(new String[]{});
 
-        RequestMyConferences requestMyConferences = new RequestMyConferences(this, BusinessCardApplication.loggedUser);
-        requestMyConferences.execute(new String[]{});
+        RequestMyEvents requestMyEvents = new RequestMyEvents(this, BusinessCardApplication.loggedUser);
+        requestMyEvents.execute(new String[]{});
+
+        final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
+        lftBroadcastReceiver = new LocationBroadcastReceiver();
+        registerReceiver(lftBroadcastReceiver, lftIntentFilter);
 
         // force a location update
         LocationLibrary.forceLocationUpdate(this);
@@ -219,19 +237,18 @@ public class MainActivity extends ActionBarActivity {
 
             String cardId = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_CARD_ID_EXTRA);
             String userId = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_USER_ID_EXTRA);
-            Log.d("Vlad", "cardId: " + cardId + ", userId: " + userId);
 
             String requestCardExtra = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_EXTRA);
             if (requestCardExtra.equals(Util.REQUEST_CARD_RESPONSE_ACCEPT)) {
                 // Accept the card sharing request
                 displayProgressDialog();
-                RequestAcceptPrivateConferenceCard requestAcceptPrivateConferenceCard = new RequestAcceptPrivateConferenceCard(this, cardId, userId);
-                requestAcceptPrivateConferenceCard.execute(new String[]{});
+                RequestAcceptPrivateEventCard requestAcceptPrivateEventCard = new RequestAcceptPrivateEventCard(this, cardId, userId);
+                requestAcceptPrivateEventCard.execute(new String[]{});
             } else if (requestCardExtra.equals(Util.REQUEST_CARD_RESPONSE_DENY)) {
                 // Deny the card sharing request
                 displayProgressDialog();
-                RequestDenyPrivateConferenceCard requestDenyPrivateConferenceCard = new RequestDenyPrivateConferenceCard(this, cardId, userId);
-                requestDenyPrivateConferenceCard.execute(new String[]{});
+                RequestDenyPrivateEventCard requestDenyPrivateEventCard = new RequestDenyPrivateEventCard(this, cardId, userId);
+                requestDenyPrivateEventCard.execute(new String[]{});
             }
         }
     }
@@ -286,12 +303,12 @@ public class MainActivity extends ActionBarActivity {
                     Intent addEditCardIntent = new Intent(this, AddEditCardActivity.class);
                     startActivity(addEditCardIntent);
                 } else if (currentPage == 2) {
-                    // add a Conference
+                    // add a Event
                 }
                 break;
             case R.id.action_join:
-                // Join a Conference
-                displayJoinConferenceDialog();
+                // Join a Event
+                displayJoinEventDialog();
                 break;
             case R.id.action_logout:
                 Util.displayConfirmLogoutDialog(this);
@@ -330,8 +347,8 @@ public class MainActivity extends ActionBarActivity {
         return myCards;
     }
 
-    public List<Conference> getConferences() {
-        return myConferences;
+    public List<Event> getEvents() {
+        return myEvents;
     }
 
     /**
@@ -350,6 +367,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         savedCards = businessCards;
+
+        // save the list to cache file
+        Util.saveList(savedCards, Util.SAVED_CARDS_FILE);
+
         ((SavedCardsFragment) pagerAdapter.getItem(0)).setSavedCards(businessCards);
     }
 
@@ -369,26 +390,34 @@ public class MainActivity extends ActionBarActivity {
         }
 
         myCards = businessCards;
+
+        // save the list to cache file
+        Util.saveList(myCards, Util.MY_CARDS_FILE);
+
         ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(businessCards);
     }
 
     /**
-     * Finished request for Conferences
+     * Finished request for Events
      */
-    public void onMyConferencesRequestFinished(JSONArray j) {
-        myConferences = new ArrayList<Conference>();
-        List<Conference> conferences = new ArrayList<Conference>();
+    public void onMyEventsRequestFinished(JSONArray j) {
+        myEvents = new ArrayList<Event>();
+        List<Event> events = new ArrayList<Event>();
         for (int i = 0; i < j.length(); i++) {
             try {
-                Conference conference = Conference.parseConferenceFromJson(j.getJSONObject(i));
-                conferences.add(conference);
+                Event event = Event.parseEventFromJson(j.getJSONObject(i));
+                events.add(event);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        myConferences = conferences;
-        ((ConferencesFragment) pagerAdapter.getItem(2)).setMyConferences(myConferences);
+        myEvents = events;
+
+        // save the list to cache file
+        Util.saveList(myEvents, Util.EVENTS_FILE);
+
+        ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(myEvents);
     }
 
     public void onGCMRegistrationComplete(String msg) {
@@ -457,19 +486,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished request for joined Conference remove
+     * Finished request for joined Event remove
      */
-    public void onJoinedConferenceDeleteRequestFinished(JSONObject json) {
+    public void onJoinedEventDeleteRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             String success = json.getString("success");
             if (success.equals("true")) {
-                // conference removed
-                Toast.makeText(this, getString(R.string.conference_remove_success), Toast.LENGTH_SHORT).show();
+                // event removed
+                Toast.makeText(this, getString(R.string.event_remove_success), Toast.LENGTH_SHORT).show();
 
-                ((ConferencesFragment) pagerAdapter.getItem(2)).removeSelectedConference();
+                ((EventsFragment) pagerAdapter.getItem(2)).removeSelectedEvent();
             } else {
-                // conference not deleted
+                // event not deleted
                 Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
@@ -479,9 +508,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished accepting the request for a private conference card
+     * Finished accepting the request for a private event card
      */
-    public void onAcceptPrivateConferenceCardRequestFinished(JSONObject json) {
+    public void onAcceptPrivateEventCardRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             int success = json.getInt("success");
@@ -498,9 +527,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished denying the request for a private conference card
+     * Finished denying the request for a private event card
      */
-    public void onDenyPrivateConferenceCardRequestFinished(JSONObject json) {
+    public void onDenyPrivateEventCardRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             int success = json.getInt("success");
@@ -516,12 +545,12 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void displayJoinConferenceDialog() {
+    private void displayJoinEventDialog() {
         View dialoglayout = getLayoutInflater().inflate(R.layout.alert_edit, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.conference_passcode_title));
-        builder.setMessage(getString(R.string.conference_passcode_message));
+        builder.setTitle(getString(R.string.event_passcode_title));
+        builder.setMessage(getString(R.string.event_passcode_message));
 
         final EditText textEntryView = (EditText) dialoglayout.findViewById(R.id.value);
 
@@ -535,10 +564,10 @@ public class MainActivity extends ActionBarActivity {
                     Toast.makeText(MainActivity.this, R.string.invalid_passcode, Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    // the Conference Passcode can be submitted
+                    // the Event Passcode can be submitted
                     progressDialog.show();
-                    RequestJoinConference requestJoinConference = new RequestJoinConference(MainActivity.this, value);
-                    requestJoinConference.execute(new String[]{});
+                    RequestJoinEvent requestJoinEvent = new RequestJoinEvent(MainActivity.this, value);
+                    requestJoinEvent.execute(new String[]{});
                 }
             }
         });
@@ -549,27 +578,27 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished joining a conference
+     * Finished joining a event
      */
-    public void onJoinConferenceRequestFinished(JSONObject json) {
+    public void onJoinEventRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             String success = json.getString("success");
             if (success.equals("true")) {
-                // Conference joined
-                String conferenceName = json.getString("conference");
+                // Event joined
+                String eventName = json.getString("event");
 
-                Toast.makeText(this, getString(R.string.conference_joined, conferenceName), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.event_joined, eventName), Toast.LENGTH_SHORT).show();
 
-                RequestMyConferences requestMyConferences = new RequestMyConferences(this, BusinessCardApplication.loggedUser);
-                requestMyConferences.execute(new String[]{});
+                RequestMyEvents requestMyEvents = new RequestMyEvents(this, BusinessCardApplication.loggedUser);
+                requestMyEvents.execute(new String[]{});
             } else if (success.equals("false")) {
-                // Conference not joined
+                // Event not joined
                 String error = json.getString("error");
-                if (error.equals("Conference does not exist")) {
+                if (error.equals("Event does not exist")) {
                     Toast.makeText(this, getString(R.string.passcode_does_not_exist), Toast.LENGTH_SHORT).show();
-                } else if (error.equals("User already added to conference")) {
-                    Toast.makeText(this, getString(R.string.conference_already_joined), Toast.LENGTH_SHORT).show();
+                } else if (error.equals("User already added to event")) {
+                    Toast.makeText(this, getString(R.string.event_already_joined), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {
@@ -582,7 +611,7 @@ public class MainActivity extends ActionBarActivity {
 
         private SavedCardsFragment savedCardsFragment;
         private MyCardsFragment myCardsFragment;
-        private ConferencesFragment conferencesFragment;
+        private EventsFragment eventsFragment;
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -602,10 +631,10 @@ public class MainActivity extends ActionBarActivity {
                     }
                     return myCardsFragment;
                 case 2:
-                    if (conferencesFragment == null) {
-                        conferencesFragment = new ConferencesFragment();
+                    if (eventsFragment == null) {
+                        eventsFragment = new EventsFragment();
                     }
-                    return conferencesFragment;
+                    return eventsFragment;
                 default:
                     return null;
             }
@@ -624,7 +653,7 @@ public class MainActivity extends ActionBarActivity {
                 case 1:
                     return getString(R.string.my_cards);
                 case 2:
-                    return getString(R.string.conferences);
+                    return getString(R.string.events);
                 default:
                     return null;
             }

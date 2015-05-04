@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.business.card.activities.MainActivity;
-import com.business.card.objects.User;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -12,30 +11,33 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestMyConferences extends AsyncTask<String, Integer, JSONArray> {
+public class RequestDenyPrivateEventCard extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
     private MainActivity activity;
-    private User user;
+    private String cardId;
+    private String userId;
 
-    public RequestMyConferences(MainActivity activity, User user) {
+    public RequestDenyPrivateEventCard(MainActivity activity, String cardId, String userId) {
         this.activity = activity;
-        this.user = user;
+        this.cardId = cardId;
+        this.userId = userId;
     }
 
     @Override
-    protected JSONArray doInBackground(String... params) {
+    protected JSONObject doInBackground(String... params) {
         byte[] result = null;
-        JSONArray json = null;
+        JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/get/conferences.php";
-            url += "?user_id=" + user.getId();
+            String url = "http://businesscard.netne.net/api/add/deny_private_event_card.php";
+            url += "?user_id=" + userId;
+            url += "&card_id=" + cardId;
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -47,7 +49,7 @@ public class RequestMyConferences extends AsyncTask<String, Integer, JSONArray> 
                 result = EntityUtils.toByteArray(response.getEntity());
                 publishProgress(result.length);
                 String str = new String(result, "UTF-8");
-                json = new JSONArray(str);
+                json = new JSONObject(str);
             }
 
             if (json != null) {
@@ -68,11 +70,11 @@ public class RequestMyConferences extends AsyncTask<String, Integer, JSONArray> 
     }
 
     @Override
-    protected void onPostExecute(JSONArray json) {
+    protected void onPostExecute(JSONObject json) {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onMyConferencesRequestFinished(json);
+            activity.onDenyPrivateEventCardRequestFinished(json);
         }
     }
 }

@@ -3,7 +3,11 @@ package com.business.card.objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Conference {
+import java.io.Serializable;
+
+public class Event implements Serializable {
+
+    private static final long serialVersionUID = -6123889786534787077L;
 
     private String id;
     private String name;
@@ -11,19 +15,19 @@ public class Conference {
     private String date;
     private String passcode;
 
-    public static Conference parseConferenceFromJson(JSONObject json) {
-        Conference conference = new Conference();
+    public static Event parseEventFromJson(JSONObject json) {
+        Event event = new Event();
         try {
-            conference.setId(json.getString("id"));
-            conference.setName(json.getString("name"));
-            conference.setLocation(json.getString("location"));
-            conference.setDate(json.getString("date"));
-            conference.setPasscode(json.getString("passcode"));
+            event.setId(json.getString("id"));
+            event.setName(json.getString("name"));
+            event.setLocation(json.getString("location"));
+            event.setDate(json.getString("date"));
+            event.setPasscode(json.getString("passcode"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return conference;
+        return event;
     }
 
     public String getId() {

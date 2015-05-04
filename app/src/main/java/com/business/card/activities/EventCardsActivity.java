@@ -13,12 +13,12 @@ import android.widget.Toast;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
-import com.business.card.adapters.ConferenceBusinessCardAdapter;
+import com.business.card.adapters.EventBusinessCardAdapter;
 import com.business.card.objects.BusinessCard;
-import com.business.card.objects.Conference;
-import com.business.card.requests.RequestConferenceCards;
-import com.business.card.requests.RequestPrivateConferenceCard;
-import com.business.card.requests.RequestPublicConferenceCard;
+import com.business.card.objects.Event;
+import com.business.card.requests.RequestEventCards;
+import com.business.card.requests.RequestPrivateEventCard;
+import com.business.card.requests.RequestPublicEventCard;
 import com.business.card.util.Util;
 
 import org.json.JSONArray;
@@ -28,12 +28,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConferenceCardsActivity extends ActionBarActivity {
+public class EventCardsActivity extends ActionBarActivity {
 
-    private Conference conference;
-    private List<BusinessCard> conferenceCards;
-    private ListView conferenceCardsListView;
-    private ConferenceBusinessCardAdapter adapter;
+    private Event event;
+    private List<BusinessCard> eventCards;
+    private ListView eventCardsListView;
+    private EventBusinessCardAdapter adapter;
     private ProgressBar progressBar;
     private TextView noCardsAvailable;
     private BusinessCard selectedCard;
@@ -42,13 +42,13 @@ public class ConferenceCardsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.conference_cards);
+        setContentView(R.layout.event_cards);
 
-        conference = BusinessCardApplication.selectedConference;
+        event = BusinessCardApplication.selectedEvent;
 
         // display the top left back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(conference.getName());
+        getSupportActionBar().setTitle(event.getName());
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
@@ -58,8 +58,8 @@ public class ConferenceCardsActivity extends ActionBarActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
-        conferenceCardsListView = (ListView) findViewById(R.id.conference_cards_listview);
-        conferenceCardsListView.setVisibility(View.GONE);
+        eventCardsListView = (ListView) findViewById(R.id.event_cards_listview);
+        eventCardsListView.setVisibility(View.GONE);
 
         noCardsAvailable = (TextView) findViewById(R.id.no_cards_available);
         noCardsAvailable.setVisibility(View.GONE);
@@ -69,8 +69,8 @@ public class ConferenceCardsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        RequestConferenceCards requestNearbyCards = new RequestConferenceCards(this, BusinessCardApplication.loggedUser, conference);
-        requestNearbyCards.execute(new String[]{});
+        RequestEventCards requestEventCards = new RequestEventCards(this, BusinessCardApplication.loggedUser, event);
+        requestEventCards.execute(new String[]{});
     }
 
     @Override
@@ -99,10 +99,10 @@ public class ConferenceCardsActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished request for conference Cards
+     * Finished request for event Cards
      */
-    public void onConferenceCardsRequestFinished(JSONArray j) {
-        conferenceCards = new ArrayList<BusinessCard>();
+    public void onEventCardsRequestFinished(JSONArray j) {
+        eventCards = new ArrayList<BusinessCard>();
         List<BusinessCard> businessCards = new ArrayList<BusinessCard>();
         for (int i = 0; i < j.length(); i++) {
             try {
@@ -113,41 +113,41 @@ public class ConferenceCardsActivity extends ActionBarActivity {
             }
         }
 
-        conferenceCards = businessCards;
+        eventCards = businessCards;
         progressBar.setVisibility(View.GONE);
 
-        if (conferenceCards.size() > 0) {
-            conferenceCardsListView.setVisibility(View.VISIBLE);
+        if (eventCards.size() > 0) {
+            eventCardsListView.setVisibility(View.VISIBLE);
             noCardsAvailable.setVisibility(View.GONE);
-            adapter = new ConferenceBusinessCardAdapter(this, conferenceCards);
-            conferenceCardsListView.setAdapter(adapter);
+            adapter = new EventBusinessCardAdapter(this, eventCards);
+            eventCardsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } else {
-            conferenceCardsListView.setVisibility(View.GONE);
+            eventCardsListView.setVisibility(View.GONE);
             noCardsAvailable.setVisibility(View.VISIBLE);
         }
     }
 
-    public void requestPublicConferenceCard(BusinessCard businessCard) {
+    public void requestPublicEventCard(BusinessCard businessCard) {
         progressDialog.show();
         selectedCard = businessCard;
 
-        RequestPublicConferenceCard requestPublicConferenceCard = new RequestPublicConferenceCard(this, businessCard);
-        requestPublicConferenceCard.execute(new String[]{});
+        RequestPublicEventCard requestPublicEventCard = new RequestPublicEventCard(this, businessCard);
+        requestPublicEventCard.execute(new String[]{});
     }
 
-    public void requestPrivateConferenceCard(BusinessCard businessCard) {
+    public void requestPrivateEventCard(BusinessCard businessCard) {
         progressDialog.show();
         selectedCard = businessCard;
 
-        RequestPrivateConferenceCard requestPrivateConferenceCard = new RequestPrivateConferenceCard(this, businessCard);
-        requestPrivateConferenceCard.execute(new String[]{});
+        RequestPrivateEventCard requestPrivateEventCard = new RequestPrivateEventCard(this, businessCard);
+        requestPrivateEventCard.execute(new String[]{});
     }
 
     /**
-     * Finished request for getting a public conference card
+     * Finished request for getting a public event card
      */
-    public void onPublicConferenceCardRequestFinished(JSONObject json) {
+    public void onPublicEventCardRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             String success = json.getString("success");
@@ -157,18 +157,18 @@ public class ConferenceCardsActivity extends ActionBarActivity {
                         selectedCard.getFirstName(), selectedCard.getLastName(),
                         selectedCard.getTitle()), Toast.LENGTH_SHORT).show();
 
-                RequestConferenceCards requestNearbyCards = new RequestConferenceCards(this, BusinessCardApplication.loggedUser, conference);
-                requestNearbyCards.execute(new String[]{});
+                RequestEventCards requestEventCards = new RequestEventCards(this, BusinessCardApplication.loggedUser, event);
+                requestEventCards.execute(new String[]{});
 
-                conferenceCards.remove(selectedCard);
-                if (conferenceCards.size() > 0) {
-                    conferenceCardsListView.setVisibility(View.VISIBLE);
+                eventCards.remove(selectedCard);
+                if (eventCards.size() > 0) {
+                    eventCardsListView.setVisibility(View.VISIBLE);
                     noCardsAvailable.setVisibility(View.GONE);
-                    adapter = new ConferenceBusinessCardAdapter(this, conferenceCards);
-                    conferenceCardsListView.setAdapter(adapter);
+                    adapter = new EventBusinessCardAdapter(this, eventCards);
+                    eventCardsListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 } else {
-                    conferenceCardsListView.setVisibility(View.GONE);
+                    eventCardsListView.setVisibility(View.GONE);
                     noCardsAvailable.setVisibility(View.VISIBLE);
                 }
             } else {
@@ -181,9 +181,9 @@ public class ConferenceCardsActivity extends ActionBarActivity {
     }
 
     /**
-     * Finished requesting a private conference card
+     * Finished requesting a private event card
      */
-    public void onPrivateConferenceCardRequestFinished(JSONObject json) {
+    public void onPrivateEventCardRequestFinished(JSONObject json) {
         progressDialog.dismiss();
         try {
             int success = json.getInt("success");

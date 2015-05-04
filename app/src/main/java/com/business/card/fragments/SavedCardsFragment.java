@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -17,15 +18,21 @@ import android.widget.TextView;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
-import com.business.card.activities.AddEditCardActivity;
 import com.business.card.activities.MainActivity;
 import com.business.card.activities.ViewCardActivity;
 import com.business.card.adapters.SavedBusinessCardAdapter;
 import com.business.card.objects.BusinessCard;
-import com.business.card.requests.RequestDeleteMyCard;
 import com.business.card.requests.RequestDeleteSavedCard;
 import com.business.card.util.Util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.List;
 
 public class SavedCardsFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -36,7 +43,7 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
     private SavedBusinessCardAdapter adapter;
     private ProgressBar progressBar;
     private TextView noCardsAvailable;
-
+    private boolean refreshList = false;
     private BusinessCard selectedBusinessCard;
 
     @Override
@@ -56,6 +63,11 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
 
         noCardsAvailable = (TextView) mView.findViewById(R.id.no_cards_available);
         noCardsAvailable.setVisibility(View.GONE);
+
+        if (refreshList) {
+            refreshList = false;
+            setSavedCards(savedCards);
+        }
     }
 
     @Override
@@ -68,9 +80,12 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     public void setSavedCards(List<BusinessCard> savedCards) {
+        if (!isAdded()) {
+            this.savedCards = savedCards;
+            refreshList = true;
+            return;
+        }
         progressBar.setVisibility(View.GONE);
-
-        this.savedCards = savedCards;
 
         if (savedCards.size() > 0) {
             savedCardsListView.setVisibility(View.VISIBLE);

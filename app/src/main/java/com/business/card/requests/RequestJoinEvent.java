@@ -3,6 +3,7 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.business.card.BusinessCardApplication;
 import com.business.card.activities.MainActivity;
 
 import org.apache.http.HttpResponse;
@@ -16,17 +17,15 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestDenyPrivateConferenceCard extends AsyncTask<String, Integer, JSONObject> {
+public class RequestJoinEvent extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
     private MainActivity activity;
-    private String cardId;
-    private String userId;
+    private String passcode;
 
-    public RequestDenyPrivateConferenceCard(MainActivity activity, String cardId, String userId) {
+    public RequestJoinEvent(MainActivity activity, String passcode) {
         this.activity = activity;
-        this.cardId = cardId;
-        this.userId = userId;
+        this.passcode = passcode;
     }
 
     @Override
@@ -35,9 +34,9 @@ public class RequestDenyPrivateConferenceCard extends AsyncTask<String, Integer,
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/deny_private_conference_card.php";
-            url += "?user_id=" + userId;
-            url += "&card_id=" + cardId;
+            String url = "http://businesscard.netne.net/api/add/join_event.php";
+            url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
+            url += "&passcode=" + passcode;
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -74,7 +73,7 @@ public class RequestDenyPrivateConferenceCard extends AsyncTask<String, Integer,
         super.onPostExecute(json);
 
         if (done) {
-            activity.onDenyPrivateConferenceCardRequestFinished(json);
+            activity.onJoinEventRequestFinished(json);
         }
     }
 }

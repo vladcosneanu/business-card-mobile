@@ -3,9 +3,9 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.business.card.BusinessCardApplication;
-import com.business.card.activities.ConferenceCardsActivity;
-import com.business.card.objects.BusinessCard;
+import com.business.card.activities.EventCardsActivity;
+import com.business.card.objects.Event;
+import com.business.card.objects.User;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -13,31 +13,33 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestPublicConferenceCard extends AsyncTask<String, Integer, JSONObject> {
+public class RequestEventCards extends AsyncTask<String, Integer, JSONArray> {
 
     private boolean done = false;
-    private ConferenceCardsActivity activity;
-    private BusinessCard businessCard;
+    private EventCardsActivity activity;
+    private User user;
+    private Event event;
 
-    public RequestPublicConferenceCard(ConferenceCardsActivity activity, BusinessCard businessCard) {
+    public RequestEventCards(EventCardsActivity activity, User user, Event event) {
         this.activity = activity;
-        this.businessCard = businessCard;
+        this.user = user;
+        this.event = event;
     }
 
     @Override
-    protected JSONObject doInBackground(String... params) {
+    protected JSONArray doInBackground(String... params) {
         byte[] result = null;
-        JSONObject json = null;
+        JSONArray json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/public_conference_card.php";
-            url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
-            url += "&card_id=" + businessCard.getId();
+            String url = "http://businesscard.netne.net/api/get/event_cards.php";
+            url += "?user_id=" + user.getId();
+            url += "&event_id=" + event.getId();
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -49,7 +51,7 @@ public class RequestPublicConferenceCard extends AsyncTask<String, Integer, JSON
                 result = EntityUtils.toByteArray(response.getEntity());
                 publishProgress(result.length);
                 String str = new String(result, "UTF-8");
-                json = new JSONObject(str);
+                json = new JSONArray(str);
             }
 
             if (json != null) {
@@ -70,11 +72,11 @@ public class RequestPublicConferenceCard extends AsyncTask<String, Integer, JSON
     }
 
     @Override
-    protected void onPostExecute(JSONObject json) {
+    protected void onPostExecute(JSONArray json) {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onPublicConferenceCardRequestFinished(json);
+            activity.onEventCardsRequestFinished(json);
         }
     }
 }

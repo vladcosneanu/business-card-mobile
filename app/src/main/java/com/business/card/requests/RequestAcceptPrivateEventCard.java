@@ -3,9 +3,7 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.business.card.BusinessCardApplication;
-import com.business.card.activities.ConferenceCardsActivity;
-import com.business.card.objects.BusinessCard;
+import com.business.card.activities.MainActivity;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -18,15 +16,17 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestPrivateConferenceCard extends AsyncTask<String, Integer, JSONObject> {
+public class RequestAcceptPrivateEventCard extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
-    private ConferenceCardsActivity activity;
-    private BusinessCard businessCard;
+    private MainActivity activity;
+    private String cardId;
+    private String userId;
 
-    public RequestPrivateConferenceCard(ConferenceCardsActivity activity, BusinessCard businessCard) {
+    public RequestAcceptPrivateEventCard(MainActivity activity, String cardId, String userId) {
         this.activity = activity;
-        this.businessCard = businessCard;
+        this.cardId = cardId;
+        this.userId = userId;
     }
 
     @Override
@@ -35,9 +35,9 @@ public class RequestPrivateConferenceCard extends AsyncTask<String, Integer, JSO
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/private_conference_card.php";
-            url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
-            url += "&card_id=" + businessCard.getId();
+            String url = "http://businesscard.netne.net/api/add/accept_private_event_card.php";
+            url += "?user_id=" + userId;
+            url += "&card_id=" + cardId;
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -74,7 +74,7 @@ public class RequestPrivateConferenceCard extends AsyncTask<String, Integer, JSO
         super.onPostExecute(json);
 
         if (done) {
-            activity.onPrivateConferenceCardRequestFinished(json);
+            activity.onAcceptPrivateEventCardRequestFinished(json);
         }
     }
 }

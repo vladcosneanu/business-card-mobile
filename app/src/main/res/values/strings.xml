@@ -40,7 +40,7 @@
     <string name="action_logout">Logout</string>
     <string name="saved_cards">Saved Cards</string>
     <string name="my_cards">My Cards</string>
-    <string name="conferences">Conferences</string>
+    <string name="events">Events</string>
     <string name="no_cards">No Cards available</string>
     <string name="no_nearby_cards">No nearby Cards found</string>
     <string name="add_business_card">Add Business Card</string>
@@ -58,7 +58,7 @@
     <string name="edit">Edit</string>
     <string name="delete_card_message">Are you sure you wish to delete this business card?\n\nTitle: %1$s\nEmail: %2$s\nPhone: %3$s\nAddress: %4$s</string>
     <string name="remove_card_message">Are you sure you wish to remove this business card from your Saved list?\n\nTitle: %1$s\nEmail: %2$s\nPhone: %3$s\nAddress: %4$s</string>
-    <string name="remove_conference_message">Are you sure you wish to remove this conference?\n\n%1$s\n%2$s</string>
+    <string name="remove_event_message">Are you sure you wish to remove this event?\n\n%1$s\n%2$s</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="choose_action_for_card">Choose an Action for this Card</string>
@@ -68,11 +68,11 @@
     <string name="distance_meters">%1$sm</string>
     <string name="public_card_received">%1$s %2$s\'s %3$s Card was added to your Saved Cards</string>
     <string name="private_card_requested">%1$s %2$s\'s %3$s Card was requested.\nYou will have access to this card once the request is accepted.</string>
-    <string name="no_conferences">No Conferences available</string>
-    <string name="choose_action_for_conference">Choose an Action for this Conference</string>
-    <string name="remove_conference">Remove Conference</string>
-    <string name="no_conference_cards">No Cards found for this Conference</string>
-    <string name="conference_cards">Conference Cards</string>
+    <string name="no_events">No Events available</string>
+    <string name="choose_action_for_event">Choose an Action for this Event</string>
+    <string name="remove_event">Remove Event</string>
+    <string name="no_event_cards">No Cards found for this Event</string>
+    <string name="event_cards">Event Cards</string>
     <string name="save_card">Save Card</string>
     <string name="logout_message">Are you sure you wish to logout?</string>
     <string name="select_card_layout">Select Card layout</string>
@@ -86,14 +86,14 @@
     <string name="accepted_private_card_request">You have granted access to your business card.</string>
     <string name="denied_private_card_request">You have denied access to your business card.</string>
     <string name="passcode">Passcode</string>
-    <string name="conference_passcode_title">Conference Passcode</string>
-    <string name="conference_passcode_message">Please insert a valid Conference Passcode in order to get access to the participants business cards.</string>
+    <string name="event_passcode_title">Event Passcode</string>
+    <string name="event_passcode_message">Please insert a valid Event Passcode in order to get access to the participants business cards.</string>
     <string name="submit">Submit</string>
     <string name="invalid_passcode">Invalid Passcode</string>
     <string name="cancel">Cancel</string>
-    <string name="conference_joined">You have successfully joined %1$s</string>
-    <string name="passcode_does_not_exist">There is no Conference associated with this Passcode.</string>
-    <string name="conference_already_joined">You have already joined this Conference.</string>
-    <string name="conference_remove_success">You have successfully removed the conference.</string>
+    <string name="event_joined">You have successfully joined %1$s</string>
+    <string name="passcode_does_not_exist">There is no Event associated with this Passcode.</string>
+    <string name="event_already_joined">You have already joined this Event.</string>
+    <string name="event_remove_success">You have successfully removed the event.</string>
 
 </resources>

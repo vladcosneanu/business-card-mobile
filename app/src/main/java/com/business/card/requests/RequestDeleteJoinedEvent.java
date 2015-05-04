@@ -5,8 +5,7 @@ import android.util.Log;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.activities.MainActivity;
-import com.business.card.objects.BusinessCard;
-import com.business.card.objects.Conference;
+import com.business.card.objects.Event;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -19,15 +18,15 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestDeleteJoinedConference extends AsyncTask<String, Integer, JSONObject> {
+public class RequestDeleteJoinedEvent extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
     private MainActivity activity;
-    private Conference conference;
+    private Event event;
 
-    public RequestDeleteJoinedConference(MainActivity activity, Conference conference) {
+    public RequestDeleteJoinedEvent(MainActivity activity, Event event) {
         this.activity = activity;
-        this.conference = conference;
+        this.event = event;
     }
 
     @Override
@@ -36,8 +35,8 @@ public class RequestDeleteJoinedConference extends AsyncTask<String, Integer, JS
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/delete/joined_conference.php";
-            url += "?conference_id=" + conference.getId();
+            String url = "http://businesscard.netne.net/api/delete/joined_event.php";
+            url += "?event_id=" + event.getId();
             url += "&user_id=" + BusinessCardApplication.loggedUser.getId();
 
             Log.e("request", url);
@@ -75,7 +74,7 @@ public class RequestDeleteJoinedConference extends AsyncTask<String, Integer, JS
         super.onPostExecute(json);
 
         if (done) {
-            activity.onJoinedConferenceDeleteRequestFinished(json);
+            activity.onJoinedEventDeleteRequestFinished(json);
         }
     }
 }

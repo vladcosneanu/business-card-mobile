@@ -4,8 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.business.card.BusinessCardApplication;
-import com.business.card.activities.ConferenceCardsActivity;
-import com.business.card.activities.MainActivity;
+import com.business.card.activities.EventCardsActivity;
 import com.business.card.objects.BusinessCard;
 
 import org.apache.http.HttpResponse;
@@ -19,15 +18,15 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestJoinConference extends AsyncTask<String, Integer, JSONObject> {
+public class RequestPublicEventCard extends AsyncTask<String, Integer, JSONObject> {
 
     private boolean done = false;
-    private MainActivity activity;
-    private String passcode;
+    private EventCardsActivity activity;
+    private BusinessCard businessCard;
 
-    public RequestJoinConference(MainActivity activity, String passcode) {
+    public RequestPublicEventCard(EventCardsActivity activity, BusinessCard businessCard) {
         this.activity = activity;
-        this.passcode = passcode;
+        this.businessCard = businessCard;
     }
 
     @Override
@@ -36,9 +35,9 @@ public class RequestJoinConference extends AsyncTask<String, Integer, JSONObject
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/join_conference.php";
+            String url = "http://businesscard.netne.net/api/add/public_event_card.php";
             url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
-            url += "&passcode=" + passcode;
+            url += "&card_id=" + businessCard.getId();
 
             Log.e("request", url);
             HttpClient client = new DefaultHttpClient();
@@ -75,7 +74,7 @@ public class RequestJoinConference extends AsyncTask<String, Integer, JSONObject
         super.onPostExecute(json);
 
         if (done) {
-            activity.onJoinConferenceRequestFinished(json);
+            activity.onPublicEventCardRequestFinished(json);
         }
     }
 }

@@ -9,16 +9,28 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.business.card.R;
 import com.business.card.activities.NotLoggedActivity;
+import com.business.card.objects.BusinessCard;
 import com.business.card.objects.Coordinate;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.io.StreamCorruptedException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +40,7 @@ public class Util {
     public static final int CONTEXT_MENU_ITEM_MY_CARDS_EDIT = 1;
     public static final int CONTEXT_MENU_ITEM_MY_CARDS_DELETE = 2;
 
-    public static final int CONTEXT_MENU_ITEM_CONFERENCES_REMOVE = 3;
+    public static final int CONTEXT_MENU_ITEM_EVENTS_REMOVE = 3;
 
     public static final int CONTEXT_MENU_ITEM_SAVED_CARDS_REMOVE = 4;
 
@@ -45,6 +57,10 @@ public class Util {
     public static final String ACCEPT_REQUEST_CARD_ACTION = "ACCEPT_REQUEST_CARD_ACTION";
     public static final String DENY_REQUEST_CARD_ACTION = "DENY_REQUEST_CARD_ACTION";
     public static final String ACCEPT_REQUEST_CARD_GRANTED_ACTION = "ACCEPT_REQUEST_CARD_GRANTED_ACTION";
+
+    public static final String SAVED_CARDS_FILE = "saved_cards";
+    public static final String MY_CARDS_FILE = "my_cards";
+    public static final String EVENTS_FILE = "events_file";
 
     private static Coordinate coordinate;
 
@@ -183,5 +199,52 @@ public class Util {
             default:
                 return R.layout.card_layout_1;
         }
+    }
+
+    public static void saveList(List<? extends Serializable> serializableList, String filename) {
+        try {
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/business_card/" + filename);
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+
+            // write the list in the file
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(serializableList);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static List<? extends Serializable> loadList(String filename) {
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/business_card/" + filename);
+        if (!file.exists()) {
+            return null;
+        }
+
+        try {
+            // read the list from the file
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+            List<? extends Serializable> list = (List<? extends Serializable>) inputStream.readObject();
+            inputStream.close();
+
+            return list;
+        } catch (StreamCorruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
