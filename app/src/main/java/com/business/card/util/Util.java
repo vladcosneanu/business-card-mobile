@@ -5,17 +5,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.business.card.R;
 import com.business.card.activities.NotLoggedActivity;
-import com.business.card.objects.BusinessCard;
 import com.business.card.objects.Coordinate;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -98,7 +99,7 @@ public class Util {
         coordinate.setLocationUpdateTimestamp(locationInfo.lastLocationUpdateTimestamp);
         coordinate.setAccuracy(locationInfo.lastAccuracy);
     }
-    
+
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -146,8 +147,12 @@ public class Util {
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked "Yes" button, delete the selected business card
-                // remove the previously saved user
+                // remove the previously saved data
                 PreferenceHelper.clearPreferences(activity);
+                PreferenceHelper.clearDefaultPreferences(activity);
+
+                // cleared any cached files
+                clearCachedFiles();
 
                 Toast.makeText(activity, R.string.logout_successful, Toast.LENGTH_SHORT).show();
 
@@ -246,5 +251,15 @@ public class Util {
         }
 
         return null;
+    }
+
+    public static void clearCachedFiles() {
+        File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/business_card/");
+        String[] entries = folder.list();
+        for (String s : entries) {
+            File currentFile = new File(folder.getPath(), s);
+            currentFile.delete();
+        }
+        folder.delete();
     }
 }

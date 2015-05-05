@@ -70,7 +70,7 @@ public class NearbyCardsActivity extends ActionBarActivity {
         Util.updateCoordinate(latestInfo);
 
         RequestNearbyCards requestNearbyCards = new RequestNearbyCards(this, BusinessCardApplication.loggedUser, Util
-                .getLocation(), 10000);
+                .getLocation(), PreferenceHelper.getNearbyRadius(this));
         requestNearbyCards.execute(new String[]{});
     }
 
@@ -92,6 +92,12 @@ public class NearbyCardsActivity extends ActionBarActivity {
                 Util.displayConfirmLogoutDialog(this);
 
                 return true;
+            case R.id.action_settings:
+                // start the settings activity
+                Intent settingsINtent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsINtent);
+
+                break;
             default:
                 break;
         }

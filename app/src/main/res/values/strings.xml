@@ -95,5 +95,7 @@
     <string name="passcode_does_not_exist">There is no Event associated with this Passcode.</string>
     <string name="event_already_joined">You have already joined this Event.</string>
     <string name="event_remove_success">You have successfully removed the event.</string>
+    <string name="nearby_summary">100</string>
+    <string name="nearby_title">Nearby Search Radius</string>
 
 </resources>

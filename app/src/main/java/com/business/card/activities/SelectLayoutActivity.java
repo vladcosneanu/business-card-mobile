@@ -88,6 +88,12 @@ public class SelectLayoutActivity extends ActionBarActivity {
                 setResult(RESULT_OK, returnIntent);
                 finish();
                 return true;
+            case R.id.action_settings:
+                // start the settings activity
+                Intent settingsINtent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsINtent);
+
+                break;
             default:
                 break;
         }

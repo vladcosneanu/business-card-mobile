@@ -12,7 +12,7 @@ import com.business.card.R;
 import com.business.card.objects.BusinessCard;
 import com.business.card.util.Util;
 
-public class ViewCardActivity  extends ActionBarActivity {
+public class ViewCardActivity extends ActionBarActivity {
 
     public static final String DISPLAY_EDIT_EXTRA_KEY = "display_edit";
 
@@ -74,6 +74,12 @@ public class ViewCardActivity  extends ActionBarActivity {
                 Util.displayConfirmLogoutDialog(this);
 
                 return true;
+            case R.id.action_settings:
+                // start the settings activity
+                Intent settingsINtent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsINtent);
+
+                break;
             default:
                 break;
         }

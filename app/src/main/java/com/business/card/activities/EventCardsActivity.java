@@ -1,6 +1,7 @@
 package com.business.card.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -91,6 +92,12 @@ public class EventCardsActivity extends ActionBarActivity {
                 Util.displayConfirmLogoutDialog(this);
 
                 return true;
+            case R.id.action_settings:
+                // start the settings activity
+                Intent settingsINtent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsINtent);
+
+                break;
             default:
                 break;
         }

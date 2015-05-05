@@ -186,6 +186,12 @@ public class AddEditCardActivity extends ActionBarActivity {
                 Util.displayConfirmLogoutDialog(this);
 
                 return true;
+            case R.id.action_settings:
+                // start the settings activity
+                Intent settingsINtent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsINtent);
+
+                break;
             default:
                 break;
         }

@@ -24,9 +24,9 @@ public class RequestNearbyCards extends AsyncTask<String, Integer, JSONArray> {
     private NearbyCardsActivity activity;
     private User user;
     private Coordinate coordinate;
-    private int distance;
+    private String distance;
 
-    public RequestNearbyCards(NearbyCardsActivity activity, User user, Coordinate coordinate, int distance) {
+    public RequestNearbyCards(NearbyCardsActivity activity, User user, Coordinate coordinate, String distance) {
         this.activity = activity;
         this.user = user;
         this.coordinate = coordinate;
