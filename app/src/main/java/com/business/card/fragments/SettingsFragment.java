@@ -38,7 +38,7 @@ public class SettingsFragment extends PreferenceFragment {
 
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Util.displayConfirmLogoutDialog(getActivity());
+                (new Util()).displayConfirmLogoutDialog(getActivity());
 
                 return false;
             }

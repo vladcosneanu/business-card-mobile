@@ -311,7 +311,7 @@ public class MainActivity extends ActionBarActivity {
                 displayJoinEventDialog();
                 break;
             case R.id.action_logout:
-                Util.displayConfirmLogoutDialog(this);
+                (new Util()).displayConfirmLogoutDialog(this);
 
                 return true;
             case R.id.action_settings:

@@ -79,7 +79,7 @@ public class SelectLayoutActivity extends ActionBarActivity {
                 finish();
                 break;
             case R.id.action_logout:
-                Util.displayConfirmLogoutDialog(this);
+                (new Util()).displayConfirmLogoutDialog(this);
 
                 return true;
             case R.id.action_accept:

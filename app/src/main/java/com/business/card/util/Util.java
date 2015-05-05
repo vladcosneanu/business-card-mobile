@@ -2,6 +2,7 @@ package com.business.card.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,12 +16,17 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.business.card.BusinessCardApplication;
 import com.business.card.R;
 import com.business.card.activities.NotLoggedActivity;
 import com.business.card.objects.Coordinate;
+import com.business.card.requests.RequestUpdateLogout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,6 +70,8 @@ public class Util {
     public static final String EVENTS_FILE = "events_file";
 
     private static Coordinate coordinate;
+    private static ProgressDialog progressDialog;
+    private static Activity activity;
 
     public static boolean isEmailValid(String email) {
         String regExpn = "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@" + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
@@ -139,20 +147,56 @@ public class Util {
         return true;
     }
 
-    public static void displayConfirmLogoutDialog(final Activity activity) {
+    public void displayConfirmLogoutDialog(final Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.action_logout);
         builder.setMessage(R.string.logout_message);
 
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked "Yes" button, delete the selected business card
-                // remove the previously saved data
+                if (isNetworkAvailable(activity)) {
+                    // User clicked "Yes" button, delete the location info and GCM data from server
+                    Util.activity = activity;
+
+                    progressDialog = new ProgressDialog(activity);
+                    progressDialog.setMessage(activity.getString(R.string.please_wait));
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setCancelable(true);
+                    progressDialog.show();
+
+                    RequestUpdateLogout requestUpdateLogout = new RequestUpdateLogout(Util.this, BusinessCardApplication.loggedUser);
+                    requestUpdateLogout.execute(new String[]{});
+                } else {
+                    displayNoNetworkForLogout(activity);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.no, null);
+
+        builder.show();
+    }
+
+    /**
+     * Logout request finished
+     */
+    public void onLogoutFinished(JSONObject json) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        try {
+            String success = json.getString("success");
+            if (success.equals("true")) {
+                // logout finished
                 PreferenceHelper.clearPreferences(activity);
                 PreferenceHelper.clearDefaultPreferences(activity);
 
                 // cleared any cached files
                 clearCachedFiles();
+
+                BusinessCardApplication.selectedBusinessCard = null;
+                BusinessCardApplication.selectedEvent = null;
+                BusinessCardApplication.loggedUser = null;
 
                 Toast.makeText(activity, R.string.logout_successful, Toast.LENGTH_SHORT).show();
 
@@ -161,10 +205,16 @@ public class Util {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 activity.startActivity(intent);
             }
-        });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-        builder.setNegativeButton(R.string.no, null);
-
+    private static void displayNoNetworkForLogout(Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.logout_network_title);
+        builder.setMessage(R.string.logout_network_message);
+        builder.setNegativeButton(R.string.ok, null);
         builder.show();
     }
 
@@ -261,5 +311,11 @@ public class Util {
             currentFile.delete();
         }
         folder.delete();
+    }
+
+    public static boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

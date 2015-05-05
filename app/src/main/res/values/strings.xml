@@ -97,5 +97,8 @@
     <string name="event_remove_success">You have successfully removed the event.</string>
     <string name="nearby_summary">100</string>
     <string name="nearby_title">Nearby Search Radius</string>
+    <string name="logout_network_title">No Network Connection</string>
+    <string name="logout_network_message">In order to logout you need to be connected to the Internet.</string>
+    <string name="ok">OK</string>
 
 </resources>
