@@ -106,6 +106,9 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/action_settings"></activity>
+        <activity
+            android:name=".activities.CreateEventActivity"
+            android:label="@string/create_event"></activity>
 
         <receiver
             android:name=".receivers.GcmBroadcastReceiver"

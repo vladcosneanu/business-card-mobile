@@ -49,6 +49,7 @@ public class EventAdapter extends BaseAdapter {
             viewHolder.name = (TextView) rowView.findViewById(R.id.name);
             viewHolder.date = (TextView) rowView.findViewById(R.id.date);
             viewHolder.location = (TextView) rowView.findViewById(R.id.location);
+            viewHolder.passcode = (TextView) rowView.findViewById(R.id.passcode);
 
             rowView.setTag(viewHolder);
         }
@@ -58,6 +59,7 @@ public class EventAdapter extends BaseAdapter {
         viewHolder.name.setText(event.getName());
         viewHolder.date.setText(event.getDate());
         viewHolder.location.setText(event.getLocation());
+        viewHolder.passcode.setText(event.getPasscode());
 
         return rowView;
     }
@@ -66,5 +68,6 @@ public class EventAdapter extends BaseAdapter {
         private TextView name;
         private TextView date;
         private TextView location;
+        private TextView passcode;
     }
 }

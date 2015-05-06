@@ -304,6 +304,8 @@ public class MainActivity extends ActionBarActivity {
                     startActivity(addEditCardIntent);
                 } else if (currentPage == 2) {
                     // add a Event
+                    Intent createEventIntent = new Intent(this, CreateEventActivity.class);
+                    startActivity(createEventIntent);
                 }
                 break;
             case R.id.action_join:

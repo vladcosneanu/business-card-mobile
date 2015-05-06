@@ -28,7 +28,9 @@
     <string name="create_account">Create Account</string>
     <string name="please_wait">Please wait&#8230;</string>
     <string name="sign_up_success">You have successfully signed up.\nPlease login.</string>
+    <string name="create_event_success">You have successfully created the event.</string>
     <string name="username_taken">This username has already been used</string>
+    <string name="passcode_taken">This passcode has already been used</string>
     <string name="please_fill_required_fields">Please fill in the required fields</string>
     <string name="password_not_confirmed">The password was not correctly confirmed</string>
     <string name="username_contains_spaces">Your username must not contain any spaces</string>
@@ -86,6 +88,7 @@
     <string name="accepted_private_card_request">You have granted access to your business card.</string>
     <string name="denied_private_card_request">You have denied access to your business card.</string>
     <string name="passcode">Passcode</string>
+    <string name="passcode2">"Passcode: "</string>
     <string name="event_passcode_title">Event Passcode</string>
     <string name="event_passcode_message">Please insert a valid Event Passcode in order to get access to the participants business cards.</string>
     <string name="submit">Submit</string>
@@ -100,5 +103,10 @@
     <string name="logout_network_title">No Network Connection</string>
     <string name="logout_network_message">In order to logout you need to be connected to the Internet.</string>
     <string name="ok">OK</string>
+    <string name="name_hint">Name</string>
+    <string name="location_hint">Location</string>
+    <string name="date">"Date: "</string>
+    <string name="create_event">Create Event</string>
+    <string name="passcode_too_long">The Passcode must not exceed 10 characters</string>
 
 </resources>
