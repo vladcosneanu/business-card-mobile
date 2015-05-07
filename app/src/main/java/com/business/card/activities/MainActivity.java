@@ -22,11 +22,13 @@ import android.widget.Toast;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
+import com.business.card.adapters.NearbyBusinessCardAdapter;
 import com.business.card.fragments.EventsFragment;
 import com.business.card.fragments.MyCardsFragment;
 import com.business.card.fragments.SavedCardsFragment;
 import com.business.card.objects.BusinessCard;
 import com.business.card.objects.Event;
+import com.business.card.objects.User;
 import com.business.card.receivers.BootCompletedReceiver;
 import com.business.card.receivers.LocationBroadcastReceiver;
 import com.business.card.requests.RequestAcceptPrivateEventCard;
@@ -613,6 +615,49 @@ public class MainActivity extends ActionBarActivity {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Finished request for share users
+     */
+    public void onShareUsersRequestFinished(JSONArray j) {
+        progressDialog.dismiss();
+
+        List<User> shareUsers = new ArrayList<User>();
+        for (int i = 0; i < j.length(); i++) {
+            try {
+                User shareUser = User.parseUserFromJson(j.getJSONObject(i));
+                shareUsers.add(shareUser);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (shareUsers.size() > 0) {
+            displayShareUsersDialog(shareUsers);
+        } else {
+            Toast.makeText(this, getString(R.string.no_share_users), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void displayShareUsersDialog(final List<User> shareUsers) {
+        String[] users = new String[shareUsers.size()];
+        for (int i = 0; i < shareUsers.size(); i++) {
+            users[i] = shareUsers.get(i).getFirstName() + " " + shareUsers.get(i).getLastName();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_user)
+                .setItems(users, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        User selectedUser = shareUsers.get(which);
+                        Log.d("Vlad", "selectedUser: " + selectedUser.getId());
+                    }
+                });
+
+        builder.show();
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {

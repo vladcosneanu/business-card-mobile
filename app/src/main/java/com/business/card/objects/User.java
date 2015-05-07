@@ -16,8 +16,8 @@ public class User {
         User user = new User();
         try {
             user.setId(json.getString("id"));
-            user.setFirstName(json.getString("first_name"));
-            user.setLastName(json.getString("last_name"));
+            user.setFirstName(json.getString("firstName"));
+            user.setLastName(json.getString("lastName"));
             user.setUsername(json.getString("username"));
             user.setPassword(json.getString("password"));
         } catch (JSONException e) {

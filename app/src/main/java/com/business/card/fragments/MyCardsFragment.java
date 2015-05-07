@@ -24,7 +24,11 @@ import com.business.card.activities.ViewCardActivity;
 import com.business.card.adapters.MyBusinessCardAdapter;
 import com.business.card.objects.BusinessCard;
 import com.business.card.requests.RequestDeleteMyCard;
+import com.business.card.requests.RequestNearbyCards;
+import com.business.card.requests.RequestShareUsers;
+import com.business.card.util.PreferenceHelper;
 import com.business.card.util.Util;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 import java.util.List;
 
@@ -101,6 +105,14 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
         switch (item.getItemId()) {
             case Util.CONTEXT_MENU_ITEM_MY_CARDS_SHARE:
                 // selected Share
+                ((MainActivity) getActivity()).displayProgressDialog();
+
+                LocationInfo latestInfo = new LocationInfo(getActivity());
+                Util.updateCoordinate(latestInfo);
+
+                RequestShareUsers requestShareUsers = new RequestShareUsers((MainActivity) getActivity(), BusinessCardApplication.loggedUser, Util
+                        .getLocation(), PreferenceHelper.getNearbyRadius(getActivity()));
+                requestShareUsers.execute(new String[]{});
 
                 break;
             case Util.CONTEXT_MENU_ITEM_MY_CARDS_EDIT:
