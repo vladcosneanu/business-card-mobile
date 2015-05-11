@@ -59,6 +59,11 @@ public class SelectLayoutActivity extends ActionBarActivity {
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
+        getSupportActionBar().setSubtitle(getString(R.string.x_of_y, (currentPage + 1), pagerAdapter.getCount()));
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
+                .getColor(Util.getColorByCardLayoutNo(currentPage + 1))));
+
         pager.setCurrentItem(Integer.parseInt(selectedLayout) - 1);
     }
 

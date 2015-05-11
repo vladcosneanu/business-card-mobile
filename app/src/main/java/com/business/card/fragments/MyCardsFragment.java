@@ -79,6 +79,8 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         BusinessCard businessCard = adapter.getItem(position);
+        businessCard.setFirstName(BusinessCardApplication.loggedUser.getFirstName());
+        businessCard.setLastName(BusinessCardApplication.loggedUser.getLastName());
         BusinessCardApplication.selectedBusinessCard = businessCard;
 
         // start the view card activity
@@ -91,6 +93,8 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         selectedBusinessCard = (BusinessCard) myCardsListView.getAdapter().getItem(info.position);
+        selectedBusinessCard.setFirstName(BusinessCardApplication.loggedUser.getFirstName());
+        selectedBusinessCard.setLastName(BusinessCardApplication.loggedUser.getLastName());
 
         menu.setHeaderTitle(getString(R.string.choose_action_for_card));
 

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
@@ -19,6 +21,13 @@ public class ViewCardActivity extends ActionBarActivity {
     private BusinessCard businessCard;
     private int cardLayout;
     private boolean displayEdit;
+
+    private TextView firstName;
+    private TextView lastName;
+    private TextView title;
+    private TextView phone;
+    private TextView email;
+    private TextView address;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +46,27 @@ public class ViewCardActivity extends ActionBarActivity {
         cardLayout = Util.getLayoutByCardLayoutNo(Integer.parseInt(businessCard.getLayout()));
 
         setContentView(cardLayout);
+
+        firstName = (TextView) findViewById(R.id.first_name);
+        firstName.setText(businessCard.getFirstName());
+        lastName = (TextView) findViewById(R.id.last_name);
+        lastName.setText(businessCard.getLastName());
+        title = (TextView) findViewById(R.id.title);
+        title.setText(businessCard.getTitle());
+        phone = (TextView) findViewById(R.id.phone);
+        phone.setText(businessCard.getPhone());
+        email = (TextView) findViewById(R.id.email);
+        if (businessCard.getEmail() != null && !businessCard.getEmail().equals("")) {
+            email.setText(businessCard.getEmail());
+        } else {
+            email.setVisibility(View.GONE);
+        }
+        address = (TextView) findViewById(R.id.address);
+        if (businessCard.getAddress() != null && !businessCard.getAddress().equals("")) {
+            address.setText(businessCard.getAddress());
+        } else {
+            address.setVisibility(View.GONE);
+        }
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
                 .getColor(Util.getColorByCardLayoutNo(Integer.parseInt(businessCard.getLayout())))));

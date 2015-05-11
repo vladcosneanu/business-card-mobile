@@ -99,10 +99,12 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.SelectLayoutActivity"
-            android:label="@string/select_card_layout"></activity>
+            android:label="@string/select_card_layout"
+            android:screenOrientation="fullSensor"></activity>
         <activity
             android:name=".activities.ViewCardActivity"
-            android:label="@string/view_card"></activity>
+            android:label="@string/view_card"
+            android:screenOrientation="fullSensor"></activity>
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/action_settings"></activity>
