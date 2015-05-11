@@ -262,7 +262,6 @@ public class MainActivity extends ActionBarActivity {
             String userId = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_USER_ID_EXTRA);
 
             String shareCardExtra = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_EXTRA);
-            Log.d("Vlad", "shareCardExtra: " + shareCardExtra);
             if (shareCardExtra.equals(Util.SHARE_CARD_RESPONSE_SAVE)) {
                 // Save the shared card
                 displayProgressDialog();
