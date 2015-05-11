@@ -37,7 +37,9 @@ import com.business.card.requests.RequestGCMRegistration;
 import com.business.card.requests.RequestJoinEvent;
 import com.business.card.requests.RequestMyCards;
 import com.business.card.requests.RequestMyEvents;
+import com.business.card.requests.RequestSaveSharedCard;
 import com.business.card.requests.RequestSavedCards;
+import com.business.card.requests.RequestShareCard;
 import com.business.card.requests.RequestUpdateGCMId;
 import com.business.card.services.GcmIntentService;
 import com.business.card.util.PreferenceHelper;
@@ -251,6 +253,24 @@ public class MainActivity extends ActionBarActivity {
                 displayProgressDialog();
                 RequestDenyPrivateEventCard requestDenyPrivateEventCard = new RequestDenyPrivateEventCard(this, cardId, userId);
                 requestDenyPrivateEventCard.execute(new String[]{});
+            }
+        } else if (receivedBundle != null && getIntent().getExtras().containsKey(Util.SHARE_CARD_RESPONSE_EXTRA)) {
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(GcmIntentService.SHARE_CARD_NOTIFICATION_ID);
+
+            String cardId = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_CARD_ID_EXTRA);
+            String userId = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_USER_ID_EXTRA);
+
+            String shareCardExtra = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_EXTRA);
+            Log.d("Vlad", "shareCardExtra: " + shareCardExtra);
+            if (shareCardExtra.equals(Util.SHARE_CARD_RESPONSE_SAVE)) {
+                // Save the shared card
+                displayProgressDialog();
+                RequestSaveSharedCard requestSaveSharedCard = new RequestSaveSharedCard(this, cardId, userId);
+                requestSaveSharedCard.execute(new String[] {});
+            } else if (shareCardExtra.equals(Util.SHARE_CARD_RESPONSE_CANCEL)) {
+                // Cancel the shared card
+                Toast.makeText(this, R.string.cancelled_shared_card, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -653,11 +673,60 @@ public class MainActivity extends ActionBarActivity {
                         // The 'which' argument contains the index position
                         // of the selected item
                         User selectedUser = shareUsers.get(which);
-                        Log.d("Vlad", "selectedUser: " + selectedUser.getId());
+                        BusinessCardApplication.selectedUser = selectedUser;
+
+                        progressDialog.show();
+                        RequestShareCard requestShareCard = new RequestShareCard(MainActivity.this,
+                                BusinessCardApplication.selectedBusinessCard, selectedUser.getId());
+                        requestShareCard.execute(new String[]{});
                     }
                 });
 
         builder.show();
+    }
+
+    /**
+     * Finished sharing a business card
+     */
+    public void onShareCardRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            int success = json.getInt("success");
+            if (success == 1) {
+                // card shared
+                Toast.makeText(this, getString(R.string.shared_cared,
+                        BusinessCardApplication.selectedBusinessCard.getTitle(),
+                        BusinessCardApplication.selectedUser.getFirstName(),
+                        BusinessCardApplication.selectedUser.getLastName()), Toast.LENGTH_LONG).show();
+            } else {
+                // card not shared
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Finished saving the shared card
+     */
+    public void onSaveSharedCardRequestFinished(JSONObject json) {
+        progressDialog.dismiss();
+        try {
+            String success = json.getString("success");
+            if (success.equals("true")) {
+                // Card saved
+                Toast.makeText(this, R.string.card_saved, Toast.LENGTH_SHORT).show();
+
+                RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
+                requestSavedCards.execute(new String[]{});
+            } else {
+                // card not saved
+                Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {

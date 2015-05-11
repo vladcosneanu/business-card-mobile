@@ -19,6 +19,7 @@ public class GcmIntentService extends IntentService {
     public static final int REQUEST_CARD_NOTIFICATION_ID = 1;
     public static final int REQUEST_CARD_GRANTED_NOTIFICATION_ID = 2;
     public static final int REQUEST_CARD_DECLINED_NOTIFICATION_ID = 3;
+    public static final int SHARE_CARD_NOTIFICATION_ID = 4;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
@@ -69,6 +70,8 @@ public class GcmIntentService extends IntentService {
             displayRequestCardGrantedNotification(bundle);
         } else if (notificationTitle.equals("Business Card request declined")) {
             displayRequestCardDeclinedNotification(bundle);
+        } else if (notificationTitle.equals("Business Card share request")) {
+            displayShareRequestNotification(bundle);
         }
     }
 
@@ -148,5 +151,39 @@ public class GcmIntentService extends IntentService {
                         .setDefaults(NotificationCompat.DEFAULT_ALL);
 
         mNotificationManager.notify(REQUEST_CARD_DECLINED_NOTIFICATION_ID, mBuilder.build());
+    }
+
+    private void displayShareRequestNotification(Bundle bundle) {
+        Intent saveIntent = new Intent(this, MainActivity.class);
+        saveIntent.setAction(Util.SAVE_SHARE_CARD_ACTION);
+        saveIntent.putExtra(Util.SHARE_CARD_RESPONSE_EXTRA, Util.SHARE_CARD_RESPONSE_SAVE);
+        saveIntent.putExtra(Util.SHARE_CARD_RESPONSE_USER_ID_EXTRA, bundle.getString("user_id"));
+        saveIntent.putExtra(Util.SHARE_CARD_RESPONSE_CARD_ID_EXTRA, bundle.getString("card_id"));
+        saveIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent savePendingIntent = PendingIntent.getActivity(this, 0,
+                saveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent cancelIntent = new Intent(this, MainActivity.class);
+        cancelIntent.setAction(Util.CANCEL_SHARE_CARD_ACTION);
+        cancelIntent.putExtra(Util.SHARE_CARD_RESPONSE_EXTRA, Util.SHARE_CARD_RESPONSE_CANCEL);
+        cancelIntent.putExtra(Util.SHARE_CARD_RESPONSE_USER_ID_EXTRA, bundle.getString("user_id"));
+        cancelIntent.putExtra(Util.SHARE_CARD_RESPONSE_CARD_ID_EXTRA, bundle.getString("card_id"));
+        cancelIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent cancelPendingIntent = PendingIntent.getActivity(this, 1,
+                cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_action_new)
+                        .setContentTitle(bundle.getString("title"))
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(bundle.getString("message")))
+                        .setContentText(bundle.getString("message"))
+                        .setAutoCancel(true)
+                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                        .addAction(R.drawable.ic_action_accept, getString(R.string.save), savePendingIntent)
+                        .addAction(R.drawable.ic_action_cancel, getString(R.string.cancel), cancelPendingIntent);
+
+        mNotificationManager.notify(SHARE_CARD_NOTIFICATION_ID, mBuilder.build());
     }
 }

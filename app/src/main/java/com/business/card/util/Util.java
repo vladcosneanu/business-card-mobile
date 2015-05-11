@@ -61,9 +61,18 @@ public class Util {
     public static final String REQUEST_CARD_RESPONSE_CARD_ID_EXTRA = "REQUEST_CARD_RESPONSE_CARD_ID_EXTRA";
     public static final String REQUEST_CARD_RESPONSE_USER_ID_EXTRA = "REQUEST_CARD_RESPONSE_USER_ID_EXTRA";
 
+    public static final String SHARE_CARD_RESPONSE_EXTRA = "SHARE_CARD_RESPONSE_EXTRA";
+    public static final String SHARE_CARD_RESPONSE_SAVE = "SHARE_CARD_RESPONSE_SAVE";
+    public static final String SHARE_CARD_RESPONSE_CANCEL = "SHARE_CARD_RESPONSE_CANCEL";
+    public static final String SHARE_CARD_RESPONSE_CARD_ID_EXTRA = "SHARE_CARD_RESPONSE_CARD_ID_EXTRA";
+    public static final String SHARE_CARD_RESPONSE_USER_ID_EXTRA = "SHARE_CARD_RESPONSE_USER_ID_EXTRA";
+
     public static final String ACCEPT_REQUEST_CARD_ACTION = "ACCEPT_REQUEST_CARD_ACTION";
     public static final String DENY_REQUEST_CARD_ACTION = "DENY_REQUEST_CARD_ACTION";
     public static final String ACCEPT_REQUEST_CARD_GRANTED_ACTION = "ACCEPT_REQUEST_CARD_GRANTED_ACTION";
+
+    public static final String SAVE_SHARE_CARD_ACTION = "SAVE_SHARE_CARD_ACTION";
+    public static final String CANCEL_SHARE_CARD_ACTION = "CANCEL_SHARE_CARD_ACTION";
 
     public static final String SAVED_CARDS_FILE = "saved_cards";
     public static final String MY_CARDS_FILE = "my_cards";

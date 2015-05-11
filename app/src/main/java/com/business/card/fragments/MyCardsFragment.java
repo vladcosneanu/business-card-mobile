@@ -105,6 +105,7 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
         switch (item.getItemId()) {
             case Util.CONTEXT_MENU_ITEM_MY_CARDS_SHARE:
                 // selected Share
+                BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
                 ((MainActivity) getActivity()).displayProgressDialog();
 
                 LocationInfo latestInfo = new LocationInfo(getActivity());

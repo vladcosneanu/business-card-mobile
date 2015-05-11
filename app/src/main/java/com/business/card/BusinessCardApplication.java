@@ -13,6 +13,7 @@ public class BusinessCardApplication extends Application {
 
     private static BusinessCardApplication singleton;
     public static User loggedUser;
+    public static User selectedUser;
     public static BusinessCard selectedBusinessCard;
     public static Event selectedEvent;
     public String generatedUsername = "";

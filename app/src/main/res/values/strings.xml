@@ -70,6 +70,7 @@
     <string name="distance_meters">%1$sm</string>
     <string name="public_card_received">%1$s %2$s\'s %3$s Card was added to your Saved Cards</string>
     <string name="private_card_requested">%1$s %2$s\'s %3$s Card was requested.\nYou will have access to this card once the request is accepted.</string>
+    <string name="shared_cared">Your %1$s Card was shared to %2$s %3$s.</string>
     <string name="no_events">No Events available</string>
     <string name="choose_action_for_event">Choose an Action for this Event</string>
     <string name="remove_event">Remove Event</string>
@@ -110,5 +111,8 @@
     <string name="passcode_too_long">The Passcode must not exceed 10 characters</string>
     <string name="no_share_users">There are no available users to share to.</string>
     <string name="select_user">Select User</string>
+    <string name="save">Save</string>
+    <string name="cancelled_shared_card">The card was not added to your Saved Cards list.</string>
+    <string name="card_saved">The card was added to your Saved Cards list.</string>
 
 </resources>
