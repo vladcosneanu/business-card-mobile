@@ -73,6 +73,8 @@
             android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
             android:text="1-800-356-9377"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
@@ -81,6 +83,8 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
             android:text="john.green@email.com"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
@@ -91,6 +95,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/info_container"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
             android:text="1600 Amphitheatre Parkway Mountain View, CA"
             android:textColor="@android:color/white"
             android:textSize="16sp" />

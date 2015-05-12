@@ -145,6 +145,8 @@ public class AddEditCardActivity extends ActionBarActivity {
                     newBusinessCard.setIsPublic(publicValue);
                     newBusinessCard.setLayout(selectedLayout);
 
+                    BusinessCardApplication.selectedBusinessCard = newBusinessCard;
+
                     if (BusinessCardApplication.selectedBusinessCard != null) {
                         RequestEditCard requestEditCard = new RequestEditCard(AddEditCardActivity.this, newBusinessCard);
                         requestEditCard.execute(new String[]{});

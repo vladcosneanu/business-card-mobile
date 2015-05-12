@@ -1,9 +1,13 @@
 package com.business.card.activities;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,15 +59,49 @@ public class ViewCardActivity extends ActionBarActivity {
         title.setText(businessCard.getTitle());
         phone = (TextView) findViewById(R.id.phone);
         phone.setText(businessCard.getPhone());
+        phone.setPaintFlags(phone.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = "tel:" + phone.getText().toString().trim() ;
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
+            }
+        });
+
         email = (TextView) findViewById(R.id.email);
         if (businessCard.getEmail() != null && !businessCard.getEmail().equals("")) {
             email.setText(businessCard.getEmail());
+            email.setPaintFlags(email.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            email.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    Uri data = Uri.parse("mailto:?subject=&body=&to=" + email.getText().toString().trim());
+                    intent.setData(data);
+                    startActivity(Intent.createChooser(intent, "Choose an Email client :"));
+                }
+            });
         } else {
             email.setVisibility(View.GONE);
         }
         address = (TextView) findViewById(R.id.address);
         if (businessCard.getAddress() != null && !businessCard.getAddress().equals("")) {
             address.setText(businessCard.getAddress());
+            address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            address.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String uri = "geo:0,0?q=" + address.getText().toString().trim();
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
+                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
         } else {
             address.setVisibility(View.GONE);
         }
