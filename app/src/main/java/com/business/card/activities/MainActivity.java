@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.business.card.BusinessCardApplication;
 import com.business.card.R;
-import com.business.card.adapters.NearbyBusinessCardAdapter;
 import com.business.card.fragments.EventsFragment;
 import com.business.card.fragments.MyCardsFragment;
 import com.business.card.fragments.SavedCardsFragment;
@@ -33,10 +32,10 @@ import com.business.card.receivers.BootCompletedReceiver;
 import com.business.card.receivers.LocationBroadcastReceiver;
 import com.business.card.requests.RequestAcceptPrivateEventCard;
 import com.business.card.requests.RequestDenyPrivateEventCard;
+import com.business.card.requests.RequestEvents;
 import com.business.card.requests.RequestGCMRegistration;
 import com.business.card.requests.RequestJoinEvent;
 import com.business.card.requests.RequestMyCards;
-import com.business.card.requests.RequestMyEvents;
 import com.business.card.requests.RequestSaveSharedCard;
 import com.business.card.requests.RequestSavedCards;
 import com.business.card.requests.RequestShareCard;
@@ -69,7 +68,7 @@ public class MainActivity extends ActionBarActivity {
 
     private List<BusinessCard> savedCards;
     private List<BusinessCard> myCards;
-    private List<Event> myEvents;
+    private List<Event> events;
 
     private int currentPage;
     private ProgressDialog progressDialog;
@@ -199,10 +198,10 @@ public class MainActivity extends ActionBarActivity {
             ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(myCards);
         }
 
-        myEvents = (List<Event>) Util.loadList(Util.EVENTS_FILE);
-        if (myEvents != null && myEvents.size() > 0) {
+        events = (List<Event>) Util.loadList(Util.EVENTS_FILE);
+        if (events != null && events.size() > 0) {
             // retrieved events from cache file
-            ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(myEvents);
+            ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(events);
         }
 
         RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
@@ -211,8 +210,8 @@ public class MainActivity extends ActionBarActivity {
         RequestMyCards requestMyCards = new RequestMyCards(this, BusinessCardApplication.loggedUser);
         requestMyCards.execute(new String[]{});
 
-        RequestMyEvents requestMyEvents = new RequestMyEvents(this, BusinessCardApplication.loggedUser);
-        requestMyEvents.execute(new String[]{});
+        RequestEvents requestEvents = new RequestEvents(this, BusinessCardApplication.loggedUser);
+        requestEvents.execute(new String[]{});
 
         final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
         lftBroadcastReceiver = new LocationBroadcastReceiver();
@@ -266,7 +265,7 @@ public class MainActivity extends ActionBarActivity {
                 // Save the shared card
                 displayProgressDialog();
                 RequestSaveSharedCard requestSaveSharedCard = new RequestSaveSharedCard(this, cardId, userId);
-                requestSaveSharedCard.execute(new String[] {});
+                requestSaveSharedCard.execute(new String[]{});
             } else if (shareCardExtra.equals(Util.SHARE_CARD_RESPONSE_CANCEL)) {
                 // Cancel the shared card
                 Toast.makeText(this, R.string.cancelled_shared_card, Toast.LENGTH_SHORT).show();
@@ -312,26 +311,41 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_search:
-                // start searching for nearby public cards
-                Intent nearbyIntent = new Intent(this, NearbyCardsActivity.class);
-                startActivity(nearbyIntent);
+                if (Util.isNetworkAvailable(this)) {
+                    // start searching for nearby public cards
+                    Intent nearbyIntent = new Intent(this, NearbyCardsActivity.class);
+                    startActivity(nearbyIntent);
+                } else {
+                    (new Util()).displayInternetRequiredDialog(this);
+                }
+
                 break;
             case R.id.action_add:
-                if (currentPage == 1) {
-                    // Clear any Business Card selected
-                    BusinessCardApplication.selectedBusinessCard = null;
-                    // start the edit card activity
-                    Intent addEditCardIntent = new Intent(this, AddEditCardActivity.class);
-                    startActivity(addEditCardIntent);
-                } else if (currentPage == 2) {
-                    // add a Event
-                    Intent createEventIntent = new Intent(this, CreateEventActivity.class);
-                    startActivity(createEventIntent);
+                if (Util.isNetworkAvailable(this)) {
+                    if (currentPage == 1) {
+                        // Clear any Business Card selected
+                        BusinessCardApplication.selectedBusinessCard = null;
+                        // start the edit card activity
+                        Intent addEditCardIntent = new Intent(this, AddEditCardActivity.class);
+                        startActivity(addEditCardIntent);
+                    } else if (currentPage == 2) {
+                        // add a Event
+                        Intent createEventIntent = new Intent(this, CreateEventActivity.class);
+                        startActivity(createEventIntent);
+                    }
+                } else {
+                    (new Util()).displayInternetRequiredDialog(this);
                 }
+
                 break;
             case R.id.action_join:
-                // Join a Event
-                displayJoinEventDialog();
+                if (Util.isNetworkAvailable(this)) {
+                    // Join an Event
+                    displayJoinEventDialog();
+                } else {
+                    (new Util()).displayInternetRequiredDialog(this);
+                }
+
                 break;
             case R.id.action_logout:
                 (new Util()).displayConfirmLogoutDialog(this);
@@ -377,7 +391,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public List<Event> getEvents() {
-        return myEvents;
+        return events;
     }
 
     /**
@@ -429,8 +443,8 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Finished request for Events
      */
-    public void onMyEventsRequestFinished(JSONArray j) {
-        myEvents = new ArrayList<Event>();
+    public void onEventsRequestFinished(JSONArray j) {
+        events = new ArrayList<Event>();
         List<Event> events = new ArrayList<Event>();
         for (int i = 0; i < j.length(); i++) {
             try {
@@ -441,12 +455,12 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
-        myEvents = events;
+        this.events = events;
 
         // save the list to cache file
-        Util.saveList(myEvents, Util.EVENTS_FILE);
+        Util.saveList(this.events, Util.EVENTS_FILE);
 
-        ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(myEvents);
+        ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(this.events);
     }
 
     public void onGCMRegistrationComplete(String msg) {
@@ -481,6 +495,13 @@ public class MainActivity extends ActionBarActivity {
                 // card deleted
                 Toast.makeText(this, getString(R.string.card_delete_success), Toast.LENGTH_SHORT).show();
 
+                myCards.remove(BusinessCardApplication.selectedBusinessCard);
+                // save the list to cache file
+                Util.saveList(this.myCards, Util.MY_CARDS_FILE);
+
+                RequestMyCards requestMyCards = new RequestMyCards(this, BusinessCardApplication.loggedUser);
+                requestMyCards.execute(new String[]{});
+
                 ((MyCardsFragment) pagerAdapter.getItem(1)).removeSelectedBusinessCard();
             } else {
                 // card not deleted
@@ -502,6 +523,13 @@ public class MainActivity extends ActionBarActivity {
             if (success.equals("true")) {
                 // card removed
                 Toast.makeText(this, getString(R.string.saved_card_remove_success), Toast.LENGTH_SHORT).show();
+
+                savedCards.remove(BusinessCardApplication.selectedBusinessCard);
+                // save the list to cache file
+                Util.saveList(this.savedCards, Util.SAVED_CARDS_FILE);
+
+                RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
+                requestSavedCards.execute(new String[]{});
 
                 ((SavedCardsFragment) pagerAdapter.getItem(0)).removeSelectedBusinessCard();
             } else {
@@ -525,7 +553,14 @@ public class MainActivity extends ActionBarActivity {
                 // event removed
                 Toast.makeText(this, getString(R.string.event_remove_success), Toast.LENGTH_SHORT).show();
 
+                events.remove(BusinessCardApplication.selectedEvent);
+                // save the list to cache file
+                Util.saveList(this.events, Util.EVENTS_FILE);
+
                 ((EventsFragment) pagerAdapter.getItem(2)).removeSelectedEvent();
+
+                RequestEvents requestEvents = new RequestEvents(this, BusinessCardApplication.loggedUser);
+                requestEvents.execute(new String[]{});
             } else {
                 // event not deleted
                 Toast.makeText(this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
@@ -619,8 +654,8 @@ public class MainActivity extends ActionBarActivity {
 
                 Toast.makeText(this, getString(R.string.event_joined, eventName), Toast.LENGTH_SHORT).show();
 
-                RequestMyEvents requestMyEvents = new RequestMyEvents(this, BusinessCardApplication.loggedUser);
-                requestMyEvents.execute(new String[]{});
+                RequestEvents requestEvents = new RequestEvents(this, BusinessCardApplication.loggedUser);
+                requestEvents.execute(new String[]{});
             } else if (success.equals("false")) {
                 // Event not joined
                 String error = json.getString("error");

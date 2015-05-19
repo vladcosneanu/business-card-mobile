@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/red_card"
@@ -27,6 +26,7 @@
                 android:id="@+id/first_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="John"
                 android:textColor="@android:color/white"
                 android:textSize="32sp"
@@ -44,6 +44,7 @@
                 android:id="@+id/last_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="Green"
                 android:textColor="@android:color/white"
                 android:textSize="32sp"
@@ -77,12 +78,14 @@
             android:layout_marginTop="3dp"
             android:text="1-800-356-9377"
             android:textColor="@android:color/white"
+            android:maxLines="1"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:layout_marginBottom="3dp"
             android:layout_marginTop="3dp"
             android:text="john.green@email.com"

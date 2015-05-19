@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import com.business.card.R;
 import com.business.card.activities.EventCardsActivity;
 import com.business.card.activities.MainActivity;
 import com.business.card.adapters.EventAdapter;
+import com.business.card.objects.BusinessCard;
 import com.business.card.objects.Event;
 import com.business.card.requests.RequestDeleteJoinedEvent;
 import com.business.card.util.Util;
@@ -64,7 +66,6 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onResume() {
         super.onResume();
-
         if (((MainActivity) getActivity()).getEvents() != null) {
             setMyEvents(((MainActivity) getActivity()).getEvents());
         }
@@ -100,15 +101,20 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
         Event event = adapter.getItem(position);
         BusinessCardApplication.selectedEvent = event;
 
-        // start the activity for viewing the cards from this event
-        Intent intent = new Intent(getActivity(), EventCardsActivity.class);
-        startActivity(intent);
+        if (Util.isNetworkAvailable(getActivity())) {
+            // start the activity for viewing the cards from this event
+            Intent intent = new Intent(getActivity(), EventCardsActivity.class);
+            startActivity(intent);
+        } else {
+            (new Util()).displayInternetRequiredCustomDialog(getActivity(), R.string.internet_required_events_message);
+        }
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         selectedEvent = (Event) myEventsListView.getAdapter().getItem(info.position);
+        BusinessCardApplication.selectedEvent = selectedEvent;
 
         menu.setHeaderTitle(getString(R.string.choose_action_for_event));
 
@@ -120,8 +126,13 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case Util.CONTEXT_MENU_ITEM_EVENTS_REMOVE:
-                // selected Remove
-                displayConfirmRemoveDialog(selectedEvent);
+                if (Util.isNetworkAvailable(getActivity())) {
+                    // selected Remove
+                    displayConfirmRemoveDialog(selectedEvent);
+                } else {
+                    (new Util()).displayInternetRequiredCustomDialog(getActivity(), R.string.internet_required_event_remove_message);
+                }
+
                 break;
             default:
                 break;

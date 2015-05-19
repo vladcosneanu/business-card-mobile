@@ -6,13 +6,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -181,6 +179,26 @@ public class Util {
             }
         });
         builder.setNegativeButton(R.string.no, null);
+
+        builder.show();
+    }
+
+    public void displayInternetRequiredDialog(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.internet_required);
+        builder.setMessage(R.string.internet_required_message);
+
+        builder.setPositiveButton(R.string.ok, null);
+
+        builder.show();
+    }
+
+    public void displayInternetRequiredCustomDialog(final Activity activity, int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.internet_required);
+        builder.setMessage(message);
+
+        builder.setPositiveButton(R.string.ok, null);
 
         builder.show();
     }

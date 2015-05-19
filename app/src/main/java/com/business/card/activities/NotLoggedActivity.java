@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.business.card.R;
 import com.business.card.util.PreferenceHelper;
+import com.business.card.util.Util;
 
 
 public class NotLoggedActivity extends ActionBarActivity {
@@ -27,9 +28,13 @@ public class NotLoggedActivity extends ActionBarActivity {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // start the activity to create a new account
-                Intent intent = new Intent(NotLoggedActivity.this, CreateAccountActivity.class);
-                startActivity(intent);
+                if (Util.isNetworkAvailable(NotLoggedActivity.this)) {
+                    // start the activity to create a new account
+                    Intent intent = new Intent(NotLoggedActivity.this, CreateAccountActivity.class);
+                    startActivity(intent);
+                } else {
+                    (new Util()).displayInternetRequiredDialog(NotLoggedActivity.this);
+                }
             }
         });
 
@@ -38,9 +43,13 @@ public class NotLoggedActivity extends ActionBarActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // start the activity to log in with an existing account
-                Intent intent = new Intent(NotLoggedActivity.this, LoginActivity.class);
-                startActivity(intent);
+                if (Util.isNetworkAvailable(NotLoggedActivity.this)) {
+                    // start the activity to log in with an existing account
+                    Intent intent = new Intent(NotLoggedActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    (new Util()).displayInternetRequiredDialog(NotLoggedActivity.this);
+                }
             }
         });
     }

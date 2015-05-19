@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -52,10 +51,12 @@ public class LoginActivity extends ActionBarActivity {
                 String passwordValue = password.getText().toString().trim();
                 if (usernameValue.equals("") || passwordValue.equals("")) {
                     Toast.makeText(LoginActivity.this, getString(R.string.login_empty), Toast.LENGTH_SHORT).show();
+                } else if (!Util.isNetworkAvailable(LoginActivity.this)) {
+                    (new Util()).displayInternetRequiredCustomDialog(LoginActivity.this, R.string.internet_required_login_message);
                 } else {
                     progressDialog.show();
                     RequestLogin requestLogin = new RequestLogin(LoginActivity.this, usernameValue, passwordValue);
-                    requestLogin.execute(new String[] {});
+                    requestLogin.execute(new String[]{});
                 }
             }
         });

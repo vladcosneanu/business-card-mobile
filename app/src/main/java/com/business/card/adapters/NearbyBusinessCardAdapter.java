@@ -70,8 +70,12 @@ public class NearbyBusinessCardAdapter extends BaseAdapter {
         viewHolder.saveCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // "Save Card" button was pressed for this card
-                activity.requestPublicCard(businessCard);
+                if (Util.isNetworkAvailable(activity)) {
+                    // "Save Card" button was pressed for this card
+                    activity.requestPublicCard(businessCard);
+                } else {
+                    (new Util()).displayInternetRequiredCustomDialog(activity, R.string.internet_required_card_save_message);
+                }
             }
         });
 

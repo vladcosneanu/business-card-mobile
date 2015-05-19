@@ -114,5 +114,19 @@
     <string name="save">Save</string>
     <string name="cancelled_shared_card">The card was not added to your Saved Cards list.</string>
     <string name="card_saved">The card was added to your Saved Cards list.</string>
+    <string name="requested">Requested</string>
+    <string name="internet_required">Internet required</string>
+    <string name="internet_required_message">This feature requires an Internet connection.</string>
+    <string name="internet_required_events_message">An Internet connection is required in order to view the Cards from an Event.</string>
+    <string name="internet_required_card_edit_message">An Internet connection is required in order to edit a Card.</string>
+    <string name="internet_required_card_add_message">An Internet connection is required in order to add a Card.</string>
+    <string name="internet_required_card_request_message">An Internet connection is required in order to request a Card.</string>
+    <string name="internet_required_card_save_message">An Internet connection is required in order to save a Card.</string>
+    <string name="internet_required_card_remove_message">An Internet connection is required in order to remove a Card.</string>
+    <string name="internet_required_card_delete_message">An Internet connection is required in order to delete a Card.</string>
+    <string name="internet_required_card_share_message">An Internet connection is required in order to share a Card.</string>
+    <string name="internet_required_event_remove_message">An Internet connection is required in order to remove an Event.</string>
+    <string name="internet_required_create_account_message">An Internet connection is required in order to create an account.</string>
+    <string name="internet_required_login_message">An Internet connection is required in order to log in.</string>
 
 </resources>

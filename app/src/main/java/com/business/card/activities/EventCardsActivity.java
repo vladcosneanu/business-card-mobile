@@ -94,8 +94,8 @@ public class EventCardsActivity extends ActionBarActivity {
                 return true;
             case R.id.action_settings:
                 // start the settings activity
-                Intent settingsINtent = new Intent(this, SettingsActivity.class);
-                startActivity(settingsINtent);
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
 
                 break;
             default:

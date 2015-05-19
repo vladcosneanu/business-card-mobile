@@ -118,6 +118,7 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         selectedBusinessCard = (BusinessCard) savedCardsListView.getAdapter().getItem(info.position);
+        BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
 
         menu.setHeaderTitle(getString(R.string.choose_action_for_card));
 
@@ -129,8 +130,13 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case Util.CONTEXT_MENU_ITEM_SAVED_CARDS_REMOVE:
-                // selected Remove
-                displayConfirmRemoveDialog(selectedBusinessCard);
+                if (Util.isNetworkAvailable(getActivity())) {
+                    // selected Remove
+                    displayConfirmRemoveDialog(selectedBusinessCard);
+                } else {
+                    (new Util()).displayInternetRequiredCustomDialog(getActivity(), R.string.internet_required_card_remove_message);
+                }
+
                 break;
             default:
                 break;

@@ -17,13 +17,13 @@ import org.json.JSONArray;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 
-public class RequestMyEvents extends AsyncTask<String, Integer, JSONArray> {
+public class RequestEvents extends AsyncTask<String, Integer, JSONArray> {
 
     private boolean done = false;
     private MainActivity activity;
     private User user;
 
-    public RequestMyEvents(MainActivity activity, User user) {
+    public RequestEvents(MainActivity activity, User user) {
         this.activity = activity;
         this.user = user;
     }
@@ -72,7 +72,7 @@ public class RequestMyEvents extends AsyncTask<String, Integer, JSONArray> {
         super.onPostExecute(json);
 
         if (done) {
-            activity.onMyEventsRequestFinished(json);
+            activity.onEventsRequestFinished(json);
         }
     }
 }

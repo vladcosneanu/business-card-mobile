@@ -74,8 +74,11 @@
                     <Button
                         android:id="@+id/save_card_button"
                         android:layout_width="wrap_content"
+                        android:background="@drawable/button"
                         android:layout_alignParentRight="true"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:textSize="12sp"
                         android:text="@string/save_card" />
                 </RelativeLayout>

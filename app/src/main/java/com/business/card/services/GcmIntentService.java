@@ -66,9 +66,9 @@ public class GcmIntentService extends IntentService {
         String notificationTitle = bundle.getString("title");
         if (notificationTitle.equals("Business Card access request")) {
             displayRequestCardNotification(bundle);
-        } else if (notificationTitle.equals("Business Card request granted")) {
+        } else if (notificationTitle.equals("Business Card access granted")) {
             displayRequestCardGrantedNotification(bundle);
-        } else if (notificationTitle.equals("Business Card request declined")) {
+        } else if (notificationTitle.equals("Business Card access declined")) {
             displayRequestCardDeclinedNotification(bundle);
         } else if (notificationTitle.equals("Business Card share request")) {
             displayShareRequestNotification(bundle);

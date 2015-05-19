@@ -133,9 +133,13 @@ public class ViewCardActivity extends ActionBarActivity {
                 finish();
                 break;
             case R.id.action_edit:
-                // start the edit card activity
-                Intent intent = new Intent(this, AddEditCardActivity.class);
-                startActivity(intent);
+                if (Util.isNetworkAvailable(this)) {
+                    // start the edit card activity
+                    Intent intent = new Intent(this, AddEditCardActivity.class);
+                    startActivity(intent);
+                } else {
+                    (new Util()).displayInternetRequiredCustomDialog(this, R.string.internet_required_card_edit_message);
+                }
 
                 break;
             case R.id.action_logout:

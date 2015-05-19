@@ -43,7 +43,7 @@ public class EventAdapter extends BaseAdapter {
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            rowView = inflater.inflate(R.layout.my_event_item, parent, false);
+            rowView = inflater.inflate(R.layout.event_item, parent, false);
             ViewHolder viewHolder = new ViewHolder();
 
             viewHolder.name = (TextView) rowView.findViewById(R.id.name);

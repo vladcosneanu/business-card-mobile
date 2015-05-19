@@ -129,8 +129,6 @@ public class AddEditCardActivity extends ActionBarActivity {
                     Toast.makeText(AddEditCardActivity.this, getString(R.string.email_invalid), Toast.LENGTH_SHORT).show();
                 } else {
                     // all is good
-                    progressDialog.show();
-
                     BusinessCard newBusinessCard = new BusinessCard();
 
                     if (BusinessCardApplication.selectedBusinessCard != null) {
@@ -145,14 +143,22 @@ public class AddEditCardActivity extends ActionBarActivity {
                     newBusinessCard.setIsPublic(publicValue);
                     newBusinessCard.setLayout(selectedLayout);
 
-                    BusinessCardApplication.selectedBusinessCard = newBusinessCard;
-
                     if (BusinessCardApplication.selectedBusinessCard != null) {
-                        RequestEditCard requestEditCard = new RequestEditCard(AddEditCardActivity.this, newBusinessCard);
-                        requestEditCard.execute(new String[]{});
+                        if (Util.isNetworkAvailable(AddEditCardActivity.this)) {
+                            progressDialog.show();
+                            RequestEditCard requestEditCard = new RequestEditCard(AddEditCardActivity.this, newBusinessCard);
+                            requestEditCard.execute(new String[]{});
+                        } else {
+                            (new Util()).displayInternetRequiredCustomDialog(AddEditCardActivity.this, R.string.internet_required_card_edit_message);
+                        }
                     } else {
-                        RequestAddCard requestAddCard = new RequestAddCard(AddEditCardActivity.this, newBusinessCard);
-                        requestAddCard.execute(new String[]{});
+                        if (Util.isNetworkAvailable(AddEditCardActivity.this)) {
+                            progressDialog.show();
+                            RequestAddCard requestAddCard = new RequestAddCard(AddEditCardActivity.this, newBusinessCard);
+                            requestAddCard.execute(new String[]{});
+                        } else {
+                            (new Util()).displayInternetRequiredCustomDialog(AddEditCardActivity.this, R.string.internet_required_card_add_message);
+                        }
                     }
                 }
             }

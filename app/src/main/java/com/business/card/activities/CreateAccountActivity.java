@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -67,49 +66,52 @@ public class CreateAccountActivity extends ActionBarActivity {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            // start the account creation process
-            String titleValue = title.getText().toString().trim();
-            String firstNameValue = firstName.getText().toString().trim();
-            String lastNameValue = lastName.getText().toString().trim();
-            String emailValue = email.getText().toString().trim();
-            String phoneValue = phone.getText().toString().trim();
-            String usernameValue = userName.getText().toString().trim();
-            String passwordValue = password.getText().toString().trim();
-            String confirmValue = passwordConfirm.getText().toString().trim();
+                // start the account creation process
+                String titleValue = title.getText().toString().trim();
+                String firstNameValue = firstName.getText().toString().trim();
+                String lastNameValue = lastName.getText().toString().trim();
+                String emailValue = email.getText().toString().trim();
+                String phoneValue = phone.getText().toString().trim();
+                String usernameValue = userName.getText().toString().trim();
+                String passwordValue = password.getText().toString().trim();
+                String confirmValue = passwordConfirm.getText().toString().trim();
 
-            if (titleValue.equals("") || firstNameValue.equals("") || lastNameValue.equals("") ||
-                usernameValue.equals("") || passwordValue.equals("") || confirmValue.equals("")) {
-                // fields not completed
-                Toast.makeText(CreateAccountActivity.this, getString(R.string.please_fill_required_fields), Toast.LENGTH_SHORT).show();
-            } else if (!Util.isEmailValid(emailValue)) {
-                // email address is invalid
-                Toast.makeText(CreateAccountActivity.this, getString(R.string.email_invalid), Toast.LENGTH_SHORT).show();
-            } else if (!passwordValue.equals(confirmValue)) {
-                // password not confirmed
-                Toast.makeText(CreateAccountActivity.this, getString(R.string.password_not_confirmed), Toast.LENGTH_SHORT).show();
-            } else if (usernameValue.contains(" ")) {
-                // username contains spaces
-                Toast.makeText(CreateAccountActivity.this, getString(R.string.username_contains_spaces), Toast.LENGTH_SHORT).show();
-            } else {
-                // all is good
-                progressDialog.show();
+                if (titleValue.equals("") || firstNameValue.equals("") || lastNameValue.equals("") ||
+                        usernameValue.equals("") || passwordValue.equals("") || confirmValue.equals("")) {
+                    // fields not completed
+                    Toast.makeText(CreateAccountActivity.this, getString(R.string.please_fill_required_fields), Toast.LENGTH_SHORT).show();
+                } else if (!Util.isEmailValid(emailValue)) {
+                    // email address is invalid
+                    Toast.makeText(CreateAccountActivity.this, getString(R.string.email_invalid), Toast.LENGTH_SHORT).show();
+                } else if (!passwordValue.equals(confirmValue)) {
+                    // password not confirmed
+                    Toast.makeText(CreateAccountActivity.this, getString(R.string.password_not_confirmed), Toast.LENGTH_SHORT).show();
+                } else if (usernameValue.contains(" ")) {
+                    // username contains spaces
+                    Toast.makeText(CreateAccountActivity.this, getString(R.string.username_contains_spaces), Toast.LENGTH_SHORT).show();
+                } else {
+                    // all is good
+                    User user = new User();
+                    user.setFirstName(firstNameValue);
+                    user.setLastName(lastNameValue);
+                    user.setUsername(usernameValue);
+                    user.setPassword(passwordValue);
 
-                User user = new User();
-                user.setFirstName(firstNameValue);
-                user.setLastName(lastNameValue);
-                user.setUsername(usernameValue);
-                user.setPassword(passwordValue);
+                    BusinessCard businessCard = new BusinessCard();
+                    businessCard.setTitle(titleValue);
+                    businessCard.setPhone(phoneValue);
+                    businessCard.setEmail(emailValue);
+                    businessCard.setIsPublic("1");
+                    businessCard.setLayout("1");
 
-                BusinessCard businessCard = new BusinessCard();
-                businessCard.setTitle(titleValue);
-                businessCard.setPhone(phoneValue);
-                businessCard.setEmail(emailValue);
-                businessCard.setIsPublic("1");
-                businessCard.setLayout("1");
-
-                RequestSignUp requestSignUp = new RequestSignUp(CreateAccountActivity.this, user, businessCard);
-                requestSignUp.execute(new String[] {});
-            }
+                    if (Util.isNetworkAvailable(CreateAccountActivity.this)) {
+                        progressDialog.show();
+                        RequestSignUp requestSignUp = new RequestSignUp(CreateAccountActivity.this, user, businessCard);
+                        requestSignUp.execute(new String[]{});
+                    } else {
+                        (new Util()).displayInternetRequiredCustomDialog(CreateAccountActivity.this, R.string.internet_required_create_account_message);
+                    }
+                }
             }
         });
 
@@ -155,7 +157,7 @@ public class CreateAccountActivity extends ActionBarActivity {
      */
     private void hideKeyboard() {
         title.requestFocus();
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(title.getWindowToken(), 0);
     }
 
@@ -168,16 +170,16 @@ public class CreateAccountActivity extends ActionBarActivity {
             @Override
             public boolean onLongClick(View v) {
                 // set a random title
-                String[] titles ={"Coach", "Doctor", "Engineer", "Software Developer", "Architect"};
+                String[] titles = {"Coach", "Doctor", "Engineer", "Software Developer", "Architect"};
                 title.setText(titles[new Random().nextInt(5)]);
 
                 // set a random first name
-                String[] firstNames ={"John", "William", "Anna", "Jessica", "Gabriel"};
+                String[] firstNames = {"John", "William", "Anna", "Jessica", "Gabriel"};
 
                 firstName.setText(firstNames[new Random().nextInt(5)]);
 
                 // set a random last name
-                String[] lastNames ={"Miller", "Brown", "Martinez", "Taylor", "Thompson"};
+                String[] lastNames = {"Miller", "Brown", "Martinez", "Taylor", "Thompson"};
                 lastName.setText(lastNames[new Random().nextInt(5)]);
 
                 // set an email

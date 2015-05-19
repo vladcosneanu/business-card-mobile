@@ -20,6 +20,7 @@ public class BusinessCard implements Serializable {
     private String isPublic;
     private int distance;
     private String layout;
+    private boolean requested = false;
 
     public static BusinessCard parseBusinessCardFromJson(JSONObject json) {
         BusinessCard businessCard = new BusinessCard();
@@ -143,5 +144,13 @@ public class BusinessCard implements Serializable {
 
     public void setLayout(String layout) {
         this.layout = layout;
+    }
+
+    public boolean isRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean requested) {
+        this.requested = requested;
     }
 }

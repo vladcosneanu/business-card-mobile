@@ -108,29 +108,43 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case Util.CONTEXT_MENU_ITEM_MY_CARDS_SHARE:
-                // selected Share
-                BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
-                ((MainActivity) getActivity()).displayProgressDialog();
+                if (Util.isNetworkAvailable(getActivity())) {
+                    // selected Share
+                    BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
+                    ((MainActivity) getActivity()).displayProgressDialog();
 
-                LocationInfo latestInfo = new LocationInfo(getActivity());
-                Util.updateCoordinate(latestInfo);
+                    LocationInfo latestInfo = new LocationInfo(getActivity());
+                    Util.updateCoordinate(latestInfo);
 
-                RequestShareUsers requestShareUsers = new RequestShareUsers((MainActivity) getActivity(), BusinessCardApplication.loggedUser, Util
-                        .getLocation(), PreferenceHelper.getNearbyRadius(getActivity()));
-                requestShareUsers.execute(new String[]{});
+                    RequestShareUsers requestShareUsers = new RequestShareUsers((MainActivity) getActivity(), BusinessCardApplication.loggedUser, Util
+                            .getLocation(), PreferenceHelper.getNearbyRadius(getActivity()));
+                    requestShareUsers.execute(new String[]{});
+                } else {
+                    (new Util()).displayInternetRequiredCustomDialog(getActivity(), R.string.internet_required_card_share_message);
+                }
 
                 break;
             case Util.CONTEXT_MENU_ITEM_MY_CARDS_EDIT:
-                // selected Edit
-                BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
+                if (Util.isNetworkAvailable(getActivity())) {
+                    // selected Edit
+                    BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
 
-                // start the edit card activity
-                Intent intent = new Intent(getActivity(), AddEditCardActivity.class);
-                startActivity(intent);
+                    // start the edit card activity
+                    Intent intent = new Intent(getActivity(), AddEditCardActivity.class);
+                    startActivity(intent);
+                } else {
+                    (new Util()).displayInternetRequiredCustomDialog(getActivity(), R.string.internet_required_card_edit_message);
+                }
+
                 break;
             case Util.CONTEXT_MENU_ITEM_MY_CARDS_DELETE:
-                // selected Delete
-                displayConfirmDeleteDialog(selectedBusinessCard);
+                if (Util.isNetworkAvailable(getActivity())) {
+                    // selected Delete
+                    displayConfirmDeleteDialog(selectedBusinessCard);
+                } else {
+                    (new Util()).displayInternetRequiredCustomDialog(getActivity(), R.string.internet_required_card_delete_message);
+                }
+
                 break;
             default:
                 break;

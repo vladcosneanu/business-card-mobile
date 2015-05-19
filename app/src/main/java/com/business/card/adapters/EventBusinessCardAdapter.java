@@ -57,19 +57,22 @@ public class EventBusinessCardAdapter extends BaseAdapter {
             viewHolder.phone = (TextView) rowView.findViewById(R.id.phone);
             viewHolder.address = (TextView) rowView.findViewById(R.id.address);
             viewHolder.visibility = (TextView) rowView.findViewById(R.id.visibility);
+            viewHolder.requested = (TextView) rowView.findViewById(R.id.requested);
             viewHolder.saveCardButton = (Button) rowView.findViewById(R.id.save_card_button);
             viewHolder.requestCardButton = (Button) rowView.findViewById(R.id.request_card_button);
 
             rowView.setTag(viewHolder);
         }
 
-        ViewHolder viewHolder = (ViewHolder) rowView.getTag();
+        final ViewHolder viewHolder = (ViewHolder) rowView.getTag();
 
         viewHolder.cardView.setCardBackgroundColor(activity.getResources()
                 .getColor(Util.getColorByCardLayoutNo(Integer.parseInt(businessCard.getLayout()))));
 
         viewHolder.title.setText(businessCard.getTitle());
         viewHolder.name.setText(businessCard.getFirstName() + " " + businessCard.getLastName());
+
+        viewHolder.requested.setVisibility(View.GONE);
 
         if (businessCard.getIsPublic().equals("1")) {
             if (businessCard.getEmail().equals("")) {
@@ -96,8 +99,12 @@ public class EventBusinessCardAdapter extends BaseAdapter {
             viewHolder.saveCardButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // "Save Card" button was pressed for this card
-                    activity.requestPublicEventCard(businessCard);
+                    if (Util.isNetworkAvailable(activity)) {
+                        // "Save Card" button was pressed for this card
+                        activity.requestPublicEventCard(businessCard);
+                    } else {
+                        (new Util()).displayInternetRequiredCustomDialog(activity, R.string.internet_required_card_save_message);
+                    }
                 }
             });
         } else {
@@ -112,10 +119,28 @@ public class EventBusinessCardAdapter extends BaseAdapter {
             viewHolder.requestCardButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // "Request Card" button was pressed for this card
-                    activity.requestPrivateEventCard(businessCard);
+                    if (Util.isNetworkAvailable(activity)) {
+                        // "Request Card" button was pressed for this card
+                        businessCard.setRequested(true);
+                        viewHolder.requestCardButton.setVisibility(View.GONE);
+                        viewHolder.requested.setVisibility(View.VISIBLE);
+
+                        activity.requestPrivateEventCard(businessCard);
+                    } else {
+                        (new Util()).displayInternetRequiredCustomDialog(activity, R.string.internet_required_card_request_message);
+                    }
                 }
             });
+
+            if (businessCard.isRequested()) {
+                // "Request Card" button was pressed for this card
+                viewHolder.requestCardButton.setVisibility(View.GONE);
+                viewHolder.requested.setVisibility(View.VISIBLE);
+            } else {
+                // "Request Card" button was not pressed for this card
+                viewHolder.requestCardButton.setVisibility(View.VISIBLE);
+                viewHolder.requested.setVisibility(View.GONE);
+            }
         }
 
         return rowView;
@@ -128,6 +153,7 @@ public class EventBusinessCardAdapter extends BaseAdapter {
         private TextView phone;
         private TextView address;
         private TextView visibility;
+        private TextView requested;
         private Button saveCardButton;
         private Button requestCardButton;
         private CardView cardView;
