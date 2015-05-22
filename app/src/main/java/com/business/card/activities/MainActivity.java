@@ -536,9 +536,11 @@ public class MainActivity extends ActionBarActivity {
                 // save the list to cache file
                 Util.saveList(this.myCards, Util.MY_CARDS_FILE);
 
+                // refresh the my cards list
                 RequestMyCards requestMyCards = new RequestMyCards(this, BusinessCardApplication.loggedUser);
                 requestMyCards.execute(new String[]{});
 
+                // remove the card from the fragment
                 ((MyCardsFragment) pagerAdapter.getItem(1)).removeSelectedBusinessCard();
             } else {
                 // card not deleted
@@ -566,9 +568,11 @@ public class MainActivity extends ActionBarActivity {
                 // save the list to cache file
                 Util.saveList(this.savedCards, Util.SAVED_CARDS_FILE);
 
+                // refresh the saved cards list
                 RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
                 requestSavedCards.execute(new String[]{});
 
+                // remove the card from the fragment
                 ((SavedCardsFragment) pagerAdapter.getItem(0)).removeSelectedBusinessCard();
             } else {
                 // card not removed
@@ -598,6 +602,7 @@ public class MainActivity extends ActionBarActivity {
 
                 ((EventsFragment) pagerAdapter.getItem(2)).removeSelectedEvent();
 
+                // refresh the events list
                 RequestEvents requestEvents = new RequestEvents(this, BusinessCardApplication.loggedUser);
                 requestEvents.execute(new String[]{});
             } else {
