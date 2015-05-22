@@ -61,6 +61,7 @@ public class LoginActivity extends ActionBarActivity {
             }
         });
 
+        // initialize a progress dialog that will be displayed with server requests
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
@@ -103,7 +104,11 @@ public class LoginActivity extends ActionBarActivity {
         try {
             if (json.getBoolean("found")) {
                 User user = User.parseUserFromJson(json);
+
+                // set the logged user
                 BusinessCardApplication.loggedUser = user;
+
+                // save the user in preferences, for caching
                 PreferenceHelper.saveUser(user, this);
 
                 Toast.makeText(this, R.string.login_successful, Toast.LENGTH_SHORT).show();

@@ -45,6 +45,7 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // inflate the fragment layout
         mView = inflater.inflate(R.layout.my_cards, container, false);
 
         return mView;
@@ -52,6 +53,7 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // get references to the UI elements
         progressBar = (ProgressBar) mView.findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -71,13 +73,18 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
     public void onResume() {
         super.onResume();
 
+        // set up the my cards list
         if (((MainActivity) getActivity()).getMyCards() != null) {
             setMyCards(((MainActivity) getActivity()).getMyCards());
         }
     }
 
+    /**
+     * List item was tapped
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // get the tapped card and set it as selected
         BusinessCard businessCard = adapter.getItem(position);
         businessCard.setFirstName(BusinessCardApplication.loggedUser.getFirstName());
         businessCard.setLastName(BusinessCardApplication.loggedUser.getLastName());
@@ -89,8 +96,12 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
         startActivity(intent);
     }
 
+    /**
+     * Method called before displaying the long tap menu
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        // get the card that was long tapped
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         selectedBusinessCard = (BusinessCard) myCardsListView.getAdapter().getItem(info.position);
         selectedBusinessCard.setFirstName(BusinessCardApplication.loggedUser.getFirstName());
@@ -104,6 +115,9 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
         menu.add(0, Util.CONTEXT_MENU_ITEM_MY_CARDS_DELETE, 0, getString(R.string.delete));
     }
 
+    /**
+     * Item seleted form long tap menu
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -113,9 +127,11 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
                     BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
                     ((MainActivity) getActivity()).displayProgressDialog();
 
+                // get the latest location
                     LocationInfo latestInfo = new LocationInfo(getActivity());
                     Util.updateCoordinate(latestInfo);
 
+                // start the request fot the available share users
                     RequestShareUsers requestShareUsers = new RequestShareUsers((MainActivity) getActivity(), BusinessCardApplication.loggedUser, Util
                             .getLocation(), PreferenceHelper.getNearbyRadius(getActivity()));
                     requestShareUsers.execute(new String[]{});
@@ -175,6 +191,8 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
 
     public void setMyCards(List<BusinessCard> myCards) {
         if (!isAdded()) {
+            // layout was not yet inflated, save the cards in order to populate the list
+            // when the layout is ready
             this.myCards = myCards;
             refreshList = true;
             return;
@@ -183,16 +201,20 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
         progressBar.setVisibility(View.GONE);
 
         if (myCards.size() > 0) {
+            // cards are available
             myCardsListView.setVisibility(View.VISIBLE);
             noCardsAvailable.setVisibility(View.GONE);
             adapter = new MyBusinessCardAdapter(getActivity(), myCards);
             myCardsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
+            // set the list item tap listener
             myCardsListView.setOnItemClickListener(this);
 
+            // register the list for long tap events
             registerForContextMenu(myCardsListView);
         } else {
+            // no cards available
             myCardsListView.setVisibility(View.GONE);
             noCardsAvailable.setVisibility(View.VISIBLE);
         }

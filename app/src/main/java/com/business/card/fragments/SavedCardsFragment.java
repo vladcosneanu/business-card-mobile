@@ -48,6 +48,7 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // inflate the fragment layout
         mView = inflater.inflate(R.layout.saved_cards, container, false);
 
         return mView;
@@ -55,6 +56,7 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // get references to the UI elements
         progressBar = (ProgressBar) mView.findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -74,6 +76,7 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
     public void onResume() {
         super.onResume();
 
+        // set up the my cards list
         if (((MainActivity) getActivity()).getSavedCards() != null) {
             setSavedCards(((MainActivity) getActivity()).getSavedCards());
         }
@@ -81,6 +84,8 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
 
     public void setSavedCards(List<BusinessCard> savedCards) {
         if (!isAdded()) {
+            // layout was not yet inflated, save the cards in order to populate the list
+            // when the layout is ready
             this.savedCards = savedCards;
             refreshList = true;
             return;
@@ -88,23 +93,31 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
         progressBar.setVisibility(View.GONE);
 
         if (savedCards.size() > 0) {
+            // cards are available
             savedCardsListView.setVisibility(View.VISIBLE);
             noCardsAvailable.setVisibility(View.GONE);
             adapter = new SavedBusinessCardAdapter(getActivity(), savedCards);
             savedCardsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
+            // set the list item tap listener
             savedCardsListView.setOnItemClickListener(this);
 
+            // register the list for long tap events
             registerForContextMenu(savedCardsListView);
         } else {
+            // no cards available
             savedCardsListView.setVisibility(View.GONE);
             noCardsAvailable.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * List item was tapped
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // get the tapped card and set it as selected
         BusinessCard businessCard = adapter.getItem(position);
         BusinessCardApplication.selectedBusinessCard = businessCard;
 
@@ -114,8 +127,12 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
         startActivity(intent);
     }
 
+    /**
+     * Method called before displaying the long tap menu
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        // get the card that was long tappe
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         selectedBusinessCard = (BusinessCard) savedCardsListView.getAdapter().getItem(info.position);
         BusinessCardApplication.selectedBusinessCard = selectedBusinessCard;
@@ -126,6 +143,9 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
         menu.add(0, Util.CONTEXT_MENU_ITEM_SAVED_CARDS_REMOVE, 0, getString(R.string.remove));
     }
 
+    /**
+     * Item seleted form long tap menu
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {

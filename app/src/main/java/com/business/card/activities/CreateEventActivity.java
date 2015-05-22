@@ -47,6 +47,7 @@ public class CreateEventActivity extends ActionBarActivity implements OnDateSetL
         // display the top left back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // initialize a progress dialog that will be displayed with server requests
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
@@ -58,6 +59,7 @@ public class CreateEventActivity extends ActionBarActivity implements OnDateSetL
         passcode = (EditText) findViewById(R.id.passcode);
         dateView = (TextView) findViewById(R.id.date);
 
+        // set the default values for the date picker
         setDateDefaultValue();
 
         changeDate = (Button) findViewById(R.id.change_date);
@@ -88,6 +90,7 @@ public class CreateEventActivity extends ActionBarActivity implements OnDateSetL
                     // all is good
                     progressDialog.show();
 
+                    // create the event object
                     Event event = new Event();
                     event.setName(nameValue);
                     event.setLocation(locationValue);
@@ -101,6 +104,9 @@ public class CreateEventActivity extends ActionBarActivity implements OnDateSetL
         });
     }
 
+    /**
+     * Set the default values for the date picker
+     */
     private void setDateDefaultValue() {
         Calendar calendar = Calendar.getInstance();
         selectedYear = String.valueOf(calendar.get(Calendar.YEAR));
@@ -114,6 +120,8 @@ public class CreateEventActivity extends ActionBarActivity implements OnDateSetL
         } else {
             selectedDay = String.valueOf(calendar.get(Calendar.DATE));
         }
+
+        // set the text for the date UI view
         dateView.setText(selectedYear + "-" + selectedMonth + "-" + selectedDay);
     }
 
@@ -162,6 +170,9 @@ public class CreateEventActivity extends ActionBarActivity implements OnDateSetL
         date.show(getSupportFragmentManager(), "Date Picker");
     }
 
+    /**
+     * The date was selected in the date picker
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         selectedYear = String.valueOf(year);
@@ -175,6 +186,8 @@ public class CreateEventActivity extends ActionBarActivity implements OnDateSetL
         } else {
             selectedDay = String.valueOf(day);
         }
+
+        // set the text for the date UI view
         dateView.setText(selectedYear + "-" + selectedMonth + "-" + selectedDay);
     }
 

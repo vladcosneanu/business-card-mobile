@@ -43,6 +43,7 @@ public class CreateAccountActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account);
 
+        // initialize a progress dialog that will be displayed with server requests
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
@@ -91,12 +92,14 @@ public class CreateAccountActivity extends ActionBarActivity {
                     Toast.makeText(CreateAccountActivity.this, getString(R.string.username_contains_spaces), Toast.LENGTH_SHORT).show();
                 } else {
                     // all is good
+                // create the user object
                     User user = new User();
                     user.setFirstName(firstNameValue);
                     user.setLastName(lastNameValue);
                     user.setUsername(usernameValue);
                     user.setPassword(passwordValue);
 
+                // create the business card object
                     BusinessCard businessCard = new BusinessCard();
                     businessCard.setTitle(titleValue);
                     businessCard.setPhone(phoneValue);

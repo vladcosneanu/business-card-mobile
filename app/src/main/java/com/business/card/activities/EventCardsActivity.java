@@ -51,11 +51,13 @@ public class EventCardsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(event.getName());
 
+        // initialize a progress dialog that will be displayed with server requests
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
 
+        // get references to the UI elements
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -70,6 +72,7 @@ public class EventCardsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+        // start the request to receive the cards for the selected event
         RequestEventCards requestEventCards = new RequestEventCards(this, BusinessCardApplication.loggedUser, event);
         requestEventCards.execute(new String[]{});
     }
@@ -124,17 +127,22 @@ public class EventCardsActivity extends ActionBarActivity {
         progressBar.setVisibility(View.GONE);
 
         if (eventCards.size() > 0) {
+            // this event has cards to display for this user
             eventCardsListView.setVisibility(View.VISIBLE);
             noCardsAvailable.setVisibility(View.GONE);
             adapter = new EventBusinessCardAdapter(this, eventCards);
             eventCardsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } else {
+            // this event doesn't have any cards to display for this user
             eventCardsListView.setVisibility(View.GONE);
             noCardsAvailable.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * Request a public card
+     */
     public void requestPublicEventCard(BusinessCard businessCard) {
         progressDialog.show();
         selectedCard = businessCard;
@@ -143,6 +151,9 @@ public class EventCardsActivity extends ActionBarActivity {
         requestPublicEventCard.execute(new String[]{});
     }
 
+    /**
+     * Request a private card
+     */
     public void requestPrivateEventCard(BusinessCard businessCard) {
         progressDialog.show();
         selectedCard = businessCard;
@@ -167,14 +178,17 @@ public class EventCardsActivity extends ActionBarActivity {
                 RequestEventCards requestEventCards = new RequestEventCards(this, BusinessCardApplication.loggedUser, event);
                 requestEventCards.execute(new String[]{});
 
+                // remove the saved card, as it was already added to Saved Cards
                 eventCards.remove(selectedCard);
                 if (eventCards.size() > 0) {
+                    // this event has cards to display for this user
                     eventCardsListView.setVisibility(View.VISIBLE);
                     noCardsAvailable.setVisibility(View.GONE);
                     adapter = new EventBusinessCardAdapter(this, eventCards);
                     eventCardsListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 } else {
+                    // this event doesn't have any cards to display for this user
                     eventCardsListView.setVisibility(View.GONE);
                     noCardsAvailable.setVisibility(View.VISIBLE);
                 }

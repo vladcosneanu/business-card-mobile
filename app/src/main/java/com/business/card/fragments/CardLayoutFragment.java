@@ -28,6 +28,7 @@ public class CardLayoutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         int cardLayout = bundle.getInt(LAYOUT_KEY, R.layout.card_layout_1);
+        // inflate the fragment layout
         mView = inflater.inflate(cardLayout, container, false);
 
         return mView;
@@ -38,6 +39,7 @@ public class CardLayoutFragment extends Fragment {
         if (BusinessCardApplication.selectedBusinessCard != null) {
             BusinessCard businessCard = BusinessCardApplication.selectedBusinessCard;
 
+            // get references to the UI elements and populate them with the card info
             firstName = (TextView) mView.findViewById(R.id.first_name);
             firstName.setText(businessCard.getFirstName());
             lastName = (TextView) mView.findViewById(R.id.last_name);

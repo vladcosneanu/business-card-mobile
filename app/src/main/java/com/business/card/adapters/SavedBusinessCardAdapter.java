@@ -45,6 +45,7 @@ public class SavedBusinessCardAdapter extends BaseAdapter {
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+            // inflate the corresponding row layout
             rowView = inflater.inflate(R.layout.saved_business_card_item, parent, false);
             ViewHolder viewHolder = new ViewHolder();
 
@@ -57,6 +58,7 @@ public class SavedBusinessCardAdapter extends BaseAdapter {
             rowView.setTag(viewHolder);
         }
 
+        // populate the UI elements with the correct information
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
 
         viewHolder.cardView.setCardBackgroundColor(context.getResources()
@@ -77,6 +79,7 @@ public class SavedBusinessCardAdapter extends BaseAdapter {
         return rowView;
     }
 
+    // this class is a holder for UI elements, in order to efficiently reuse them
     static class ViewHolder {
         private TextView name;
         private TextView phone;

@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
     private GoogleCloudMessaging gcm;
     private String regid;
 
+    // instantiate the viewpager's page change listener
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -86,54 +87,66 @@ public class MainActivity extends ActionBarActivity {
         public void onPageSelected(int position) {
             currentPage = position;
             if (position == 0) {
+                // "Saved Cards" page selected
+                // display the search icon
                 if (searchMenuItem != null) {
                     searchMenuItem.setVisible(true);
                 } else {
                     displaySearchMenuItem = true;
                 }
 
+                // hide the "+" icon
                 if (addMenuItem != null) {
                     addMenuItem.setVisible(false);
                 } else {
                     displayAddMenuItem = false;
                 }
 
+                // hide the "join event" icon
                 if (joinMenuItem != null) {
                     joinMenuItem.setVisible(false);
                 } else {
                     displayJoinMenuItem = false;
                 }
             } else if (position == 1) {
+                // "My Cards" page selected
+                // hide the "search" icon
                 if (searchMenuItem != null) {
                     searchMenuItem.setVisible(false);
                 } else {
                     displaySearchMenuItem = false;
                 }
 
+                // display the "+" icon
                 if (addMenuItem != null) {
                     addMenuItem.setVisible(true);
                 } else {
                     displayAddMenuItem = true;
                 }
 
+                // hide the "join event" icon
                 if (joinMenuItem != null) {
                     joinMenuItem.setVisible(false);
                 } else {
                     displayJoinMenuItem = false;
                 }
             } else if (position == 2) {
+                // "Events" page selected
+                // hide the "search" icon
                 if (searchMenuItem != null) {
                     searchMenuItem.setVisible(false);
                 } else {
                     displaySearchMenuItem = false;
                 }
 
+                // display the "+" icon
                 if (addMenuItem != null) {
                     addMenuItem.setVisible(true);
                 } else {
                     displayAddMenuItem = true;
                 }
 
+                // display the "join event" icon
                 if (joinMenuItem != null) {
                     joinMenuItem.setVisible(true);
                 } else {
@@ -152,26 +165,33 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        // initialize a progress dialog that will be displayed with server requests
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
 
+        // get references to the UI elements
         pager = (ViewPager) findViewById(R.id.viewPager);
         pager.setOnPageChangeListener(pageChangeListener);
+        // instantiate the pager adapter and set it to the viewpager
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
         // Check device for Play Services APK. If check succeeds, proceed with
         //  GCM registration.
         if (Util.checkPlayServices(this)) {
+            // Google Play Services installed
             gcm = GoogleCloudMessaging.getInstance(this);
+            // get the GCM reg id from preferences
             regid = PreferenceHelper.getRegistrationId(this);
 
             if (regid.isEmpty()) {
+                // GCM reg id does not exist, request a new one
                 RequestGCMRegistration requestGCMRegistration = new RequestGCMRegistration(this, gcm);
                 requestGCMRegistration.execute();
             } else {
+                // GCM reg id exists, update the server
                 RequestUpdateGCMId requestUpdateGCMId = new RequestUpdateGCMId(this, BusinessCardApplication.loggedUser);
                 requestUpdateGCMId.execute(new String[]{});
             }
@@ -179,6 +199,7 @@ public class MainActivity extends ActionBarActivity {
             Log.i("MainActivity", "No valid Google Play Services APK found.");
         }
 
+        // check if a notification started this activity
         verifyReceivedIntent(getIntent());
     }
 
@@ -186,24 +207,28 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+        // load the saved cards list from cache
         savedCards = (List<BusinessCard>) Util.loadList(Util.SAVED_CARDS_FILE);
         if (savedCards != null && savedCards.size() > 0) {
             // retrieved saved cards from cache file
             ((SavedCardsFragment) pagerAdapter.getItem(0)).setSavedCards(savedCards);
         }
 
+        // load the my cards list from cache
         myCards = (List<BusinessCard>) Util.loadList(Util.MY_CARDS_FILE);
         if (myCards != null && myCards.size() > 0) {
             // retrieved my cards from cache file
             ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(myCards);
         }
 
+        // load the events list from cache
         events = (List<Event>) Util.loadList(Util.EVENTS_FILE);
         if (events != null && events.size() > 0) {
             // retrieved events from cache file
             ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(events);
         }
 
+        // start requests for updating the main pages: saved cards, my cards and events
         RequestSavedCards requestSavedCards = new RequestSavedCards(this, BusinessCardApplication.loggedUser);
         requestSavedCards.execute(new String[]{});
 
@@ -213,6 +238,7 @@ public class MainActivity extends ActionBarActivity {
         RequestEvents requestEvents = new RequestEvents(this, BusinessCardApplication.loggedUser);
         requestEvents.execute(new String[]{});
 
+        // register a receiver for new location events
         final IntentFilter lftIntentFilter = new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction());
         lftBroadcastReceiver = new LocationBroadcastReceiver();
         registerReceiver(lftBroadcastReceiver, lftIntentFilter);
@@ -227,20 +253,28 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        // check if a notification started this activity
         verifyReceivedIntent(intent);
 
         super.onNewIntent(intent);
     }
 
+    /**
+     * Check if a notification started this activity
+     */
     private void verifyReceivedIntent(Intent intent) {
         Bundle receivedBundle = intent.getExtras();
         if (receivedBundle != null && getIntent().getExtras().containsKey(Util.REQUEST_CARD_RESPONSE_EXTRA)) {
+            // this activity was started by "Business Card access request" notification
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // dismiss the notification
             notificationManager.cancel(GcmIntentService.REQUEST_CARD_NOTIFICATION_ID);
 
+            // extract the cardId and userId from the intent
             String cardId = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_CARD_ID_EXTRA);
             String userId = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_USER_ID_EXTRA);
 
+            // verify which button was tapped
             String requestCardExtra = getIntent().getExtras().getString(Util.REQUEST_CARD_RESPONSE_EXTRA);
             if (requestCardExtra.equals(Util.REQUEST_CARD_RESPONSE_ACCEPT)) {
                 // Accept the card sharing request
@@ -254,12 +288,16 @@ public class MainActivity extends ActionBarActivity {
                 requestDenyPrivateEventCard.execute(new String[]{});
             }
         } else if (receivedBundle != null && getIntent().getExtras().containsKey(Util.SHARE_CARD_RESPONSE_EXTRA)) {
+            // this activity was started by "Business Card share request" notification
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // dismiss the notification
             notificationManager.cancel(GcmIntentService.SHARE_CARD_NOTIFICATION_ID);
 
+            // extract the cardId and userId from the intent
             String cardId = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_CARD_ID_EXTRA);
             String userId = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_USER_ID_EXTRA);
 
+            // verify which button was tapped
             String shareCardExtra = getIntent().getExtras().getString(Util.SHARE_CARD_RESPONSE_EXTRA);
             if (shareCardExtra.equals(Util.SHARE_CARD_RESPONSE_SAVE)) {
                 // Save the shared card
@@ -282,6 +320,7 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        // set the correct visibility for the option menu elements, depending on the selected viewpager page
         searchMenuItem = menu.getItem(0);
         if (displaySearchMenuItem) {
             searchMenuItem.setVisible(true);
@@ -368,18 +407,9 @@ public class MainActivity extends ActionBarActivity {
         super.onStop();
 
         if (lftBroadcastReceiver != null) {
+            // stop receiving new location events
             unregisterReceiver(lftBroadcastReceiver);
         }
-    }
-
-    /**
-     * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
-     * or CCS to send messages to your app. Not needed for this demo since the
-     * device sends upstream messages to a server that echoes back the message
-     * using the 'from' address in the message.
-     */
-    private void sendRegistrationIdToBackend() {
-        // Your implementation here.
     }
 
     public List<BusinessCard> getSavedCards() {
@@ -414,6 +444,7 @@ public class MainActivity extends ActionBarActivity {
         // save the list to cache file
         Util.saveList(savedCards, Util.SAVED_CARDS_FILE);
 
+        // update the Saved Cards fragment
         ((SavedCardsFragment) pagerAdapter.getItem(0)).setSavedCards(businessCards);
     }
 
@@ -437,6 +468,7 @@ public class MainActivity extends ActionBarActivity {
         // save the list to cache file
         Util.saveList(myCards, Util.MY_CARDS_FILE);
 
+        // update the My Cards fragment
         ((MyCardsFragment) pagerAdapter.getItem(1)).setMyCards(businessCards);
     }
 
@@ -460,11 +492,15 @@ public class MainActivity extends ActionBarActivity {
         // save the list to cache file
         Util.saveList(this.events, Util.EVENTS_FILE);
 
+        // update the Events fragment
         ((EventsFragment) pagerAdapter.getItem(2)).setMyEvents(this.events);
     }
 
+    // GCM registration is complete
     public void onGCMRegistrationComplete(String msg) {
         Log.d("MainActivity", "msg: " + msg);
+
+        // update the server with the GCM reg id
         RequestUpdateGCMId requestUpdateGCMId = new RequestUpdateGCMId(this, BusinessCardApplication.loggedUser);
         requestUpdateGCMId.execute(new String[]{});
     }
@@ -476,8 +512,8 @@ public class MainActivity extends ActionBarActivity {
         try {
             String success = json.getString("success");
             if (success.equals("true")) {
-                // location updated
-                Log.d(getClass().getSimpleName(), "Device GCM registration id sent to server");
+                // gcm red id updated
+                Log.d("MainActivity", "Device GCM registration id sent to server");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -495,6 +531,7 @@ public class MainActivity extends ActionBarActivity {
                 // card deleted
                 Toast.makeText(this, getString(R.string.card_delete_success), Toast.LENGTH_SHORT).show();
 
+                // remove the card from the My Cards fragment
                 myCards.remove(BusinessCardApplication.selectedBusinessCard);
                 // save the list to cache file
                 Util.saveList(this.myCards, Util.MY_CARDS_FILE);
@@ -524,6 +561,7 @@ public class MainActivity extends ActionBarActivity {
                 // card removed
                 Toast.makeText(this, getString(R.string.saved_card_remove_success), Toast.LENGTH_SHORT).show();
 
+                // remove the card from the Saved Cards fragment
                 savedCards.remove(BusinessCardApplication.selectedBusinessCard);
                 // save the list to cache file
                 Util.saveList(this.savedCards, Util.SAVED_CARDS_FILE);
@@ -553,6 +591,7 @@ public class MainActivity extends ActionBarActivity {
                 // event removed
                 Toast.makeText(this, getString(R.string.event_remove_success), Toast.LENGTH_SHORT).show();
 
+                // remove the event from the Events fragment
                 events.remove(BusinessCardApplication.selectedEvent);
                 // save the list to cache file
                 Util.saveList(this.events, Util.EVENTS_FILE);
@@ -622,9 +661,11 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int id) {
                 String value = textEntryView.getText().toString().trim();
                 if (value.equals("")) {
+                    // invalid passcode
                     Toast.makeText(MainActivity.this, R.string.invalid_passcode, Toast.LENGTH_SHORT).show();
                     return;
                 } else if (value.length() < 4) {
+                    // passcode too short
                     Toast.makeText(MainActivity.this, R.string.invalid_passcode, Toast.LENGTH_SHORT).show();
                     return;
                 } else {
@@ -654,6 +695,7 @@ public class MainActivity extends ActionBarActivity {
 
                 Toast.makeText(this, getString(R.string.event_joined, eventName), Toast.LENGTH_SHORT).show();
 
+                // refresh the events list
                 RequestEvents requestEvents = new RequestEvents(this, BusinessCardApplication.loggedUser);
                 requestEvents.execute(new String[]{});
             } else if (success.equals("false")) {
@@ -695,6 +737,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void displayShareUsersDialog(final List<User> shareUsers) {
+        // display a list of users to which a card can be shared
         String[] users = new String[shareUsers.size()];
         for (int i = 0; i < shareUsers.size(); i++) {
             users[i] = shareUsers.get(i).getFirstName() + " " + shareUsers.get(i).getLastName();
@@ -763,6 +806,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Pager adapter class
+     */
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         private SavedCardsFragment savedCardsFragment;
@@ -777,16 +823,19 @@ public class MainActivity extends ActionBarActivity {
         public Fragment getItem(int pos) {
             switch (pos) {
                 case 0:
+                    // Saved Cards fragment
                     if (savedCardsFragment == null) {
                         savedCardsFragment = new SavedCardsFragment();
                     }
                     return savedCardsFragment;
                 case 1:
+                    // My Cards fragment
                     if (myCardsFragment == null) {
                         myCardsFragment = new MyCardsFragment();
                     }
                     return myCardsFragment;
                 case 2:
+                    // Events fragment
                     if (eventsFragment == null) {
                         eventsFragment = new EventsFragment();
                     }
@@ -805,12 +854,15 @@ public class MainActivity extends ActionBarActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
+                    // Saved Cards fragment
                     return getString(R.string.saved_cards);
                 case 1:
+                    // My Cards fragment
                     return getString(R.string.my_cards);
                 case 2:
                     return getString(R.string.events);
                 default:
+                    // Events fragment
                     return null;
             }
         }

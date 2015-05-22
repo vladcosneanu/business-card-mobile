@@ -47,6 +47,7 @@ public class AddEditCardActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_card);
 
+        // initialize a progress dialog that will be displayed with server requests
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
@@ -72,9 +73,11 @@ public class AddEditCardActivity extends ActionBarActivity {
             }
         });
 
+        // init the selected layout
         selectedLayout = "1";
 
         if (BusinessCardApplication.selectedBusinessCard != null) {
+            // a card is being edited
             businessCard = BusinessCardApplication.selectedBusinessCard;
 
             // fill the edit fields wih the selected business card info
@@ -98,9 +101,11 @@ public class AddEditCardActivity extends ActionBarActivity {
         addEditCardButton = (Button) findViewById(R.id.add_edit_card_button);
 
         if (BusinessCardApplication.selectedBusinessCard != null) {
+            // a card is being edited
             getSupportActionBar().setTitle(getString(R.string.edit_business_card));
             addEditCardButton.setText(getString(R.string.edit_business_card));
         } else {
+            // a new card is being added
             getSupportActionBar().setTitle(getString(R.string.add_business_card));
             addEditCardButton.setText(getString(R.string.add_business_card));
         }
@@ -129,9 +134,11 @@ public class AddEditCardActivity extends ActionBarActivity {
                     Toast.makeText(AddEditCardActivity.this, getString(R.string.email_invalid), Toast.LENGTH_SHORT).show();
                 } else {
                     // all is good
+                    // create the business card object
                     BusinessCard newBusinessCard = new BusinessCard();
 
                     if (BusinessCardApplication.selectedBusinessCard != null) {
+                        // a card is being edited
                         newBusinessCard.setId(businessCard.getId());
                     }
 
@@ -144,11 +151,13 @@ public class AddEditCardActivity extends ActionBarActivity {
                     newBusinessCard.setLayout(selectedLayout);
 
                     if (BusinessCardApplication.selectedBusinessCard != null) {
+                        // start the edit card request
                         if (Util.isNetworkAvailable(AddEditCardActivity.this)) {
                             progressDialog.show();
                             RequestEditCard requestEditCard = new RequestEditCard(AddEditCardActivity.this, newBusinessCard);
                             requestEditCard.execute(new String[]{});
                         } else {
+                            // start the add card request
                             (new Util()).displayInternetRequiredCustomDialog(AddEditCardActivity.this, R.string.internet_required_card_edit_message);
                         }
                     } else {
@@ -164,12 +173,14 @@ public class AddEditCardActivity extends ActionBarActivity {
             }
         });
 
+        // setup the "Change Layout" button
         changeLayoutButton = (Button) findViewById(R.id.change_layout);
         changeLayoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // start the card layout selection activity
                 Intent intent = new Intent(AddEditCardActivity.this, SelectLayoutActivity.class);
+                // send the selected layout
                 intent.putExtra(LAYOUT_EXTRA_KEY, selectedLayout);
                 startActivityForResult(intent, SELECT_LAYOUT_REQUEST);
             }
@@ -248,8 +259,12 @@ public class AddEditCardActivity extends ActionBarActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_LAYOUT_REQUEST) {
+            // layout selection ended
             if(resultCode == RESULT_OK){
+                // extract the selection from the data received
                 selectedLayout = data.getStringExtra(LAYOUT_EXTRA_KEY);
+
+                // assign the correct background color to the layout color view
                 layoutColor.setBackgroundColor(getResources().getColor(Util.getColorByCardLayoutNo(Integer.parseInt(selectedLayout))));
             }
         }

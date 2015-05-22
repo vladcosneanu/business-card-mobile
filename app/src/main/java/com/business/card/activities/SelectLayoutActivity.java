@@ -22,6 +22,7 @@ public class SelectLayoutActivity extends ActionBarActivity {
 
     private int currentPage;
 
+    // instantiate the viewpager's page change listener
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -35,9 +36,6 @@ public class SelectLayoutActivity extends ActionBarActivity {
 
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
                     .getColor(Util.getColorByCardLayoutNo(currentPage + 1))));
-
-//            getSupportActionBar().setDisplayShowTitleEnabled(false);
-//            getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
 
         @Override
@@ -54,16 +52,20 @@ public class SelectLayoutActivity extends ActionBarActivity {
 
         String selectedLayout = getIntent().getExtras().getString(AddEditCardActivity.LAYOUT_EXTRA_KEY);
 
+        // get references to the UI elements
         pager = (ViewPager) findViewById(R.id.viewPager);
         pager.setOnPageChangeListener(pageChangeListener);
+        // instantiate the pager adapter and set it to the viewpager
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
         getSupportActionBar().setSubtitle(getString(R.string.x_of_y, (currentPage + 1), pagerAdapter.getCount()));
 
+        // set the correct action bar color, based on page number
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
                 .getColor(Util.getColorByCardLayoutNo(currentPage + 1))));
 
+        // display the correct page
         pager.setCurrentItem(Integer.parseInt(selectedLayout) - 1);
     }
 
@@ -88,6 +90,7 @@ public class SelectLayoutActivity extends ActionBarActivity {
 
                 return true;
             case R.id.action_accept:
+                // layout accept button tapped
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(AddEditCardActivity.LAYOUT_EXTRA_KEY, String.valueOf(currentPage + 1));
                 setResult(RESULT_OK, returnIntent);
@@ -106,6 +109,9 @@ public class SelectLayoutActivity extends ActionBarActivity {
         return true;
     }
 
+    /**
+     * Pager adapter class
+     */
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
@@ -115,8 +121,10 @@ public class SelectLayoutActivity extends ActionBarActivity {
         @Override
         public Fragment getItem(int pos) {
             Bundle bundle = new Bundle();
+            // instantiate the card layout fragment
             CardLayoutFragment cardLayoutFragment = new CardLayoutFragment();
 
+            // send the correct layout resource based on page number
             switch (pos) {
                 case 0:
                     bundle.putInt(CardLayoutFragment.LAYOUT_KEY, R.layout.card_layout_1);
@@ -151,6 +159,7 @@ public class SelectLayoutActivity extends ActionBarActivity {
 
         @Override
         public int getCount() {
+            // there are 6 card layouts available
             return 6;
         }
 

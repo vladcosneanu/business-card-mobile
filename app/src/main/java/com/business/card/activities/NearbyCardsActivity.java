@@ -47,11 +47,13 @@ public class NearbyCardsActivity extends ActionBarActivity {
         // display the top left back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // initialize a progress dialog that will be displayed with server requests
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
 
+        // get references to the UI elements
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -66,9 +68,11 @@ public class NearbyCardsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+        // get the latest location
         LocationInfo latestInfo = new LocationInfo(getBaseContext());
         Util.updateCoordinate(latestInfo);
 
+        // get nearby cards based on the radius selected from Settings
         RequestNearbyCards requestNearbyCards = new RequestNearbyCards(this, BusinessCardApplication.loggedUser, Util
                 .getLocation(), PreferenceHelper.getNearbyRadius(this));
         requestNearbyCards.execute(new String[]{});
@@ -124,17 +128,22 @@ public class NearbyCardsActivity extends ActionBarActivity {
         progressBar.setVisibility(View.GONE);
 
         if (nearbyCards.size() > 0) {
+            // there are nearby cards to display for this user
             nearbyCardsListView.setVisibility(View.VISIBLE);
             noCardsAvailable.setVisibility(View.GONE);
             adapter = new NearbyBusinessCardAdapter(this, nearbyCards);
             nearbyCardsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } else {
+            // there are no nearby cards to display for this user
             nearbyCardsListView.setVisibility(View.GONE);
             noCardsAvailable.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * Request a public card
+     */
     public void requestPublicCard(BusinessCard businessCard) {
         progressDialog.show();
         selectedCard = businessCard;
@@ -156,12 +165,15 @@ public class NearbyCardsActivity extends ActionBarActivity {
                         selectedCard.getFirstName(), selectedCard.getLastName(),
                         selectedCard.getTitle()), Toast.LENGTH_SHORT).show();
 
+                // remove the saved card as it was added to Saved Cards list
                 nearbyCards.remove(selectedCard);
                 if (nearbyCards.size() > 0) {
+                    // there are nearby cards to display for this user
                     nearbyCardsListView.setVisibility(View.VISIBLE);
                     noCardsAvailable.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
                 } else {
+                    // there are no nearby cards to display for this user
                     nearbyCardsListView.setVisibility(View.GONE);
                     noCardsAvailable.setVisibility(View.VISIBLE);
                 }

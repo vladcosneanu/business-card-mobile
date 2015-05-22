@@ -39,6 +39,7 @@ public class ViewCardActivity extends ActionBarActivity {
         // display the top left back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // verify if the Edit button should be displayed
         displayEdit = getIntent().getExtras().getBoolean(DISPLAY_EDIT_EXTRA_KEY);
     }
 
@@ -46,11 +47,13 @@ public class ViewCardActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+        // get the selected business card
         businessCard = BusinessCardApplication.selectedBusinessCard;
         cardLayout = Util.getLayoutByCardLayoutNo(Integer.parseInt(businessCard.getLayout()));
 
         setContentView(cardLayout);
 
+        // get references to the UI elements
         firstName = (TextView) findViewById(R.id.first_name);
         firstName.setText(businessCard.getFirstName());
         lastName = (TextView) findViewById(R.id.last_name);
@@ -63,7 +66,8 @@ public class ViewCardActivity extends ActionBarActivity {
         phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uri = "tel:" + phone.getText().toString().trim() ;
+                // call the number
+                String uri = "tel:" + phone.getText().toString().trim();
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse(uri));
                 startActivity(intent);
@@ -77,6 +81,7 @@ public class ViewCardActivity extends ActionBarActivity {
             email.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // send an email
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     Uri data = Uri.parse("mailto:?subject=&body=&to=" + email.getText().toString().trim());
                     intent.setData(data);
@@ -93,6 +98,7 @@ public class ViewCardActivity extends ActionBarActivity {
             address.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // display the address in Google Maps
                     String uri = "geo:0,0?q=" + address.getText().toString().trim();
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
                     intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
@@ -106,6 +112,7 @@ public class ViewCardActivity extends ActionBarActivity {
             address.setVisibility(View.GONE);
         }
 
+        // set the background color based on the selected card's layout
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
                 .getColor(Util.getColorByCardLayoutNo(Integer.parseInt(businessCard.getLayout())))));
     }
@@ -115,6 +122,7 @@ public class ViewCardActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_view_card, menu);
 
+        // manage the display of the edit button
         MenuItem editMenuItem = menu.getItem(0);
         if (displayEdit) {
             editMenuItem.setVisible(true);

@@ -18,8 +18,8 @@ public class SettingsFragment extends PreferenceFragment {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
+        // set up the nearby preference
         final ListPreference nearby = (ListPreference) findPreference("nearby");
-
         nearby.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -33,6 +33,7 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
+        // set up the logout preference
         final Preference logout = (Preference) findPreference("logout");
         logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 

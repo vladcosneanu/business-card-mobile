@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -41,6 +40,7 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // inflate the fragment layout
         mView = inflater.inflate(R.layout.events, container, false);
 
         return mView;
@@ -48,6 +48,7 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // get references to the UI elements
         progressBar = (ProgressBar) mView.findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -66,6 +67,7 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onResume() {
         super.onResume();
+        // set up the events list
         if (((MainActivity) getActivity()).getEvents() != null) {
             setMyEvents(((MainActivity) getActivity()).getEvents());
         }
@@ -73,6 +75,8 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
 
     public void setMyEvents(List<Event> myEvents) {
         if (!isAdded()) {
+            // layout was not yet inflated, save the events in order to populate the list
+            // when the layout is ready
             this.myEvents = myEvents;
             refreshList = true;
             return;
@@ -81,23 +85,31 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
         progressBar.setVisibility(View.GONE);
 
         if (myEvents.size() > 0) {
+            // events are available
             myEventsListView.setVisibility(View.VISIBLE);
             noEventsAvailable.setVisibility(View.GONE);
             adapter = new EventAdapter(getActivity(), myEvents);
             myEventsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
+            // set the list item tap listener
             myEventsListView.setOnItemClickListener(this);
 
+            // register the list for long tap events
             registerForContextMenu(myEventsListView);
         } else {
+            // no events available
             myEventsListView.setVisibility(View.GONE);
             noEventsAvailable.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * List item was tapped
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // get the tapped event and set it as selected
         Event event = adapter.getItem(position);
         BusinessCardApplication.selectedEvent = event;
 
@@ -110,8 +122,12 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
         }
     }
 
+    /**
+     * Method called before displaying the long tap menu
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        // get the event that was long tapped
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         selectedEvent = (Event) myEventsListView.getAdapter().getItem(info.position);
         BusinessCardApplication.selectedEvent = selectedEvent;
@@ -122,6 +138,9 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
         menu.add(0, Util.CONTEXT_MENU_ITEM_EVENTS_REMOVE, 0, getString(R.string.remove));
     }
 
+    /**
+     * Item seleted form long tap menu
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {

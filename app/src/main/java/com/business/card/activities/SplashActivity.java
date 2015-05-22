@@ -19,6 +19,7 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 try {
+                    // wait 1s before doing anything
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -30,7 +31,7 @@ public class SplashActivity extends Activity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {
-                    // start the main activity, clearing any other activities previously opened
+                    // start the not logged activity, clearing any other activities previously opened
                     Intent intent = new Intent(SplashActivity.this, NotLoggedActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
