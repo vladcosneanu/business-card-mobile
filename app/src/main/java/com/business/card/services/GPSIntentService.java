@@ -18,7 +18,7 @@ abstract public class GPSIntentService extends IntentService {
     }
 
     /**
-     * Create new partial wake lock for the device
+     * Create new partial wake lock for the device. Ensures that the CPU is running.
      */
     synchronized private static PowerManager.WakeLock getLock(Context context) {
         if (lockStatic == null) {
@@ -48,6 +48,7 @@ abstract public class GPSIntentService extends IntentService {
             PowerManager.WakeLock lock = getLock(this.getApplicationContext());
             if (lock.isHeld()) {
                 try {
+                    // release the partial wake lock for the device
                     lock.release();
                 } catch (Exception e) {
                     Log.e(getClass().getSimpleName(), "Exception when releasing wakelock", e);

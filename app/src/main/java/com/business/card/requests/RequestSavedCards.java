@@ -28,6 +28,9 @@ public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
         this.user = user;
     }
 
+    /**
+     * This method is executed in a background thread
+     */
     @Override
     protected JSONArray doInBackground(String... params) {
         byte[] result = null;
@@ -67,6 +70,9 @@ public class RequestSavedCards extends AsyncTask<String, Integer, JSONArray> {
         Log.d("size", values[0].toString());
     }
 
+    /**
+     * This method is executed on the main UI thread
+     */
     @Override
     protected void onPostExecute(JSONArray json) {
         super.onPostExecute(json);

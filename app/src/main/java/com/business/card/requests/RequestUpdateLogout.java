@@ -3,9 +3,7 @@ package com.business.card.requests;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.business.card.activities.MainActivity;
 import com.business.card.objects.User;
-import com.business.card.util.PreferenceHelper;
 import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
@@ -30,6 +28,9 @@ public class RequestUpdateLogout extends AsyncTask<String, Integer, JSONObject> 
         this.user = user;
     }
 
+    /**
+     * This method is executed in a background thread
+     */
     @Override
     protected JSONObject doInBackground(String... params) {
         byte[] result = null;
@@ -69,6 +70,9 @@ public class RequestUpdateLogout extends AsyncTask<String, Integer, JSONObject> 
         Log.d("size", values[0].toString());
     }
 
+    /**
+     * This method is executed on the main UI thread
+     */
     @Override
     protected void onPostExecute(JSONObject json) {
         super.onPostExecute(json);

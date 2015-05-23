@@ -16,6 +16,7 @@ import com.business.card.util.Util;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GcmIntentService extends IntentService {
+
     public static final int REQUEST_CARD_NOTIFICATION_ID = 1;
     public static final int REQUEST_CARD_GRANTED_NOTIFICATION_ID = 2;
     public static final int REQUEST_CARD_DECLINED_NOTIFICATION_ID = 3;
@@ -32,15 +33,14 @@ public class GcmIntentService extends IntentService {
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.
+        // in the BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
+        if (!extras.isEmpty()) {
             /*
              * Filter messages based on message type. Since it is likely that GCM
              * will be extended in the future with new message types, just ignore
-             * any message types you're not interested in, or that you don't
-             * recognize.
+             * any message types that don't present interest
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
                 sendNotification(extras);
@@ -57,13 +57,13 @@ public class GcmIntentService extends IntentService {
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    // Put the message into a notification and post it.
-    // This is just one simple example of what you might choose to do with
-    // a GCM message.
     private void sendNotification(Bundle bundle) {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // extract the title from the bundle received
         String notificationTitle = bundle.getString("title");
+
+        // display the appropriate notification, based on title
         if (notificationTitle.equals("Business Card access request")) {
             displayRequestCardNotification(bundle);
         } else if (notificationTitle.equals("Business Card access granted")) {
@@ -75,7 +75,11 @@ public class GcmIntentService extends IntentService {
         }
     }
 
+    /**
+     * Display the "Business Card access request" notification
+     */
     private void displayRequestCardNotification(Bundle bundle) {
+        // create the "Accept" pending Intent
         Intent acceptIntent = new Intent(this, MainActivity.class);
         acceptIntent.setAction(Util.ACCEPT_REQUEST_CARD_ACTION);
         acceptIntent.putExtra(Util.REQUEST_CARD_RESPONSE_EXTRA, Util.REQUEST_CARD_RESPONSE_ACCEPT);
@@ -85,6 +89,7 @@ public class GcmIntentService extends IntentService {
         PendingIntent acceptPendingIntent = PendingIntent.getActivity(this, 0,
                 acceptIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // create the "Deny" pending Intent
         Intent denyIntent = new Intent(this, MainActivity.class);
         denyIntent.setAction(Util.DENY_REQUEST_CARD_ACTION);
         denyIntent.putExtra(Util.REQUEST_CARD_RESPONSE_EXTRA, Util.REQUEST_CARD_RESPONSE_DENY);
@@ -94,6 +99,7 @@ public class GcmIntentService extends IntentService {
         PendingIntent denyPendingIntent = PendingIntent.getActivity(this, 1,
                 denyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // build the notification
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_action_new)
@@ -106,17 +112,22 @@ public class GcmIntentService extends IntentService {
                         .addAction(R.drawable.ic_action_accept, getString(R.string.allow), acceptPendingIntent)
                         .addAction(R.drawable.ic_action_cancel, getString(R.string.deny), denyPendingIntent);
 
+        // show the notification to the user
         mNotificationManager.notify(REQUEST_CARD_NOTIFICATION_ID, mBuilder.build());
     }
 
+    /**
+     * Display the "Business Card access granted" notification
+     */
     private void displayRequestCardGrantedNotification(Bundle bundle) {
+        // create a pending intent that will display the main activity
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(Util.ACCEPT_REQUEST_CARD_GRANTED_ACTION);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent acceptPendingIntent = PendingIntent.getActivity(this, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
+        // build the notification
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_action_new)
@@ -128,17 +139,22 @@ public class GcmIntentService extends IntentService {
                         .setAutoCancel(true)
                         .setDefaults(NotificationCompat.DEFAULT_ALL);
 
+        // show the notification to the user
         mNotificationManager.notify(REQUEST_CARD_GRANTED_NOTIFICATION_ID, mBuilder.build());
     }
 
+    /**
+     * Display the "Business Card access declined" notification
+     */
     private void displayRequestCardDeclinedNotification(Bundle bundle) {
+        // create a pending intent that will display the main activity
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(Util.ACCEPT_REQUEST_CARD_GRANTED_ACTION);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent acceptPendingIntent = PendingIntent.getActivity(this, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
+        // build the notification
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_action_new)
@@ -150,10 +166,15 @@ public class GcmIntentService extends IntentService {
                         .setAutoCancel(true)
                         .setDefaults(NotificationCompat.DEFAULT_ALL);
 
+        // show the notification to the user
         mNotificationManager.notify(REQUEST_CARD_DECLINED_NOTIFICATION_ID, mBuilder.build());
     }
 
+    /**
+     * Display the "Business Card share request" notification
+     */
     private void displayShareRequestNotification(Bundle bundle) {
+        // create the "Save" pending Intent
         Intent saveIntent = new Intent(this, MainActivity.class);
         saveIntent.setAction(Util.SAVE_SHARE_CARD_ACTION);
         saveIntent.putExtra(Util.SHARE_CARD_RESPONSE_EXTRA, Util.SHARE_CARD_RESPONSE_SAVE);
@@ -163,6 +184,7 @@ public class GcmIntentService extends IntentService {
         PendingIntent savePendingIntent = PendingIntent.getActivity(this, 0,
                 saveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // create the "Cancel" pending Intent
         Intent cancelIntent = new Intent(this, MainActivity.class);
         cancelIntent.setAction(Util.CANCEL_SHARE_CARD_ACTION);
         cancelIntent.putExtra(Util.SHARE_CARD_RESPONSE_EXTRA, Util.SHARE_CARD_RESPONSE_CANCEL);
@@ -172,6 +194,7 @@ public class GcmIntentService extends IntentService {
         PendingIntent cancelPendingIntent = PendingIntent.getActivity(this, 1,
                 cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // build the notification
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_action_new)
@@ -184,6 +207,7 @@ public class GcmIntentService extends IntentService {
                         .addAction(R.drawable.ic_action_accept, getString(R.string.save), savePendingIntent)
                         .addAction(R.drawable.ic_action_cancel, getString(R.string.cancel), cancelPendingIntent);
 
+        // show the notification to the user
         mNotificationManager.notify(SHARE_CARD_NOTIFICATION_ID, mBuilder.build());
     }
 }

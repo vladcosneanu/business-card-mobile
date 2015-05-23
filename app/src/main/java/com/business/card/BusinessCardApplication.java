@@ -28,11 +28,14 @@ public class BusinessCardApplication extends Application {
         super.onCreate();
 
         singleton = this;
+
+        // verify if the user is logged in
         if (PreferenceHelper.isUserLoggedIn(this)) {
             loggedUser = PreferenceHelper.loadUser(this);
         }
 
         try {
+            // initialize the location library
             LocationLibrary.initialiseLibrary(getBaseContext(), "com.business.card");
             LocationLibrary.useFineAccuracyForRequests(true);
         } catch (Exception e) {

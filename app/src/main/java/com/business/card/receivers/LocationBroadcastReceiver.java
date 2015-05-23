@@ -13,7 +13,7 @@ public class LocationBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		// extract the location info in the broadcast
 		final LocationInfo locationInfo = (LocationInfo) intent.getSerializableExtra(LocationLibraryConstants.LOCATION_BROADCAST_EXTRA_LOCATIONINFO);
-		// refresh the display with it
+		// refresh the stored coordinate
 		if (locationInfo != null && locationInfo.anyLocationDataReceived()) {
 			Util.updateCoordinate(locationInfo);
 		}

@@ -80,6 +80,9 @@ public class Util {
     private static ProgressDialog progressDialog;
     private static Activity activity;
 
+    /**
+     * This method is used to verify that a string is a valid email address
+     */
     public static boolean isEmailValid(String email) {
         String regExpn = "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@" + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
                 + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\." + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
@@ -115,6 +118,9 @@ public class Util {
         coordinate.setAccuracy(locationInfo.lastAccuracy);
     }
 
+    /**
+     * This method verifies if there is an active internet connection available
+     */
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -154,6 +160,9 @@ public class Util {
         return true;
     }
 
+    /**
+     * Display the logout confirmation dialog
+     */
     public void displayConfirmLogoutDialog(final Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.action_logout);
@@ -183,6 +192,9 @@ public class Util {
         builder.show();
     }
 
+    /**
+     * Display the Internet required dialog
+     */
     public void displayInternetRequiredDialog(final Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.internet_required);
@@ -193,6 +205,9 @@ public class Util {
         builder.show();
     }
 
+    /**
+     * Display the Internet required dialog, with a custom message
+     */
     public void displayInternetRequiredCustomDialog(final Activity activity, int message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.internet_required);
@@ -237,6 +252,9 @@ public class Util {
         }
     }
 
+    /**
+     * Display the No Network for Logout dialog
+     */
     private static void displayNoNetworkForLogout(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.logout_network_title);
@@ -245,6 +263,9 @@ public class Util {
         builder.show();
     }
 
+    /**
+     * Get the card layout background color resource, based on layout number
+     */
     public static int getColorByCardLayoutNo(int layoutNo) {
         switch (layoutNo) {
             case 1:
@@ -264,6 +285,9 @@ public class Util {
         }
     }
 
+    /**
+     * Get the card layout resource, based on layout number
+     */
     public static int getLayoutByCardLayoutNo(int layoutNo) {
         switch (layoutNo) {
             case 1:
@@ -283,6 +307,9 @@ public class Util {
         }
     }
 
+    /**
+     * Save a list of serializable elements to a specific filename, for caching
+     */
     public static void saveList(List<? extends Serializable> serializableList, String filename) {
         try {
             File file = new File(Environment.getExternalStorageDirectory().getPath() + "/business_card/" + filename);
@@ -300,6 +327,9 @@ public class Util {
         }
     }
 
+    /**
+     * Load a previously saved list of serializable elements from a specific filename
+     */
     public static List<? extends Serializable> loadList(String filename) {
         File file = new File(Environment.getExternalStorageDirectory().getPath() + "/business_card/" + filename);
         if (!file.exists()) {
@@ -330,6 +360,9 @@ public class Util {
         return null;
     }
 
+    /**
+     * Delete all cached files
+     */
     public static void clearCachedFiles() {
         File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/business_card/");
         String[] entries = folder.list();
@@ -338,11 +371,5 @@ public class Util {
             currentFile.delete();
         }
         folder.delete();
-    }
-
-    public static boolean isNetworkAvailable(Activity activity) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

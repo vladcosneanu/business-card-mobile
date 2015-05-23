@@ -50,7 +50,7 @@ public class ScheduledGPSService extends GPSIntentService {
     /**
      * The user location update request finished
      */
-    public void onLocaionUpdateRequestFinished(JSONObject json) {
+    public void onLocationUpdateRequestFinished(JSONObject json) {
         try {
             String success = json.getString("success");
             if (success.equals("true")) {

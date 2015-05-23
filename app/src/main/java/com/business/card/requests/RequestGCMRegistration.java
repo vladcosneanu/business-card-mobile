@@ -34,6 +34,9 @@ public class RequestGCMRegistration extends AsyncTask<Void, Void, String> {
         this.gcm = gcm;
     }
 
+    /**
+     * This method is executed in a background thread
+     */
     @Override
     protected String doInBackground(Void... params) {
         String msg = "";
@@ -65,6 +68,9 @@ public class RequestGCMRegistration extends AsyncTask<Void, Void, String> {
         return msg;
     }
 
+    /**
+     * This method is executed on the main UI thread
+     */
     @Override
     protected void onPostExecute(String msg) {
         activity.onGCMRegistrationComplete(msg);

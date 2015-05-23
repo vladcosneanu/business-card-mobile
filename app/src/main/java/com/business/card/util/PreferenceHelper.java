@@ -23,6 +23,9 @@ public class PreferenceHelper {
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
 
+    /**
+     * Save a key-value pair in preferences
+     */
     public static void saveValue(Context context, String key, String value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARD, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -30,11 +33,17 @@ public class PreferenceHelper {
         editor.commit();
     }
 
+    /**
+     * Load a key-value pair from preferences
+     */
     public static String loadValue(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARD, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, "");
     }
 
+    /**
+     * Save the user in preferences
+     */
     public static void saveUser(User user, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARD, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -46,6 +55,9 @@ public class PreferenceHelper {
         editor.commit();
     }
 
+    /**
+     * Load the user from preferences, if the user was previously saved
+     */
     public static User loadUser(Context context) {
         User user = new User();
 
@@ -59,6 +71,9 @@ public class PreferenceHelper {
         return user;
     }
 
+    /**
+     * Check if the user is logged in
+     */
     public static boolean isUserLoggedIn(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARD, Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString(USER_ID, "");
@@ -72,7 +87,6 @@ public class PreferenceHelper {
 
     /**
      * Gets the current registration ID for application on GCM service.
-     * <p/>
      * If result is empty, the app needs to register.
      *
      * @return registration ID, or empty string if there is no existing
@@ -98,8 +112,7 @@ public class PreferenceHelper {
     }
 
     /**
-     * Stores the registration ID and app versionCode in the application's
-     * {@code SharedPreferences}.
+     * Stores the registration ID and app versionCode in the application's SharedPreferences
      *
      * @param context application's context.
      * @param regId registration ID
@@ -114,6 +127,9 @@ public class PreferenceHelper {
         editor.commit();
     }
 
+    /**
+     * Delete all the preferences
+     */
     public static void clearPreferences(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BUSINESS_CARD, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -121,6 +137,9 @@ public class PreferenceHelper {
         editor.commit();
     }
 
+    /**
+     * Delete all the default preferences
+     */
     public static void clearDefaultPreferences(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -128,6 +147,9 @@ public class PreferenceHelper {
         editor.commit();
     }
 
+    /**
+     * Get the Nearby Search Radius that was set in preferences
+     */
     public static String getNearbyRadius(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String nearby = sharedPreferences.getString("nearby", "100");

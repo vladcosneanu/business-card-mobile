@@ -29,6 +29,9 @@ public class RequestPublicEventCard extends AsyncTask<String, Integer, JSONObjec
         this.businessCard = businessCard;
     }
 
+    /**
+     * This method is executed in a background thread
+     */
     @Override
     protected JSONObject doInBackground(String... params) {
         byte[] result = null;
@@ -69,6 +72,9 @@ public class RequestPublicEventCard extends AsyncTask<String, Integer, JSONObjec
         Log.d("size", values[0].toString());
     }
 
+    /**
+     * This method is executed on the main UI thread
+     */
     @Override
     protected void onPostExecute(JSONObject json) {
         super.onPostExecute(json);
