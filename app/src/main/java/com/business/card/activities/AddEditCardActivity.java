@@ -153,6 +153,7 @@ public class AddEditCardActivity extends ActionBarActivity {
                     if (BusinessCardApplication.selectedBusinessCard != null) {
                         // start the edit card request
                         if (Util.isNetworkAvailable(AddEditCardActivity.this)) {
+                            businessCard = newBusinessCard;
                             progressDialog.show();
                             RequestEditCard requestEditCard = new RequestEditCard(AddEditCardActivity.this, newBusinessCard);
                             requestEditCard.execute(new String[]{});
@@ -227,7 +228,7 @@ public class AddEditCardActivity extends ActionBarActivity {
                 // card edited
                 Toast.makeText(this, getString(R.string.card_edit_success), Toast.LENGTH_SHORT).show();
 
-                BusinessCardApplication.selectedBusinessCard.setLayout(selectedLayout);
+                BusinessCardApplication.selectedBusinessCard = businessCard;
 
                 finish();
             } else {
