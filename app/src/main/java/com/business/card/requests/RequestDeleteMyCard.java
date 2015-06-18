@@ -7,6 +7,7 @@ import com.business.card.activities.AddEditCardActivity;
 import com.business.card.activities.MainActivity;
 import com.business.card.fragments.MyCardsFragment;
 import com.business.card.objects.BusinessCard;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -40,7 +41,7 @@ public class RequestDeleteMyCard extends AsyncTask<String, Integer, JSONObject> 
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/delete/my_card.php";
+            String url = Util.HOST + "/api/delete/my_card.php";
             url += "?id=" + businessCard.getId();
             url += "&user_id=" + businessCard.getUserId();
 

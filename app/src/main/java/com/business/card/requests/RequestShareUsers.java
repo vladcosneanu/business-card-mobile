@@ -7,6 +7,7 @@ import com.business.card.activities.MainActivity;
 import com.business.card.activities.NearbyCardsActivity;
 import com.business.card.objects.Coordinate;
 import com.business.card.objects.User;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -43,7 +44,7 @@ public class RequestShareUsers extends AsyncTask<String, Integer, JSONArray> {
         JSONArray json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/get/share_users.php";
+            String url = Util.HOST + "/api/get/share_users.php";
             url += "?user_id=" + user.getId();
             url += "&distance=" + distance;
             url += "&lat=" + coordinate.getLatitude();

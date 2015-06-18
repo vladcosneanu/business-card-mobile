@@ -8,6 +8,7 @@ import com.business.card.objects.Coordinate;
 import com.business.card.objects.User;
 import com.business.card.services.ScheduledGPSService;
 import com.business.card.util.PreferenceHelper;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -40,7 +41,7 @@ public class RequestUpdateGCMId extends AsyncTask<String, Integer, JSONObject> {
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/update/user_gcm_reg_id.php";
+            String url = Util.HOST + "/api/update/user_gcm_reg_id.php";
             url += "?id=" + user.getId();
             url += "&gcm_reg_id=" + PreferenceHelper.getRegistrationId(activity);
 

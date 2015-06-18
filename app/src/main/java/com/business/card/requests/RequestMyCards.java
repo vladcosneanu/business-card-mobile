@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.business.card.activities.MainActivity;
 import com.business.card.objects.User;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -37,7 +38,7 @@ public class RequestMyCards extends AsyncTask<String, Integer, JSONArray> {
         JSONArray json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/get/my_cards.php";
+            String url = Util.HOST + "/api/get/my_cards.php";
             url += "?user_id=" + user.getId();
 
             Log.e("request", url);

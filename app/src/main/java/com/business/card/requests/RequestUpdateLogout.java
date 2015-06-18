@@ -37,7 +37,7 @@ public class RequestUpdateLogout extends AsyncTask<String, Integer, JSONObject> 
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/update/user_logout.php";
+            String url = Util.HOST + "/api/update/user_logout.php";
             url += "?id=" + user.getId();
 
             Log.e("request", url);

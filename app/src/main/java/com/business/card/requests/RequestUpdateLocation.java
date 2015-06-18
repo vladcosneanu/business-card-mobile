@@ -7,6 +7,7 @@ import android.util.Log;
 import com.business.card.objects.Coordinate;
 import com.business.card.objects.User;
 import com.business.card.services.ScheduledGPSService;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -41,7 +42,7 @@ public class RequestUpdateLocation extends AsyncTask<String, Integer, JSONObject
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/update/user_location.php";
+            String url = Util.HOST + "/api/update/user_location.php";
             url += "?id=" + user.getId();
             url += "&lat=" + coordinate.getLatitude();
             url += "&lng=" + coordinate.getLongitude();

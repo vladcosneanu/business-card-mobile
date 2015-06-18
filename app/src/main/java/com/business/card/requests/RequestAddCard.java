@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.business.card.activities.AddEditCardActivity;
 import com.business.card.objects.BusinessCard;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -38,7 +39,7 @@ public class RequestAddCard extends AsyncTask<String, Integer, JSONObject> {
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/card.php";
+            String url = Util.HOST + "/api/add/card.php";
             url += "?user_id=" + businessCard.getUserId();
             url += "&title=" + URLEncoder.encode(businessCard.getTitle(), "UTF-8");
             url += "&email=" + URLEncoder.encode(businessCard.getEmail(), "UTF-8");

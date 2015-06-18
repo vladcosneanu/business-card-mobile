@@ -6,6 +6,7 @@ import android.util.Log;
 import com.business.card.BusinessCardApplication;
 import com.business.card.activities.CreateEventActivity;
 import com.business.card.objects.Event;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -39,7 +40,7 @@ public class RequestCreateEvent extends AsyncTask<String, Integer, JSONObject> {
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/event.php";
+            String url = Util.HOST + "/api/add/event.php";
             url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
             url += "&name=" + URLEncoder.encode(event.getName(), "UTF-8");
             url += "&location=" + URLEncoder.encode(event.getLocation(), "UTF-8");

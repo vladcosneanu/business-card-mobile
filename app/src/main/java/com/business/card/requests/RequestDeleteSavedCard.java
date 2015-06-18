@@ -6,6 +6,7 @@ import android.util.Log;
 import com.business.card.BusinessCardApplication;
 import com.business.card.activities.MainActivity;
 import com.business.card.objects.BusinessCard;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -38,7 +39,7 @@ public class RequestDeleteSavedCard extends AsyncTask<String, Integer, JSONObjec
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/delete/saved_card.php";
+            String url = Util.HOST + "/api/delete/saved_card.php";
             url += "?card_id=" + businessCard.getId();
             url += "&user_id=" + BusinessCardApplication.loggedUser.getId();
 

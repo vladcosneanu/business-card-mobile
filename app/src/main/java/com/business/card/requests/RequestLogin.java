@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.business.card.activities.LoginActivity;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -37,8 +38,7 @@ public class RequestLogin extends AsyncTask<String, Integer, JSONObject> {
         byte[] result = null;
         JSONObject json = null;
 
-        String url = "";
-        url = "http://businesscard.netne.net/api/login.php?username=" + email + "&password=" + password;
+        String url = Util.HOST + "/api/login.php?username=" + email + "&password=" + password;
 
         try {
             Log.e("request", url);

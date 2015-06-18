@@ -7,6 +7,7 @@ import com.business.card.BusinessCardApplication;
 import com.business.card.activities.AddEditCardActivity;
 import com.business.card.activities.NearbyCardsActivity;
 import com.business.card.objects.BusinessCard;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -40,7 +41,7 @@ public class RequestGetPublicCard extends AsyncTask<String, Integer, JSONObject>
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/public_card.php";
+            String url = Util.HOST + "/api/add/public_card.php";
             url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
             url += "&card_id=" + businessCard.getId();
 

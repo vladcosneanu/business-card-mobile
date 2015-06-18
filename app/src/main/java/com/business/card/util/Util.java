@@ -41,6 +41,8 @@ import java.util.regex.Pattern;
 
 public class Util {
 
+    public static final String HOST = "http://businesscard.net84.net";
+
     public static final int CONTEXT_MENU_ITEM_MY_CARDS_SHARE = 0;
     public static final int CONTEXT_MENU_ITEM_MY_CARDS_EDIT = 1;
     public static final int CONTEXT_MENU_ITEM_MY_CARDS_DELETE = 2;

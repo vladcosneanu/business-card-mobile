@@ -6,6 +6,7 @@ import android.util.Log;
 import com.business.card.BusinessCardApplication;
 import com.business.card.activities.EventCardsActivity;
 import com.business.card.objects.BusinessCard;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -38,7 +39,7 @@ public class RequestPrivateEventCard extends AsyncTask<String, Integer, JSONObje
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/private_event_card.php";
+            String url = Util.HOST + "/api/add/private_event_card.php";
             url += "?user_id=" + BusinessCardApplication.loggedUser.getId();
             url += "&card_id=" + businessCard.getId();
 

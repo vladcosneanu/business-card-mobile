@@ -6,6 +6,7 @@ import android.util.Log;
 import com.business.card.BusinessCardApplication;
 import com.business.card.activities.MainActivity;
 import com.business.card.objects.Event;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -38,7 +39,7 @@ public class RequestDeleteJoinedEvent extends AsyncTask<String, Integer, JSONObj
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/delete/joined_event.php";
+            String url = Util.HOST + "http://businesscard.netne.net/api/delete/joined_event.php";
             url += "?event_id=" + event.getId();
             url += "&user_id=" + BusinessCardApplication.loggedUser.getId();
 

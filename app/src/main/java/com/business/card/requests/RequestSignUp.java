@@ -19,6 +19,7 @@ import com.business.card.BusinessCardApplication;
 import com.business.card.activities.CreateAccountActivity;
 import com.business.card.objects.BusinessCard;
 import com.business.card.objects.User;
+import com.business.card.util.Util;
 
 public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
 
@@ -42,7 +43,7 @@ public class RequestSignUp extends AsyncTask<String, Integer, JSONObject> {
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/sign_up.php";
+            String url = Util.HOST + "/api/add/sign_up.php";
             url += "?title=" + URLEncoder.encode(businessCard.getTitle(), "UTF-8");
             url += "&first_name=" + URLEncoder.encode(user.getFirstName(), "UTF-8");
             url += "&last_name=" + URLEncoder.encode(user.getLastName(), "UTF-8");

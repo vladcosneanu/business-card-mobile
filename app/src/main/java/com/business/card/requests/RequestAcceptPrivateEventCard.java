@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.business.card.activities.MainActivity;
+import com.business.card.util.Util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -38,7 +39,7 @@ public class RequestAcceptPrivateEventCard extends AsyncTask<String, Integer, JS
         JSONObject json = null;
 
         try {
-            String url = "http://businesscard.netne.net/api/add/accept_private_event_card.php";
+            String url = Util.HOST + "/api/add/accept_private_event_card.php";
             url += "?user_id=" + userId;
             url += "&card_id=" + cardId;
 
