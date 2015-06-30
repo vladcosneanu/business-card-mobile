@@ -222,6 +222,9 @@ public class MyCardsFragment extends Fragment implements AdapterView.OnItemClick
 
     public void removeSelectedBusinessCard() {
         // remove the Business Card that the user deleted
+        if (myCards == null) {
+            myCards = ((MainActivity) getActivity()).getMyCards();
+        }
         myCards.remove(selectedBusinessCard);
 
         adapter = new MyBusinessCardAdapter(getActivity(), myCards);

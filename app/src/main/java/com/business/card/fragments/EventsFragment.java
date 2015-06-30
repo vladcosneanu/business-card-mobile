@@ -182,6 +182,9 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemClickL
 
     public void removeSelectedEvent() {
         // remove the Event that the user deleted
+        if (myEvents == null) {
+            myEvents = ((MainActivity) getActivity()).getEvents();
+        }
         myEvents.remove(selectedEvent);
 
         adapter = new EventAdapter(getActivity(), myEvents);

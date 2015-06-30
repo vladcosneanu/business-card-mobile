@@ -63,6 +63,10 @@ public class GcmIntentService extends IntentService {
         // extract the title from the bundle received
         String notificationTitle = bundle.getString("title");
 
+        if (notificationTitle == null) {
+            return;
+        }
+
         // display the appropriate notification, based on title
         if (notificationTitle.equals("Business Card access request")) {
             displayRequestCardNotification(bundle);

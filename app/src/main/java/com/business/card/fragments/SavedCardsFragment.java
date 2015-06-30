@@ -187,6 +187,9 @@ public class SavedCardsFragment extends Fragment implements AdapterView.OnItemCl
 
     public void removeSelectedBusinessCard() {
         // remove the Business Card that the user deleted
+        if (savedCards == null) {
+            savedCards = ((MainActivity) getActivity()).getSavedCards();
+        }
         savedCards.remove(selectedBusinessCard);
 
         adapter = new SavedBusinessCardAdapter(getActivity(), savedCards);
